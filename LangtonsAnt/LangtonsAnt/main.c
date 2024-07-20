@@ -1,10 +1,6 @@
 #include "graphics.h"
 #include "io.h"
 
-#ifndef NDEBUG
-//#include <vld.h>
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 
