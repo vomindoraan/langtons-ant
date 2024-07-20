@@ -64,7 +64,7 @@ int save_colors(char *filename, Colors *colors)
 	e += fprintf(output, "%zu\n", colors->n);
 
 	if (fclose(output) == EOF || e < COLORS_TOTAL_FIELDS) {
-		e = EOF;
+		return EOF;
 	}
 	return e;
 }
@@ -74,29 +74,29 @@ Simulation *load_simulation(char *filename)
 	Simulation *sim;
 	Colors *colors;
 	FILE *input;
-	size_t nn = 0, i, j;
+	size_t skip = 0, i, j;
 	bool is_sparse;
 
 	if (!(colors = load_colors(filename))) {
 		return NULL;
 	}
 
-	sim = simulation_new(colors, GRID_DEF_INIT_SIZE);
-
 	if (!(input = fopen(filename, "r"))) {
 		return NULL;
 	}
 
-	while (nn < 5) {
+	while (skip < 5) {
 		int c = getc(input);
 		if (c == '\n') {
-			nn++;
+			skip++;
 		}
 	}
 
+	sim = simulation_new(colors, GRID_DEF_INIT_SIZE);
+
 	if (fscanf(input, "%d %d %u\n", &sim->ant->pos.x, &sim->ant->pos.y,
 			   &sim->ant->dir) < 3) {
-		return sim;
+		return sim; // Colors only
 	}
 	if (fscanf(input, "%zu\n", &sim->steps) < 0) {
 		goto error_end;
@@ -163,9 +163,7 @@ Simulation *load_simulation(char *filename)
 		}
 	}
 
-	if (fclose(input) == EOF) {
-		return NULL;
-	}
+	fclose(input);
 	return sim;
 
 error_end:
@@ -234,7 +232,6 @@ int save_simulation(char *filename, Simulation *sim)
 	if (fclose(output) == EOF) {
 		return EOF;
 	}
-
 	return 0; // TODO return success bool
 }
 
