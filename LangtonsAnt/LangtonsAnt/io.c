@@ -95,7 +95,7 @@ Simulation *load_simulation(char *filename)
 	sim = simulation_new(colors, GRID_DEF_INIT_SIZE);
 
 	if (fscanf(input, "%d %d %u\n", &sim->ant->pos.x, &sim->ant->pos.y,
-			   &sim->ant->dir) < 3) {
+		       &sim->ant->dir) < 3) {
 		return sim; // Colors only
 	}
 	if (fscanf(input, "%zu\n", &sim->steps) < 0) {
@@ -113,11 +113,11 @@ Simulation *load_simulation(char *filename)
 	sim->grid->csr = NULL;
 
 	if (fscanf(input, "%hhu %zu %zu %zu\n", &sim->grid->def_color,
-			   &sim->grid->init_size, &sim->grid->size, &sim->grid->colored) < 0) {
+		       &sim->grid->init_size, &sim->grid->size, &sim->grid->colored) < 0) {
 		goto error_end;
 	}
 	if (fscanf(input, "%d %d %d %d\n", &sim->grid->top_left.x, &sim->grid->top_left.y,
-			   &sim->grid->bottom_right.x, &sim->grid->bottom_right.y) < 0) {
+		       &sim->grid->bottom_right.x, &sim->grid->bottom_right.y) < 0) {
 		goto error_end;
 	}
 
@@ -156,7 +156,7 @@ Simulation *load_simulation(char *filename)
 			}
 			for (j = 0; j < sim->grid->size; j++) {
 				if (fscanf(input, (j == sim->grid->size - 1) ? "%hhu\n" : "%hhu ",
-						   &sim->grid->c[i][j]) < 0) {
+					       &sim->grid->c[i][j]) < 0) {
 					goto error_end;
 				}
 			}
@@ -187,7 +187,7 @@ int save_simulation(char *filename, Simulation *sim)
 	}
 
 	if (fprintf(output, "%d %d %u\n", sim->ant->pos.x, sim->ant->pos.y,
-				sim->ant->dir) < 0) {
+		        sim->ant->dir) < 0) {
 		return EOF;
 	}
 	if (fprintf(output, "%zu\n", sim->steps) < 0) {
@@ -197,11 +197,11 @@ int save_simulation(char *filename, Simulation *sim)
 		return EOF;
 	}
 	if (fprintf(output, "%hhu %zu %zu %zu\n", sim->grid->def_color,
-				sim->grid->init_size, sim->grid->size, sim->grid->colored) < 0) {
+		        sim->grid->init_size, sim->grid->size, sim->grid->colored) < 0) {
 		return EOF;
 	}
 	if (fprintf(output, "%d %d %d %d\n", sim->grid->top_left.x, sim->grid->top_left.y,
-				sim->grid->bottom_right.x, sim->grid->bottom_right.y) < 0) {
+		        sim->grid->bottom_right.x, sim->grid->bottom_right.y) < 0) {
 		return EOF;
 	}
 
@@ -222,7 +222,7 @@ int save_simulation(char *filename, Simulation *sim)
 		for (i = 0; i < sim->grid->size; i++) {
 			for (j = 0; j < sim->grid->size; j++) {
 				if (fprintf(output, (j == sim->grid->size-1) ? "%hhu\n" : "%hhu ",
-							sim->grid->c[i][j]) < 0) {
+					        sim->grid->c[i][j]) < 0) {
 					return EOF;
 				}
 			}
@@ -246,7 +246,7 @@ int save_grid_bitmap(char* filename, Grid* grid)
 			Vector2i pos = (Vector2i) { j, i };  // Flip axes
 			color_t color = GRID_COLOR_AT(grid, pos);
 			memcpy_s(image[i*width + j], sizeof(pixel_t),
-				     color_map[color], sizeof(pixel_t));
+			         color_map[color], sizeof(pixel_t));
 		}
 	}
 

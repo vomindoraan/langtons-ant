@@ -124,7 +124,7 @@ static void bordered(Grid *grid, Ant *ant, int line_width)
 			pos.y = i, pos.x = j;
 			yx = pos2yx(pos, line_width, cs, o);
 			draw_cell(yx, cs, GRID_COLOR_AT(grid, pos),
-					  (ant && VECTOR_EQ(pos, ant->pos)) ? ant : NULL);
+			          (ant && VECTOR_EQ(pos, ant->pos)) ? ant : NULL);
 		}
 	}
 }
@@ -158,7 +158,7 @@ static void borderless(Grid *grid, Ant *ant)
 			yx = pos2yx(rel, 0, cs, o);
 			pos = rel2abs(rel, origin);
 			draw_cell(yx, cs, GRID_COLOR_AT(grid, pos),
-					  (ant && VECTOR_EQ(pos, ant->pos)) ? ant : NULL);
+			          (ant && VECTOR_EQ(pos, ant->pos)) ? ant : NULL);
 		}
 	}
 }
@@ -188,8 +188,8 @@ void draw_grid_iter(Grid *grid, Ant *ant, Vector2i old_pos)
 {
 	int gs = grid->size, vgs = min(gs, GRID_VIEW_SIZE);
 	int lw = (gs == GRID_SIZE_SMALL(grid))  ? LINE_WIDTH_SMALL
-		   : (gs == GRID_SIZE_MEDIUM(grid)) ? LINE_WIDTH_MEDIUM
-		   : LINE_WIDTH_LARGE;
+	       : (gs == GRID_SIZE_MEDIUM(grid)) ? LINE_WIDTH_MEDIUM
+	       : LINE_WIDTH_LARGE;
 	int cs = CELL_SIZE(vgs, lw);
 	int o = OFFSET_SIZE(TOTAL_SIZE(vgs, lw, cs));
 	Vector2i origin = ORIGIN_POS(gs, vgs, gridscrl.y, gridscrl.x), pos, yx;

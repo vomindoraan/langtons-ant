@@ -111,11 +111,11 @@ input_t grid_mouse_command(Grid *grid)
 {
 	MEVENT event;
 	int step;
-	
+
 	nc_getmouse(&event);
 	step = (event.bstate & BUTTON1_CLICKED) ? SCROLL_STEP_SMALL
-		 : (event.bstate & BUTTON3_CLICKED) ? grid->size // Can be anything large
-		 : 0;
+	     : (event.bstate & BUTTON3_CLICKED) ? grid->size // Can be anything large
+	     : 0;
 
 	/* Vertical scrollbar */
 	if (event.x == GRID_VIEW_SIZE && event.y < GRID_VIEW_SIZE) {

@@ -108,5 +108,5 @@ bool ant_move(Ant *ant, Grid *grid, Colors *colors)
 bool is_ant_in_bounds(Ant *ant, Grid *grid)
 {
 	return ant->pos.y >= 0 && (size_t)ant->pos.y < grid->size
-		&& ant->pos.x >= 0 && (size_t)ant->pos.x < grid->size;
+	    && ant->pos.x >= 0 && (size_t)ant->pos.x < grid->size;
 }

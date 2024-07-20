@@ -110,7 +110,7 @@ Vector2i abs2rel(Vector2i abs, Vector2i origin)
 bool area_contains(Vector2i top_left, size_t width, size_t height, Vector2i v)
 {
 	return (v.y >= top_left.y && v.y < top_left.y+(int)height
-			&& v.x >= top_left.x && v.x < top_left.x+(int)width);
+	        && v.x >= top_left.x && v.x < top_left.x+(int)width);
 }
 
 void draw_square(WINDOW *w, Vector2i top_left, size_t size)
@@ -186,6 +186,6 @@ chtype dir2arrow(Direction dir)
 chtype turn2arrow(turn_t turn)
 {
 	return (turn == TURN_LEFT)  ? '<'
-		 : (turn == TURN_RIGHT) ? '>'
-		 : '-';
+	     : (turn == TURN_RIGHT) ? '>'
+	     : '-';
 }

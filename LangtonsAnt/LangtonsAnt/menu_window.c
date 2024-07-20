@@ -280,9 +280,9 @@ static void draw_init_size(void)
 {
 	wattrset(menuw, GET_PAIR_FOR(MENU_ACTIVE_COLOR));
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_UP],   MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
-				menu_isize_u_pos, FALSE);
+	            menu_isize_u_pos, FALSE);
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_DOWN], MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
-				menu_isize_d_pos, FALSE);
+	            menu_isize_d_pos, FALSE);
 	wattrset(menuw, fg_pair);
 	draw_sprite(menuw, (SpriteInfo) { digit_sprites[stgs.init_size], 3, 5 }, isize_pos, TRUE);
 }
@@ -297,13 +297,13 @@ static void draw_direction(void)
 {
 	wattrset(menuw, GET_PAIR_FOR(MENU_ACTIVE_COLOR));
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_UP],    MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
-				menu_dir_u_pos, FALSE);
+	            menu_dir_u_pos, FALSE);
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_RIGHT], MENU_RLARROW_WIDTH, MENU_RLARROW_HEIGHT },
-				menu_dir_r_pos, FALSE);
+	            menu_dir_r_pos, FALSE);
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_DOWN],  MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
-				menu_dir_d_pos, FALSE);
+	            menu_dir_d_pos, FALSE);
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_LEFT],  MENU_RLARROW_WIDTH, MENU_RLARROW_HEIGHT },
-				menu_dir_l_pos, FALSE);
+	            menu_dir_l_pos, FALSE);
 	draw_dir_arrow();
 }
 
@@ -324,9 +324,9 @@ static void draw_speed(void)
 	/* Draw arrow buttons */
 	wattrset(menuw, pair);
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_UP], MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
-				menu_speed_u_pos, FALSE);
+	            menu_speed_u_pos, FALSE);
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_DOWN], MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
-				menu_speed_d_pos, FALSE);
+	            menu_speed_d_pos, FALSE);
 
 	/* Draw speed value */
 	wattrset(menuw, bg_pair);
