@@ -1,11 +1,12 @@
-#include <stdio.h>
-#include <stdlib.h>
-#ifndef NDEBUG
-#include <vld.h>
-#endif
-
 #include "graphics.h"
 #include "io.h"
+
+#ifndef NDEBUG
+//#include <vld.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char *argv[])
 {

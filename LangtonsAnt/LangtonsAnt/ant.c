@@ -1,6 +1,6 @@
-#include <stdlib.h>
-
 #include "logic.h"
+
+#include <stdlib.h>
 
 Ant *ant_new(Grid *grid, Direction dir)
 {
@@ -49,7 +49,7 @@ static void ant_move_n(Ant *ant, Grid *grid, Colors *colors)
 	bool is_def = *c == colors->def;
 	turn_t turn;
 
-	// In-place color changing
+	/* In-place color changing */
 	if (is_color_special(colors, *c)) {
 		*c = (byte)colors->next[*c];
 	}
@@ -71,12 +71,12 @@ static void ant_move_n(Ant *ant, Grid *grid, Colors *colors)
 static void ant_move_s(Ant *ant, Grid *grid, Colors *colors)
 {
 	int y = ant->pos.y, x = ant->pos.x, turn;
-	Cell **t = grid->csr + y;
+	SparseCell **t = grid->csr + y;
 
-	while (*t && CELL_GET_COLUMN(*t) < (size_t)x) {
+	while (*t && CSR_GET_COLUMN(*t) < (size_t)x) {
 		t = &(*t)->next;
 	}
-	if (!*t || CELL_GET_COLUMN(*t) != (size_t)x) {
+	if (!*t || CSR_GET_COLUMN(*t) != (size_t)x) {
 		if (!*t) {
 			grid->colored++;
 			update_bounding_box(grid, ant->pos);
@@ -84,14 +84,14 @@ static void ant_move_s(Ant *ant, Grid *grid, Colors *colors)
 		new_cell(t, x, (byte)colors->first);
 	}
 
-	// In-place color changing
-	if (is_color_special(colors, CELL_GET_COLOR(*t))) {
-		CELL_SET_COLOR(*t, colors->next[CELL_GET_COLOR(*t)]);
+	/* In-place color changing */
+	if (is_color_special(colors, CSR_GET_COLOR(*t))) {
+		CSR_SET_COLOR(*t, colors->next[CSR_GET_COLOR(*t)]);
 	}
 
-	turn = colors->turn[CELL_GET_COLOR(*t)];
+	turn = colors->turn[CSR_GET_COLOR(*t)];
 	assert(abs(turn) == 1);
-	CELL_SET_COLOR(*t, (byte)colors->next[CELL_GET_COLOR(*t)]);
+	CSR_SET_COLOR(*t, (byte)colors->next[CSR_GET_COLOR(*t)]);
 	change_dir(ant, turn);
 }
 

@@ -1,6 +1,6 @@
-#include <stdlib.h>
-
 #include "logic.h"
+
+#include <stdlib.h>
 
 Colors *colors_new(color_t def)
 {
@@ -99,8 +99,9 @@ void set_color(Colors *colors, size_t index, color_t c, turn_t turn)
 	colors->next[prev] = c;
 	colors->next[c] = colors->next[i];
 	colors->turn[c] = turn;
-	
-	colors->next[i] = c; // Special
+
+	/* Special color */
+	colors->next[i] = c;
 	for (j = 0; j < COLOR_COUNT; j++) {
 		if (colors->next[j] == i) {
 			colors->next[j] = c;

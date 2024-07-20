@@ -1,6 +1,14 @@
+#include "graphics.h"
+
 #include <math.h>
 
-#include "graphics.h"
+#ifdef _WIN32
+#include <Windows.h>
+
+HANDLE console;
+CONSOLE_FONT_INFOEX user_font;
+SMALL_RECT user_window;
+#endif
 
 chtype fg_pair, bg_pair, ui_pair;
 
@@ -23,6 +31,29 @@ void init_def_pairs(color_t fg_color, color_t bg_color)
 
 void init_graphics(color_t fg_color, color_t bg_color)
 {
+#ifdef _WIN32
+	/* Store current console font */
+	console = GetStdHandle(STD_OUTPUT_HANDLE);
+	user_font.cbSize = sizeof(CONSOLE_FONT_INFOEX); // Required for the below call
+	GetCurrentConsoleFontEx(console, FALSE, &user_font);
+
+	/* Store current window position & size */
+	CONSOLE_SCREEN_BUFFER_INFO tmp;
+	GetConsoleScreenBufferInfo(console, &tmp);
+	user_window = tmp.srWindow;
+
+	/* Set console font to 8x8 raster */
+	CONSOLE_FONT_INFOEX font = {
+		.cbSize = sizeof(CONSOLE_FONT_INFOEX),
+		.nFont = 0,
+		.dwFontSize = { .X = CONSOLE_FONT_SIZE, .Y = CONSOLE_FONT_SIZE },
+		.FontFamily = FF_DONTCARE,
+		.FontWeight = FW_NORMAL,
+	};
+	wcscpy(font.FaceName, CONSOLE_FONT_FACE);
+	SetCurrentConsoleFontEx(console, FALSE, &font);
+#endif
+
 	initscr();
 	resize_term(GRID_WINDOW_SIZE, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH);
 	curs_set(0);
@@ -40,8 +71,7 @@ void init_graphics(color_t fg_color, color_t bg_color)
 	init_menu_window();
 
 	if (gridw == NULL || menuw == NULL) {
-		printw("Couldn't initialize graphics. Please lower your terminal's font size "
-			   "(raster 8x8 preferred) and try again.");
+		printw("Couldn't initialize graphics: Terminal font too large");
 		wnoutrefresh(stdscr);
 	}
 
@@ -53,6 +83,12 @@ void end_graphics(void)
 	end_grid_window();
 	end_menu_window();
 	endwin();
+
+#ifdef _WIN32
+	/* Restore user console font and window position & size */
+	SetCurrentConsoleFontEx(console, FALSE, &user_font);
+	SetConsoleWindowInfo(console, TRUE, &user_window);
+#endif
 }
 
 Vector2i rel2abs(Vector2i rel, Vector2i origin)

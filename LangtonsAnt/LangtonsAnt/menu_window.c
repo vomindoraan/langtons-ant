@@ -1,13 +1,13 @@
+#include "graphics.h"
+
 #include <math.h>
 #include <string.h>
-
-#include "graphics.h"
 
 WINDOW *menuw;
 Settings stgs;
 IOStatus load_status, save_status;
 
-const Vector2i menu_pos = { 0, GRID_WINDOW_SIZE };
+const Vector2i menu_pos         = { 0, GRID_WINDOW_SIZE };
 const Vector2i menu_isize_u_pos = { MENU_LOGO_HEIGHT+2,   MENU_WINDOW_WIDTH-9 };
 const Vector2i menu_isize_d_pos = { MENU_LOGO_HEIGHT+5,   MENU_WINDOW_WIDTH-9 };
 const Vector2i menu_dir_u_pos   = { MENU_DIRECTION_POS+2, MENU_WINDOW_WIDTH-8 };
@@ -102,9 +102,14 @@ void end_menu_window(void)
 Vector2i get_menu_tile_pos(size_t index)
 {
 	Vector2i pos;
-	size_t index_y = index % MENU_TILES_PER_COL, index_x = index / MENU_TILES_PER_COL;
+	size_t index_x, index_y;
 
-	assert(index < MENU_TILE_COUNT);
+	if (index < 0 || index >= MENU_TILE_COUNT) {
+		return VECTOR_INVALID;
+	}
+
+	index_x = index / MENU_TILES_PER_COL;
+	index_y = index % MENU_TILES_PER_COL;
 	if (index_x % 2) {
 		index_y = MENU_TILES_PER_COL - index_y - 1;
 	}
@@ -155,10 +160,10 @@ static void draw_logo(void)
 static void draw_color_arrow(Vector2i pos1, Vector2i pos2)
 {
 	int ts = MENU_TILE_SIZE, o = MENU_TILE_SIZE/2, dy, dx;
-	
+
 	assert(pos1.y != pos2.y || pos1.x != pos2.x);
 	wattrset(menuw, fg_pair);
-	
+
 	if (pos1.x == pos2.x) {
 		dy = abs(pos1.y - pos2.y) - ts;
 		mvwvline(menuw, min(pos1.y, pos2.y)+ts, pos1.x+o, ACS_VLINE, dy);
@@ -208,7 +213,7 @@ static void draw_color_tile(Vector2i top_left, color_t c)
 
 	/* Draw direction arrow */
 	if (!is_def) {
-		wattron(menuw, A_REVERSE);
+		wattron(menuw, A_REVERSE); // TODO black arrow if IS_COLOR_BRIGHT(c)
 		mvwaddch(menuw, y+s/2, x+s/2, turn2arrow(stgs.colors->turn[c]));
 	}
 
@@ -230,7 +235,7 @@ static void draw_color_list(void)
 	pos1.y = rules_pos.y-MENU_TILE_VSEP-1, pos1.x = rules_pos.x-MENU_TILE_HSEP-MENU_TILE_SIZE;
 	wattrset(menuw, bg_pair);
 	draw_rect(menuw, pos1, MENU_TILES_WIDTH, MENU_TILES_HEIGHT);
-	
+
 	if (!stgs.colors) {
 		return;
 	}
@@ -249,7 +254,7 @@ static void draw_color_list(void)
 		state_map[c] = i;
 		do_for = c != stgs.colors->last;
 	}
-	
+
 	/* Draw placeholder tile */
 	if (i < MENU_TILE_COUNT) {
 		draw_color_tile(pos2, stgs.colors->def);
@@ -306,23 +311,30 @@ static void draw_speed(void)
 {
 	chtype pair = GET_PAIR_FOR(MENU_ACTIVE_COLOR);
 	int dy = menu_speed_d_pos.y - menu_speed_u_pos.y - 2;
-	Vector2i pos = { speed_pos.y + dy+1 - 2*stgs.speed, speed_pos.x }; // TODO better way for speed slider pos
+	Vector2i slider_pos = { speed_pos.y + dy+1 - 2*stgs.speed, speed_pos.x }; // TODO better way for speed slider pos
 
+	/* Draw scrollbar */
+	wattrset(menuw, ui_pair);
+	mvwvline(menuw, menu_speed_u_pos.y + 2, menu_speed_u_pos.x + 1, ACS_VLINE, dy);
+
+	/* Draw slider */
+	wattrset(menuw, fg_pair);
+	mvwvline(menuw, slider_pos.y+1, slider_pos.x-3, ACS_BLOCK, 3);
+
+	/* Draw arrow buttons */
 	wattrset(menuw, pair);
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_UP], MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
 				menu_speed_u_pos, FALSE);
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_DOWN], MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
 				menu_speed_d_pos, FALSE);
-	wattrset(menuw, ui_pair);
-	mvwvline(menuw, menu_speed_u_pos.y+2, menu_speed_u_pos.x+1, ACS_VLINE, dy);
 
-	wattrset(menuw, pair);
-	mvwvline(menuw, pos.y+1, pos.x-3, ACS_BLOCK, 3);
-	wattrset(menuw, fg_pair | A_REVERSE);
-	draw_rect(menuw, speed_pos, MENU_DIGIT_WIDTH, dy+4);
-	wattroff(menuw, A_REVERSE);
-	draw_sprite(menuw, (SpriteInfo) { digit_sprites[stgs.speed], 3, 5 }, pos, TRUE);
+	/* Draw speed value */
+	wattrset(menuw, bg_pair);
+	draw_rect(menuw, speed_pos, MENU_DIGIT_WIDTH, dy + 4);
+	wattrset(menuw, fg_pair);
+	draw_sprite(menuw, (SpriteInfo) { digit_sprites[stgs.speed], 3, 5 }, slider_pos, TRUE);
 
+	/* Draw Step+ sprite */
 	wattrset(menuw, GET_PAIR_FOR(has_enough_colors(stgs.colors) ? MENU_ACTIVE_COLOR : MENU_INACTIVE_COLOR));
 	draw_sprite(menuw, (SpriteInfo) { stepup_sprite, 3, 3 }, menu_stepup_pos, FALSE);
 }
@@ -342,7 +354,7 @@ static void draw_function(void)
 	waddch(menuw, ACS_BLOCK);
 	wattrset(menuw, pair);
 	waddstr(menuw, ") = ");
-	
+
 	sprintf(str, "(q%hd, ", state_map[next_color]);
 	mvwaddstr(menuw, func_pos.y+1, func_pos.x+1, str);
 	wattrset(menuw, GET_PAIR_FOR(next_color));
@@ -369,7 +381,7 @@ static void draw_control_buttons(void)
 
 	wattrset(menuw, GET_PAIR_FOR(is_simulation_running(stgs.linked_sim) ? MENU_PAUSE_COLOR : MENU_INACTIVE_COLOR));
 	draw_sprite(menuw, (SpriteInfo) { button_sprites[1], 5, 5 }, pos2, FALSE);
-	
+
 	if (has_simulation_started(stgs.linked_sim)) {
 		wattrset(menuw, GET_PAIR_FOR(MENU_STOP_COLOR));
 		draw_sprite(menuw, (SpriteInfo) { button_sprites[2], 5, 5 }, pos3, FALSE);
@@ -492,31 +504,30 @@ void draw_menu_full(void)
 
 void draw_menu_iter(void)
 {
-	static bool sparse = FALSE;
 	Simulation *sim = stgs.linked_sim;
+	static bool sparse = FALSE;
 #if LOOP_OPT_STEPS
 	static size_t prev_steps = 0;
-	bool do_draw = sim->steps-prev_steps >= exp(max(stgs.speed-LOOP_OPT_SPEED, 0));
+	double threshold = exp(max(stgs.speed-LOOP_OPT_SPEED, 0)); // ~1096 @ speed 9
+	bool do_draw = sim->steps-prev_steps >= threshold;
+#endif
 
+	if (!sparse && is_grid_sparse(sim->grid)) {
+		sparse = TRUE;
+#if LOOP_OPT_STEPS
+		do_draw = TRUE;
+#endif
+		draw_edge();
+	}
+#if LOOP_OPT_STEPS
 	if (do_draw) {
 #endif
 		draw_dir_arrow();
 		draw_function();
 		draw_steps();
-#if LOOP_OPT_STEPS
-		prev_steps = sim->steps;
-	}
-#endif
-	if (!sparse && is_grid_sparse(sim->grid)) {
-		draw_edge();
-		sparse = TRUE;
-		do_draw = TRUE;
-	}
-#if LOOP_OPT_STEPS
-	if (do_draw) {
-#endif
 		wnoutrefresh(menuw);
 #if LOOP_OPT_STEPS
+		prev_steps = sim->steps;
 	}
 #endif
 }

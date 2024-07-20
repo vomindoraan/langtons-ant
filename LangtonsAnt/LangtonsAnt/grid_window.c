@@ -1,7 +1,7 @@
+#include "graphics.h"
+
 #include <math.h>
 #include <stdlib.h>
-
-#include "graphics.h"
 
 WINDOW *gridw;
 ScrollInfo gridscrl;
@@ -73,10 +73,10 @@ static void draw_scrollbars(color_t def)
 	mvwvline(gridw, v, n, ACS_BLOCK, size);
 }
 
-static void draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
+static bool draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
 {
 	if (yx.y < 0 || yx.y >= GRID_VIEW_SIZE || yx.x < 0 || yx.x >= GRID_VIEW_SIZE) {
-		return;
+		return FALSE;
 	}
 
 	wattrset(gridw, GET_PAIR_FOR(c));
@@ -93,6 +93,8 @@ static void draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
 			mvwaddch(gridw, center.y, center.x, dir2arrow(ant->dir) | A_REVERSE);
 		}
 	}
+
+	return TRUE;
 }
 
 static void bordered(Grid *grid, Ant *ant, int line_width)
@@ -191,18 +193,21 @@ void draw_grid_iter(Grid *grid, Ant *ant, Vector2i old_pos)
 	int cs = CELL_SIZE(vgs, lw);
 	int o = OFFSET_SIZE(TOTAL_SIZE(vgs, lw, cs));
 	Vector2i origin = ORIGIN_POS(gs, vgs, gridscrl.y, gridscrl.x), pos, yx;
+	bool drawn;
 
 	pos = abs2rel(old_pos, origin);
 	yx = pos2yx(pos, lw, cs, o);
-	draw_cell(yx, cs, GRID_COLOR_AT(grid, old_pos), NULL);
+	drawn = draw_cell(yx, cs, GRID_COLOR_AT(grid, old_pos), NULL);
 
 	if (ant) {
 		pos = abs2rel(ant->pos, origin);
 		yx = pos2yx(pos, lw, cs, o);
-		draw_cell(yx, cs, GRID_ANT_COLOR(grid, ant), ant);
+		drawn &= draw_cell(yx, cs, GRID_ANT_COLOR(grid, ant), ant);
 	}
-	
-	wnoutrefresh(gridw);
+
+	if (drawn) {
+		wnoutrefresh(gridw);
+	}
 }
 
 void scroll_grid(Grid *grid, int dy, int dx)

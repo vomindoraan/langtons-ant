@@ -7,20 +7,11 @@
 #define __LOGIC_H__
 
 #include <assert.h>
+#include <limits.h>
 #include <stddef.h>
 
 
 /*--------------------- General purpose macros and types ---------------------*/
-
-///@{
-/** Max/min integer */
-#ifndef INT_MAX
-#define INT_MAX 2147483647
-#endif
-#ifndef INT_MIN
-#define INT_MIN ~INT_MAX
-#endif
-///@}
 
 ///@{
 /** Standard max/min macro */
@@ -74,7 +65,7 @@ typedef struct ant {
 } Ant;
 
 
-/*---------------------- Colors/rules macros and types -----------------------*/
+/*----------------------- Color rules macros and types -----------------------*/
 
 /** @name Colors struct constants */
 ///@{
@@ -97,7 +88,7 @@ typedef short color_t;
 /** Turn direction for given rule */
 typedef char turn_t;
 
-/** Colors container */
+/** Color rules container */
 typedef struct colors {
 	color_t next[COLOR_COUNT];
 	turn_t turn[COLOR_COUNT];
@@ -123,30 +114,30 @@ typedef struct colors {
 #define GRID_SIZE_MEDIUM(g)     (GRID_SIZE_SMALL(g) * GRID_MULT)
 #define GRID_SIZE_LARGE(g)      (GRID_SIZE_MEDIUM(g) * GRID_MULT)
 #define IS_GRID_LARGE(g)        ((g)->size >= GRID_SIZE_LARGE(g))
-#define GRID_EFFICIENCY(g)      ((g)->size*(g)->size / ((double)sizeof(Cell)*(g)->colored))
+#define GRID_EFFICIENCY(g)      ((g)->size*(g)->size / ((double)sizeof(SparseCell)*(g)->colored))
 #define GRID_COLOR_AT(g, p)     (is_grid_sparse(g) ? color_at_s(g, p) : (g)->c[(p).y][(p).x])
 #define GRID_ANT_COLOR(g, a)    GRID_COLOR_AT(g, (a)->pos)
 ///@}
 
 /** @name Sparse matrix bit packing macros */
 ///@{
-#define CELL_COLOR_MASK         (0xF << 28)
-#define CELL_GET_COLOR(c)       (((c)->packed & CELL_COLOR_MASK) >> 28)
-#define CELL_SET_COLOR(c, col)  ((c)->packed = (c)->packed & ~CELL_COLOR_MASK | ((col)<<28))
-#define CELL_GET_COLUMN(c)      ((c)->packed & ~CELL_COLOR_MASK)
-#define CELL_SET_COLUMN(c, col) ((c)->packed = (c)->packed & CELL_COLOR_MASK | (col) & ~CELL_COLOR_MASK)
+#define CSR_COLOR_MASK          (0xF << 28)
+#define CSR_GET_COLOR(sc)       (((sc)->packed & CSR_COLOR_MASK) >> 28)
+#define CSR_SET_COLOR(sc, col)  ((sc)->packed = (sc)->packed & ~CSR_COLOR_MASK | ((col)<<28))
+#define CSR_GET_COLUMN(sc)      ((sc)->packed & ~CSR_COLOR_MASK)
+#define CSR_SET_COLUMN(sc, col) ((sc)->packed = (sc)->packed & CSR_COLOR_MASK | (col) & ~CSR_COLOR_MASK)
 ///@}
 
 /** Sparse matrix cell container */
 typedef struct cell {
 	size_t packed;
 	struct cell *next;
-} Cell;
+} SparseCell;
 
 /** Grid container */
 typedef struct grid {
 	byte **c, **tmp, def_color;
-	Cell **csr;
+	SparseCell **csr;
 	size_t init_size, size, tmp_size, colored;
 	Vector2i top_left, bottom_right;
 } Grid;
@@ -203,7 +194,7 @@ void grid_expand(Grid *grid, Ant *ant);
 void grid_make_sparse(Grid *grid);
 bool is_grid_sparse(Grid *grid);
 bool is_grid_usage_low(Grid *grid);
-void new_cell(Cell **cur, size_t column, byte c);
+void new_cell(SparseCell **curr, size_t column, byte c);
 byte color_at_s(Grid *grid, Vector2i p);
 
 

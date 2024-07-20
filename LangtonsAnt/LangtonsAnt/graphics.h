@@ -7,7 +7,14 @@
 #define __GRAPHICS_H__
 
 #include "logic.h"
+
 #include "include/curses.h"
+
+/** @name Preferred console font settings */
+///@{
+#define CONSOLE_FONT_FACE L"Px437 IBM EGA 8x8"
+#define CONSOLE_FONT_SIZE 8
+///@}
 
 
 /*--------------------------- Display color macros ---------------------------*/
@@ -24,7 +31,10 @@
 /** @name 4-bit color macros (HTML names) */
 ///@{
 #define COLOR_BLACK   0
+#define COLOR_SILVER  7
+
 #define COLOR_GRAY    8
+#define COLOR_WHITE   15
 
 #ifdef PDC_RGB        /* RGB */
 #define COLOR_MAROON  1
@@ -52,9 +62,6 @@
 #define COLOR_FUCHSIA (COLOR_RED | COLOR_BLUE)
 #define COLOR_YELLOW  (COLOR_RED | COLOR_LIME)
 
-#define COLOR_SILVER  7
-#define COLOR_WHITE   15
-
 #ifndef COLOR_COUNT
 #define COLOR_COUNT   16
 #endif
@@ -65,10 +72,11 @@
 
 /** @name Utility color macros */
 ///@{
-#define GET_PAIR_FOR(c)  (COLOR_PAIR((c) + 1))
-#define GET_COLOR_FOR(p) (PAIR_NUMBER(p) - 1)
+#define GET_PAIR_FOR(c)             (COLOR_PAIR((c) + 1))
+#define GET_COLOR_FOR(p)            (PAIR_NUMBER(p) - 1)
 #define AVAILABLE_COLOR(def, c, bk) (((def) == (c)) ? (bk) : (c))
 #define AVAILABLE_PAIR(def, c, bk)  GET_PAIR_FOR(AVAILABLE_COLOR(def, c, bk))
+#define IS_COLOR_BRIGHT(c)          ((c) & 0x8)
 ///@}
 
 
@@ -162,7 +170,7 @@ typedef struct scroll_info {
 
 /** Structure containing all relevant menu settings */
 typedef struct settings {
-	Colors *colors;         /**< Currently active colors/rules */
+	Colors *colors;         /**< Currently active color rules */
 	size_t init_size;       /**< Initial grid size */
 	byte speed;             /**< Speed multiplier */
 	Simulation *linked_sim; /**< Currently active simulation */
@@ -209,7 +217,7 @@ typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE } IOStatus;
 ///@}
 
 /** Window state change as a result of input events (bitwise OR of INPUT_* fields) */
-typedef unsigned char input_t;
+typedef byte input_t;
 
 
 /*------------------------- Loop performance macros --------------------------*/
@@ -422,8 +430,8 @@ void end_grid_window(void);
 void draw_grid_full(Grid *grid, Ant *ant);
 
 /**
- * Draws the given cell in the grid (the portion shown by gridscrl).
- * Suitable for calling in loops as it does less work than draw_grid__full.
+ * Draws the given cell in the grid (the portion shown by gridscrl)
+ * Suitable for calling in loops as it does less work than draw_grid__full
  * @param grid Grid from which to draw
  * @param ant Ant to be drawn in the grid (NULL for no ant)
  * @param old_pos Position of cell that has changed and should be drawn
@@ -498,14 +506,14 @@ void init_menu_window(void);
 void end_menu_window(void);
 
 /**
- * Draws the entire menu.
+ * Draws the entire menu
  * @see draw_menu_iter(void)
  */
 void draw_menu_full(void);
 
 /**
- * Draws only the parts of the menu that can dynamically change.
- * Suitable for calling in loops as it does less work than draw_menu_full.
+ * Draws only the parts of the menu that can dynamically change
+ * Suitable for calling in loops as it does less work than draw_menu_full
  * @see draw_menu_full(void)
  */
 void draw_menu_iter(void);
@@ -513,7 +521,7 @@ void draw_menu_iter(void);
 /**
  * Finds the relative position of a color tile in the menu
  * @param index Index in the color list
- * @return Relative position of found tile
+ * @return Relative position of found tile; or VECTOR_INVALID if index is out of bounds
  */
 Vector2i get_menu_tile_pos(size_t index);
 
@@ -529,7 +537,7 @@ Vector2i get_menu_cdef_pos(void);
  *----------------------------------------------------------------------------*/
 
 /**
- * Deletes the old simulation and settings and sets them to the state of the argument
+ * Deletes the old simulation and settings and sets them to the passed state
  * @param sim Simulation whose state to use
  * @return INPUT_MENU_CHANGED | INPUT_GRID_CHANGED
  * @see reset_simulation(void)
@@ -557,7 +565,7 @@ input_t clear_simulation(void);
  * Handles key Command passed to the menu
  * @param key Key passed to the grid
  * @return INPUT_MENU_CHANGED if menu changed | INPUT_GRID_CHANGED if grid changed;
- *            INPUT_NO_CHANGE otherwise
+ *         INPUT_NO_CHANGE otherwise
  * @see menu_mouse_command(void)
  */
 input_t menu_key_command(int key);
@@ -565,7 +573,7 @@ input_t menu_key_command(int key);
 /**
  * Handles mouse command passed to the menu
  * @return INPUT_MENU_CHANGED if menu changed | INPUT_GRID_CHANGED if grid changed;
- *            INPUT_NO_CHANGE otherwise
+ *         INPUT_NO_CHANGE otherwise
  * @see menu_key_command(int)
  */
 input_t menu_mouse_command(void);
@@ -579,7 +587,7 @@ input_t menu_mouse_command(void);
  * Opens a temporary dialog window for picking colors
  * @param pos Dialog origin relative to menu
  * @param color_index Index of the color that is to be set (CIDX_NEWCOLOR to add a color,
- * CIDX_DEFAULT to change the default)
+ *        CIDX_DEFAULT to change the default)
  * @see close_dialog(void)
  */
 void open_dialog(Vector2i pos, color_t color_index);

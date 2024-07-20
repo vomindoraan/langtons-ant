@@ -1,8 +1,8 @@
-#include <stdlib.h>
-#include <string.h>
-
 #include "graphics.h"
 #include "io.h"
+
+#include <stdlib.h>
+#include <string.h>
 
 #define INPUT_WINDOW_WIDTH  (MENU_WINDOW_WIDTH-4)
 #define INPUT_WINDOW_HEIGHT 3
@@ -121,7 +121,7 @@ static void read_filename(char *filename)
 	waddstr(iow, " Path: ");
 	wattroff(iow, fg_pair);
 	echo();
-	mvwgetnstr(iow, 1, 1, filename, FILENAME_BUF_LEN);
+	mvwgetnstr(iow, 1, 1, filename, FILENAME_BUF_LEN-1);
 	noecho();
 	delwin(iow);
 }
@@ -129,7 +129,7 @@ static void read_filename(char *filename)
 static input_t io_button_clicked(bool load)
 {
 	Simulation *sim;
-	char filename[FILENAME_BUF_LEN];
+	char filename[FILENAME_BUF_LEN] = { 0 }, bmp_filename[FILENAME_BUF_LEN] = { 0 };
 	read_filename(filename);
 	if (load) {
 		load_status = (sim = load_simulation(filename)) ? STATUS_SUCCESS : STATUS_FAILURE;
@@ -138,6 +138,9 @@ static input_t io_button_clicked(bool load)
 		}
 	} else {
 		save_status = (save_simulation(filename, stgs.linked_sim) != EOF) ? STATUS_SUCCESS : STATUS_FAILURE;
+		strcpy_s(bmp_filename, FILENAME_BUF_LEN, filename);
+		strcat_s(bmp_filename, FILENAME_BUF_LEN, ".bmp");
+		save_grid_bitmap(bmp_filename, stgs.linked_sim->grid);
 	}
 	return INPUT_MENU_CHANGED;
 }

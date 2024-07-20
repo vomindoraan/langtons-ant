@@ -1,6 +1,6 @@
-#include <stdlib.h>
-
 #include "logic.h"
+
+#include <stdlib.h>
 
 Simulation *simulation_new(Colors *colors, size_t init_size)
 {

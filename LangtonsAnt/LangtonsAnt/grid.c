@@ -1,8 +1,8 @@
-#include <stdlib.h>
-#include <string.h>
-
 #include "logic.h"
 #include "graphics.h"
+
+#include <stdlib.h>
+#include <string.h>
 
 Grid *grid_new(Colors *colors, size_t init_size)
 {
@@ -51,7 +51,7 @@ static void grid_delete_n(Grid *grid)
 static void grid_delete_s(Grid *grid)
 {
 	size_t i;
-	Cell *cell;
+	SparseCell *cell;
 	for (i = 0; i < grid->size; i++) {
 		while (grid->csr[i]) {
 			cell = grid->csr[i];
@@ -130,7 +130,7 @@ static void grid_expand_n(Grid *grid)
 static void grid_expand_s(Grid *grid)
 {
 	size_t old = grid->size, size = GRID_MULT*old, i;
-	Cell **new = malloc(size*sizeof(Cell*)), *t;
+	SparseCell **new = malloc(size*sizeof(SparseCell*)), *t;
 
 	for (i = 0; i < size; i++) {
 		if (is_in_old_matrix_row(i, old)) {
@@ -138,7 +138,7 @@ static void grid_expand_s(Grid *grid)
 			grid->csr[i-old] = NULL;
 			t = new[i];
 			while (t) {
-				CELL_SET_COLUMN(t, CELL_GET_COLUMN(t) + old);
+				CSR_SET_COLUMN(t, CSR_GET_COLUMN(t) + old);
 				t = t->next;
 			}
 		} else {
@@ -171,19 +171,19 @@ void grid_expand(Grid *grid, Ant *ant)
 void grid_make_sparse(Grid *grid)
 {
 	size_t size = grid->size, i, j;
-	Cell **cur;
+	SparseCell **curr;
 	byte c;
 
 	grid_delete_tmp(grid);
 
-	grid->csr = calloc(size, sizeof(Cell*));
+	grid->csr = calloc(size, sizeof(SparseCell*));
 	for (i = 0; i < size; i++) {
-		cur = grid->csr + i;
+		curr = grid->csr + i;
 		for (j = 0; j < size; j++) {
 			c = grid->c[i][j];
 			if (c != grid->def_color) {
-				new_cell(cur, j, c);
-				cur = &(*cur)->next;
+				new_cell(curr, j, c);
+				curr = &(*curr)->next;
 			}
 		}
 		free(grid->c[i]);
@@ -203,21 +203,21 @@ bool is_grid_usage_low(Grid *grid)
 	return (double)grid->colored / b < GRID_USAGE_THRESHOLD;
 }
 
-void new_cell(Cell **cur, size_t column, byte c)
+void new_cell(SparseCell **curr, size_t column, byte c)
 {
-	Cell *new = malloc(sizeof(Cell));
-	CELL_SET_COLUMN(new, column);
-	CELL_SET_COLOR(new, c);
-	new->next = *cur;
-	*cur = new;
+	SparseCell *new = malloc(sizeof(SparseCell));
+	CSR_SET_COLUMN(new, column);
+	CSR_SET_COLOR(new, c);
+	new->next = *curr;
+	*curr = new;
 }
 
 byte color_at_s(Grid *grid, Vector2i p)
 {
 	size_t x = p.x;
-	Cell *t = grid->csr[p.y];
-	while (t && CELL_GET_COLUMN(t) < x) {
+	SparseCell *t = grid->csr[p.y];
+	while (t && CSR_GET_COLUMN(t) < x) {
 		t = t->next;
 	}
-	return (!t || CELL_GET_COLUMN(t) != x) ? grid->def_color : CELL_GET_COLOR(t);
+	return (!t || CSR_GET_COLUMN(t) != x) ? grid->def_color : CSR_GET_COLOR(t);
 }

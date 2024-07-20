@@ -1,10 +1,10 @@
+#include "io.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "io.h"
-
-Colors *load_rules(char *filename) // TODO format checks
+Colors *load_colors(char *filename) // TODO format checks
 {
 	Colors *colors;
 	FILE *input;
@@ -35,7 +35,7 @@ Colors *load_rules(char *filename) // TODO format checks
 		return NULL;
 	}
 
-	if (e < RULES_TOTAL_FIELDS) {
+	if (e < COLORS_TOTAL_FIELDS) {
 		colors_delete(colors);
 		return NULL;
 	}
@@ -43,7 +43,7 @@ Colors *load_rules(char *filename) // TODO format checks
 	return colors;
 }
 
-int save_rules(char *filename, Colors *colors)
+int save_colors(char *filename, Colors *colors)
 {
 	FILE *output;
 	int e;
@@ -63,7 +63,7 @@ int save_rules(char *filename, Colors *colors)
 	e += fprintf(output, "%hd %hd\n", colors->first, colors->last);
 	e += fprintf(output, "%zu\n", colors->n);
 
-	if (fclose(output) == EOF || e < RULES_TOTAL_FIELDS) {
+	if (fclose(output) == EOF || e < COLORS_TOTAL_FIELDS) {
 		e = EOF;
 	}
 	return e;
@@ -77,7 +77,7 @@ Simulation *load_simulation(char *filename)
 	size_t nn = 0, i, j;
 	bool is_sparse;
 
-	if (!(colors = load_rules(filename))) {
+	if (!(colors = load_colors(filename))) {
 		return NULL;
 	}
 
@@ -122,27 +122,28 @@ Simulation *load_simulation(char *filename)
 	}
 
 	if (is_sparse) {
-		sim->grid->csr = malloc(sim->grid->size*sizeof(Cell*));
+		sim->grid->csr = malloc(sim->grid->size*sizeof(SparseCell*));
 		size_t colp;
-		Cell *temp;
+		SparseCell *cell;
+
 		for (i = 0; i < sim->grid->size; i++) {
 			char c;
-			temp = NULL;
+			cell = NULL;
 			sim->grid->csr[i] = NULL;
 			while (fscanf(input, "%c", &c) > 0 && c == ' ') {
 				if (fscanf(input, "%zu", &colp) < 0) {
 					goto error_end;
 				}
-				if (!temp) {
-					sim->grid->csr[i] = malloc(sizeof(Cell));
+				if (!cell) {
+					sim->grid->csr[i] = malloc(sizeof(SparseCell));
 					sim->grid->csr[i]->packed = colp;
 					sim->grid->csr[i]->next = NULL;
-					temp = sim->grid->csr[i];
+					cell = sim->grid->csr[i];
 				} else {
-					temp->next = malloc(sizeof(Cell));
-					temp->next->packed = colp;
-					temp->next->next = NULL;
-					temp = temp->next;
+					cell->next = malloc(sizeof(SparseCell));
+					cell->next->packed = colp;
+					cell->next->next = NULL;
+					cell = cell->next;
 				}
 			}
 		}
@@ -175,12 +176,13 @@ error_end:
 
 int save_simulation(char *filename, Simulation *sim)
 {
+	FILE *output;
+	SparseCell *cell;
 	size_t i, j;
-	if (save_rules(filename, sim->colors) == EOF) {
+
+	if (save_colors(filename, sim->colors) == EOF) {
 		return EOF;
 	}
-
-	FILE *output;
 
 	if (!(output = fopen(filename, "a"))) {
 		return EOF;
@@ -204,15 +206,15 @@ int save_simulation(char *filename, Simulation *sim)
 				sim->grid->bottom_right.x, sim->grid->bottom_right.y) < 0) {
 		return EOF;
 	}
-	Cell *temp;
+
 	if (is_grid_sparse(sim->grid)) {
 		for (i = 0; i < sim->grid->size; i++) {
-			temp = sim->grid->csr[i];
-			while (temp) {
-				if (fprintf(output, " %zu", temp->packed) < 0) {
+			cell = sim->grid->csr[i];
+			while (cell) {
+				if (fprintf(output, " %zu", cell->packed) < 0) {
 					return EOF;
 				}
-				temp = temp->next;
+				cell = cell->next;
 			}
 			if (fprintf(output, "\n") < 0) {
 				return EOF;
@@ -234,4 +236,24 @@ int save_simulation(char *filename, Simulation *sim)
 	}
 
 	return 0; // TODO return success bool
+}
+
+int save_grid_bitmap(char* filename, Grid* grid)
+{
+	pixel_t *image;
+	size_t height = grid->size, width = grid->size, i, j;
+
+	image = malloc(height * width * sizeof(pixel_t));
+	for (i = 0; i < height; i++) {
+		for (j = 0; j < width; j++) {
+			Vector2i pos = (Vector2i) { j, i };  // Flip axes
+			color_t color = GRID_COLOR_AT(grid, pos);
+			memcpy_s(image[i*width + j], sizeof(pixel_t),
+				     color_map[color], sizeof(pixel_t));
+		}
+	}
+
+	int e = create_bitmap_file(filename, image, height, width);
+	free(image);
+	return e;
 }

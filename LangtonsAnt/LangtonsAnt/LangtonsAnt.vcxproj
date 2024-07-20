@@ -19,13 +19,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ant_sprites.c" />
+    <ClCompile Include="bitmap.c" />
     <ClCompile Include="colors.c" />
     <ClCompile Include="dialog.c" />
     <ClCompile Include="game_loop.c" />
@@ -107,7 +108,13 @@
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="LangtonsAnt.ico" />
+    <Image Include="resource\LangtonsAnt.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="resource\Px437_IBM_EGA_8x8.ttf">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </Font>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LangtonsAnt.rc" />
