@@ -14,19 +14,18 @@ chtype fg_pair, bg_pair, ui_pair;
 
 void init_def_pairs(color_t fg_color, color_t bg_color)
 {
-	color_t i;
-	for (i = 0; i < COLOR_COUNT; i++) {
-		if (i == bg_color) {
-			init_pair(i+1, i, fg_color);
-			bg_pair = GET_PAIR_FOR(i);
-		} else {
-			init_pair(i+1, i, bg_color);
-			if (i == fg_color) {
-				fg_pair = GET_PAIR_FOR(i);
-			}
+	color_t c, ui_color;
+	for (c = 0; c < COLOR_COUNT; c++) {
+		init_pair(c+1, c, IS_COLOR_BRIGHT(c) ? fg_color : bg_color);
+		if (c == bg_color) {
+			bg_pair = COLOR_PAIR(c+1);
+		} else if (c == fg_color) {
+			fg_pair = COLOR_PAIR(c+1);
 		}
 	}
-	ui_pair = AVAILABLE_PAIR(bg_color, COLOR_WHITE, COLOR_SILVER);
+	ui_color = AVAILABLE_COLOR(bg_color, COLOR_WHITE, COLOR_SILVER);
+	init_pair(c+1, ui_color, bg_color);
+	ui_pair = COLOR_PAIR(c+1);
 }
 
 void init_graphics(color_t fg_color, color_t bg_color)

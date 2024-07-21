@@ -91,6 +91,10 @@ void init_menu_window(void)
 	wbkgd(menuw, fg_pair);
 	keypad(menuw, TRUE);
 	nodelay(menuw, TRUE);
+	assert(!IS_COLOR_BRIGHT(MENU_EDGE_COLOR)
+	    && !IS_COLOR_BRIGHT(MENU_EDGE_COLOR_S)
+	    && !IS_COLOR_BRIGHT(MENU_ACTIVE_COLOR)
+	    && !IS_COLOR_BRIGHT(MENU_INACTIVE_COLOR));
 }
 
 void end_menu_window(void)
@@ -200,22 +204,13 @@ static void draw_color_arrow(Vector2i pos1, Vector2i pos2)
 
 static void draw_color_tile(Vector2i top_left, color_t c)
 {
-	chtype pair;
+	chtype pair = GET_PAIR_FOR(c);
 	bool is_def = c == stgs.colors->def;
 	int y = top_left.y, x = top_left.x, s = MENU_TILE_SIZE;
 
 	/* Draw tile */
-	wattrset(menuw, pair = GET_PAIR_FOR(c));
-	if (is_def) {
-		wattron(menuw, A_REVERSE);
-	}
+	wattrset(menuw, is_def ? bg_pair : pair);
 	draw_square(menuw, top_left, s);
-
-	/* Draw direction arrow */
-	if (!is_def) {
-		wattron(menuw, A_REVERSE); // TODO black arrow if IS_COLOR_BRIGHT(c)
-		mvwaddch(menuw, y+s/2, x+s/2, turn2arrow(stgs.colors->turn[c]));
-	}
 
 	/* Draw frame */
 	wattrset(menuw, is_def ? pair : fg_pair);
@@ -223,6 +218,12 @@ static void draw_color_tile(Vector2i top_left, color_t c)
 	mvwvline(menuw, y,     x,     ACS_BLOCK, s);
 	mvwhline(menuw, y+s-1, x,     ACS_BLOCK, s);
 	mvwvline(menuw, y,     x+s-1, ACS_BLOCK, s);
+
+	/* Draw direction arrow */
+	if (!is_def) {
+		wattrset(menuw, pair | A_REVERSE);
+		mvwaddch(menuw, y+s/2, x+s/2, turn2arrow(stgs.colors->turn[c]));
+	}
 }
 
 static void draw_color_list(void)

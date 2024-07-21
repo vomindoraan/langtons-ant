@@ -76,7 +76,7 @@
 #define GET_COLOR_FOR(p)            (PAIR_NUMBER(p) - 1)
 #define AVAILABLE_COLOR(def, c, bk) (((def) == (c)) ? (bk) : (c))
 #define AVAILABLE_PAIR(def, c, bk)  GET_PAIR_FOR(AVAILABLE_COLOR(def, c, bk))
-#define IS_COLOR_BRIGHT(c)          ((c) & 0x8)
+#define IS_COLOR_BRIGHT(c)          (((c)&1 + !!((c)&2) + !!((c)&4) + !!((c)&8)) > 2)
 ///@}
 
 
