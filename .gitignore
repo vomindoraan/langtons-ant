@@ -218,6 +218,7 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
+*.exe
 *.dmp
-/LangtonsAnt/Docs
+/Docs/
 ~AutoRecover.LangtonsAnt.vcxproj
