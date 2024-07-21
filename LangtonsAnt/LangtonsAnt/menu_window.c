@@ -348,18 +348,18 @@ static void draw_function(void)
 	color_t ant_color = GRID_ANT_COLOR(sim->grid, sim->ant);
 	color_t next_color = sim->colors->next[ant_color]; // Uses sim->colors instead of stgs.colors
 
-	sprintf(str, "f(q%hd, ", state_map[ant_color]);
+	sprintf(str, "f(q%-2hd, ", state_map[ant_color]);
 	wattrset(menuw, pair);
 	mvwaddstr(menuw, func_pos.y, func_pos.x, str);
 	wattrset(menuw, GET_PAIR_FOR(ant_color));
-	waddch(menuw, ACS_BLOCK);
+	waddch(menuw, ACS_CKBOARD);
 	wattrset(menuw, pair);
 	waddstr(menuw, ") = ");
 
-	sprintf(str, "(q%hd, ", state_map[next_color]);
+	sprintf(str, "(q%-2hd, ", state_map[next_color]);
 	mvwaddstr(menuw, func_pos.y+1, func_pos.x+1, str);
 	wattrset(menuw, GET_PAIR_FOR(next_color));
-	waddch(menuw, ACS_BLOCK);
+	waddch(menuw, ACS_CKBOARD);
 	sprintf(str, ", %c) ", turn2arrow(sim->colors->turn[ant_color]));
 	wattrset(menuw, pair);
 	waddstr(menuw, str);
