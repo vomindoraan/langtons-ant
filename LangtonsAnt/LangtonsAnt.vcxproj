@@ -88,6 +88,9 @@
   <ItemGroup>
     <ClInclude Include="graphics.h" />
     <ClInclude Include="include\curses.h" />
+    <ClInclude Include="include\ncurses.h" />
+    <ClInclude Include="include\ncurses_dll.h" />
+    <ClInclude Include="include\pdcurses.h" />
     <ClInclude Include="io.h" />
     <ClInclude Include="logic.h" />
     <ClInclude Include="resource.h" />
