@@ -1,5 +1,6 @@
 #include "logic.h"
 
+#include <assert.h>
 #include <stdlib.h>
 
 Simulation *simulation_new(Colors *colors, size_t init_size)

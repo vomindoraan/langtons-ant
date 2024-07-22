@@ -1,5 +1,7 @@
 #include "graphics.h"
 
+#include <assert.h>
+
 WINDOW *dialogw;
 Vector2i dialog_pos;
 const char *dialog_cdef_msg = "Pick grid color";

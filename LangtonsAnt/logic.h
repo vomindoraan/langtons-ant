@@ -6,9 +6,8 @@
 #ifndef __LOGIC_H__
 #define __LOGIC_H__
 
-#include <assert.h>
-#include <limits.h>
-#include <stddef.h>
+#include <limits.h> // INT_MIN, INT_MAX
+#include <stddef.h> // size_t
 
 
 /*--------------------- General purpose macros and types ---------------------*/

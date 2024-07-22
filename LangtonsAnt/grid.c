@@ -1,6 +1,7 @@
 #include "logic.h"
 #include "graphics.h"
 
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 

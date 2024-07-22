@@ -1,5 +1,6 @@
 #include "logic.h"
 
+#include <assert.h>
 #include <stdlib.h>
 
 Ant *ant_new(Grid *grid, Direction dir)
