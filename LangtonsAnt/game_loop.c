@@ -2,7 +2,7 @@
 
 static bool run_loop = TRUE;
 
-static input_t handle_input(Simulation* sim)
+static input_t handle_input(Simulation *sim)
 {
 	input_t ret = INPUT_NO_CHANGE;
 	int ch = getch();

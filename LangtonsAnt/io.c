@@ -235,7 +235,7 @@ int save_simulation(char *filename, Simulation *sim)
 	return 0; // TODO return success bool
 }
 
-int save_grid_bitmap(char* filename, Grid* grid)
+int save_grid_bitmap(char *filename, Grid *grid)
 {
 	pixel_t *image;
 	size_t height = grid->size, width = grid->size, i, j;

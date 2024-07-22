@@ -29,7 +29,7 @@ const pixel_t color_map[COLOR_COUNT] = {
 	[COLOR_YELLOW]  = { 0x00, 0xFF, 0xFF },
 };
 
-static byte* init_file_header(int height, int stride)
+static byte *init_file_header(int height, int stride)
 {
 	int file_size = FILE_HEADER_SIZE + INFO_HEADER_SIZE + (stride * height);
 	static byte file_header[] = {
@@ -50,7 +50,7 @@ static byte* init_file_header(int height, int stride)
 	return file_header;
 }
 
-static byte* init_info_header(int height, int width)
+static byte *init_info_header(int height, int width)
 {
 	static byte info_header[] = {
 		0, 0, 0, 0, // header size
@@ -81,9 +81,9 @@ static byte* init_info_header(int height, int width)
 	return info_header;
 }
 
-int create_bitmap_file(char* filename, pixel_t *image, size_t height, size_t width)
+int create_bitmap_file(char *filename, pixel_t *image, size_t height, size_t width)
 {
-	FILE* output;
+	FILE *output;
 	size_t width_in_bytes = width * BYTES_PER_PIXEL;
 	byte padding[3] = { 0, 0, 0 };
 	size_t padding_size = (4 - width_in_bytes % 4) % 4;
@@ -96,10 +96,10 @@ int create_bitmap_file(char* filename, pixel_t *image, size_t height, size_t wid
 		return EOF;
 	}
 
-	byte* file_header = init_file_header(height, stride);
+	byte *file_header = init_file_header(height, stride);
 	e = fwrite(file_header, 1, FILE_HEADER_SIZE, output);
 
-	byte* info_header = init_info_header(height, width);
+	byte *info_header = init_info_header(height, width);
 	e += fwrite(info_header, 1, INFO_HEADER_SIZE, output);
 
 	for (i = 0; i < height; i++) {

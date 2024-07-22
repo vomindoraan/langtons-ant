@@ -69,7 +69,7 @@ int save_simulation(char *filename, Simulation *sim);
  * @param grid Grid to be written
  * @return Bitmap size if successful; EOF otherwise
  */
-int save_grid_bitmap(char* filename, Grid* grid);
+int save_grid_bitmap(char *filename, Grid *grid);
 
 
 /*----------------------------------------------------------------------------*
@@ -89,6 +89,6 @@ extern const pixel_t color_map[COLOR_COUNT];
  * @param height Image height
  * @param width Image width
  */
-int create_bitmap_file(char* filename, pixel_t *image, size_t height, size_t width);
+int create_bitmap_file(char *filename, pixel_t *image, size_t height, size_t width);
 
 #endif
