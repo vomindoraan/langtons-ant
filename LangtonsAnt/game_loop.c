@@ -25,10 +25,10 @@ void game_loop(void)
 		sim = stgs.linked_sim;
 
 		if (is_simulation_running(sim)) {
-			Vector2i old_pos = sim->ant->pos;
+			Vector2i prev_pos = sim->ant->pos;
 			if (simulation_step(sim)) {
 				napms(LOOP_DELAY / (1 << stgs.speed)); // TODO fixed timestep loop
-				draw_grid_iter(sim->grid, sim->ant, old_pos);
+				draw_grid_iter(sim->grid, sim->ant, prev_pos);
 				draw_menu_iter();
 			} else {
 				grid_changed = menu_changed = TRUE;

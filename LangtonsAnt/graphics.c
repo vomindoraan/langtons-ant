@@ -11,22 +11,29 @@ CONSOLE_FONT_INFOEX user_font;
 SMALL_RECT user_window;
 #endif
 
-chtype fg_pair, bg_pair, ui_pair;
+chtype fg_pair, bg_pair, ui_pair, ui_pair_contrast;
 
 void init_def_pairs(color_t fg_color, color_t bg_color)
 {
-	color_t c, ui_color;
+	color_t ui_color = AVAILABLE_COLOR(bg_color, COLOR_WHITE, COLOR_SILVER), c;
+	short p;
+
 	for (c = 0; c < COLOR_COUNT; c++) {
-		init_pair(c+1, c, IS_COLOR_BRIGHT(c) ? fg_color : bg_color);
+		color_t contrast = IS_COLOR_BRIGHT(c) ? fg_color : bg_color;
+		p = GET_PAIRNO_FOR(c);
+		init_pair(p, c, contrast);
 		if (c == bg_color) {
-			bg_pair = COLOR_PAIR(c+1);
+			bg_pair = COLOR_PAIR(p);
 		} else if (c == fg_color) {
-			fg_pair = COLOR_PAIR(c+1);
+			fg_pair = COLOR_PAIR(p);
+		} else if (c == ui_color) {
+			ui_pair_contrast = COLOR_PAIR(p);
 		}
 	}
-	ui_color = AVAILABLE_COLOR(bg_color, COLOR_WHITE, COLOR_SILVER);
-	init_pair(c+1, ui_color, bg_color);
-	ui_pair = COLOR_PAIR(c+1);
+
+	p = GET_PAIRNO_FOR(c);
+	init_pair(p, ui_color, bg_color);
+	ui_pair = COLOR_PAIR(p);
 }
 
 void init_graphics(color_t fg_color, color_t bg_color)

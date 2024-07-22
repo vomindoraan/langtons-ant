@@ -41,7 +41,7 @@ void close_dialog(void)
 	picked_turn = TURN_NONE;
 }
 
-static void draw_tiles(void)
+static void draw_colors(void)
 {
 	color_t i, fg = GET_COLOR_FOR(fg_pair);
 	Vector2i outer = colors_pos, inner;
@@ -74,14 +74,23 @@ static void draw_tiles(void)
 
 static void draw_buttons(void)
 {
+	chtype pair;
+	short fg, bg;
+	int ymid, xmid;
+
+	pair_content(PAIR_NUMBER(ui_pair), &fg, &bg);
+	pair = GET_PAIR_FOR((picked_color != COLOR_NONE) ? picked_color : bg);
+
+	/* Default color picker dialog - message instead of buttons */
 	if (cidx == CIDX_DEFAULT) {
-		wattrset(dialogw, GET_PAIR_FOR(stgs.colors->def) | A_REVERSE);
+		wattrset(dialogw, ui_pair_contrast | A_REVERSE);
 		mvwaddstr(dialogw, left_pos.y, left_pos.x, dialog_cdef_msg);
 		return;
 	}
 
-	int ymid = DIALOG_BUTTON_HEIGHT/2, xmid = DIALOG_BUTTON_WIDTH/2;
-	wattrset(dialogw, GET_PAIR_FOR((picked_color != COLOR_NONE) ? picked_color : DIALOG_BUTTON_COLOR));
+	/* Left/right buttons */
+	ymid = DIALOG_BUTTON_HEIGHT/2, xmid = DIALOG_BUTTON_WIDTH/2;
+	wattrset(dialogw, pair);
 	draw_rect(dialogw, left_pos,  DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
 	draw_rect(dialogw, right_pos, DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
 	wattron(dialogw, A_REVERSE);
@@ -92,6 +101,7 @@ static void draw_buttons(void)
 		            DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
 	}
 
+	/* Additional X button in case of delete dialog */
 	if (cidx >= 0) {
 		ymid = DIALOG_DELETE_HEIGHT/2, xmid = DIALOG_DELETE_WIDTH/2;
 		wattrset(dialogw, GET_PAIR_FOR(DIALOG_DELETE_COLOR));
@@ -103,10 +113,10 @@ static void draw_buttons(void)
 
 void draw_dialog(void)
 {
-	wattrset(dialogw, GET_PAIR_FOR(stgs.colors->def));
+	wattrset(dialogw, ui_pair);
 	draw_rect(dialogw, (Vector2i) { 0, 0 }, DIALOG_WINDOW_WIDTH, DIALOG_WINDOW_HEIGHT);
 
-	draw_tiles();
+	draw_colors();
 	draw_buttons();
 
 	wnoutrefresh(dialogw);

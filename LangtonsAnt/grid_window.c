@@ -76,6 +76,7 @@ static void draw_scrollbars(color_t def)
 
 static bool draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
 {
+	/* Ignore if cell isn't visible */
 	if (yx.y < 0 || yx.y >= GRID_VIEW_SIZE || yx.x < 0 || yx.x >= GRID_VIEW_SIZE) {
 		return FALSE;
 	}
@@ -185,7 +186,7 @@ void draw_grid_full(Grid *grid, Ant *ant)
 	wnoutrefresh(gridw);
 }
 
-void draw_grid_iter(Grid *grid, Ant *ant, Vector2i old_pos)
+void draw_grid_iter(Grid *grid, Ant *ant, Vector2i prev_pos)
 {
 	int gs = grid->size, vgs = min(gs, GRID_VIEW_SIZE);
 	int lw = (gs == GRID_SIZE_SMALL(grid))  ? LINE_WIDTH_SMALL
@@ -196,14 +197,16 @@ void draw_grid_iter(Grid *grid, Ant *ant, Vector2i old_pos)
 	Vector2i origin = ORIGIN_POS(gs, vgs, gridscrl.y, gridscrl.x), pos, yx;
 	bool drawn;
 
-	pos = abs2rel(old_pos, origin);
+	/* Redraw cell at previous position */
+	pos = abs2rel(prev_pos, origin);
 	yx = pos2yx(pos, lw, cs, o);
-	drawn = draw_cell(yx, cs, GRID_COLOR_AT(grid, old_pos), NULL);
+	drawn = draw_cell(yx, cs, GRID_COLOR_AT(grid, prev_pos), NULL);
 
+	/* Draw cell at ant's position */
 	if (ant) {
 		pos = abs2rel(ant->pos, origin);
 		yx = pos2yx(pos, lw, cs, o);
-		drawn &= draw_cell(yx, cs, GRID_ANT_COLOR(grid, ant), ant);
+		drawn |= draw_cell(yx, cs, GRID_ANT_COLOR(grid, ant), ant);
 	}
 
 	if (drawn) {

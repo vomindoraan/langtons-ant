@@ -206,16 +206,17 @@ static void draw_color_arrow(Vector2i pos1, Vector2i pos2)
 
 static void draw_color_tile(Vector2i top_left, color_t c)
 {
-	chtype pair = GET_PAIR_FOR(c);
+	chtype tile_pair = GET_PAIR_FOR(c);
+	chtype frame_pair = (c != GET_COLOR_FOR(bg_pair)) ? tile_pair : ui_pair;
 	bool is_def = c == stgs.colors->def;
 	int y = top_left.y, x = top_left.x, s = MENU_TILE_SIZE;
 
 	/* Draw tile */
-	wattrset(menuw, is_def ? bg_pair : pair);
+	wattrset(menuw, is_def ? bg_pair : tile_pair);
 	draw_square(menuw, top_left, s);
 
 	/* Draw frame */
-	wattrset(menuw, is_def ? pair : fg_pair);
+	wattrset(menuw, is_def ? frame_pair : fg_pair);
 	mvwhline(menuw, y,     x,     FILL_CHAR, s);
 	mvwvline(menuw, y,     x,     FILL_CHAR, s);
 	mvwhline(menuw, y+s-1, x,     FILL_CHAR, s);
@@ -223,7 +224,7 @@ static void draw_color_tile(Vector2i top_left, color_t c)
 
 	/* Draw direction arrow */
 	if (!is_def) {
-		wattrset(menuw, pair | A_REVERSE);
+		wattrset(menuw, tile_pair | A_REVERSE);
 		mvwaddch(menuw, y+s/2, x+s/2, turn2arrow(stgs.colors->turn[c]));
 	}
 }
@@ -342,7 +343,7 @@ static void draw_speed(void)
 	draw_sprite(menuw, (SpriteInfo) { stepup_sprite, 3, 3 }, menu_stepup_pos, FALSE);
 }
 
-static void draw_function(void)
+static void draw_state_func(void)
 {
 	Simulation *sim = stgs.linked_sim;
 	chtype pair = GET_PAIR_FOR(MENU_ACTIVE_COLOR);
@@ -425,13 +426,13 @@ static void draw_io_buttons(void)
 	}
 }
 
-static void draw_size(void)
+static void draw_grid_size(void)
 {
 	Simulation *sim = stgs.linked_sim;
 	size_t size = sim ? sim->grid->size : 0;
 	char str[29];
 	sprintf(str, "%28d", size);
-	wattrset(menuw, GET_PAIR_FOR(MENU_EDGE_COLOR));
+	wattrset(menuw, fg_pair);
 	mvwaddstr(menuw, size_pos.y, size_pos.x-28, str);
 }
 
@@ -492,10 +493,10 @@ void draw_menu_full(void)
 	draw_init_size();
 	draw_direction();
 	draw_speed();
-	draw_function();
+	draw_state_func();
 	draw_control_buttons();
 	draw_io_buttons();
-	draw_size();
+	draw_grid_size();
 	draw_steps();
 	draw_labels();
 	wnoutrefresh(menuw);
@@ -526,7 +527,7 @@ void draw_menu_iter(void)
 	if (do_draw) {
 #endif
 		draw_dir_arrow();
-		draw_function();
+		draw_state_func();
 		draw_steps();
 		wnoutrefresh(menuw);
 #if LOOP_OPT_STEPS

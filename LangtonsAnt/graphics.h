@@ -19,6 +19,7 @@
 ///@}
 
 /** Fill character used for drawing */
+//#define FILL_CHAR ACS_BLOCK
 #define FILL_CHAR (' ' | A_REVERSE)
 
 
@@ -77,7 +78,8 @@
 
 /** @name Utility color macros */
 ///@{
-#define GET_PAIR_FOR(c)             (COLOR_PAIR((c) + 1))
+#define GET_PAIRNO_FOR(c)           ((c) + 1)
+#define GET_PAIR_FOR(c)             COLOR_PAIR(GET_PAIRNO_FOR(c))
 #define GET_COLOR_FOR(p)            (PAIR_NUMBER(p) - 1)
 #define AVAILABLE_COLOR(def, c, bk) (((def) == (c)) ? (bk) : (c))
 #define AVAILABLE_PAIR(def, c, bk)  GET_PAIR_FOR(AVAILABLE_COLOR(def, c, bk))
@@ -90,7 +92,7 @@
 /** @name Grid window attributes */
 ///@{
 #define GRID_WINDOW_SIZE    109
-#define GRID_VIEW_SIZE      (GRID_WINDOW_SIZE - 1)
+#define GRID_VIEW_SIZE      (GRID_WINDOW_SIZE - 1) // TODO variable scrollbar size
 #define LINE_WIDTH_SMALL    2
 #define LINE_WIDTH_MEDIUM   1
 #define LINE_WIDTH_LARGE    0
@@ -194,7 +196,6 @@ typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE } IOStatus;
 #define DIALOG_TILE_COLS     5
 #define DIALOG_BUTTON_WIDTH  7
 #define DIALOG_BUTTON_HEIGHT 3
-#define DIALOG_BUTTON_COLOR  COLOR_WHITE
 #define DIALOG_DELETE_WIDTH  5
 #define DIALOG_DELETE_HEIGHT DIALOG_BUTTON_HEIGHT
 #define DIALOG_DELETE_COLOR  COLOR_RED
@@ -251,7 +252,7 @@ typedef struct sprite_info {
 
 /** @name Globals */
 ///@{
-extern chtype         fg_pair, bg_pair, ui_pair;
+extern chtype         fg_pair, bg_pair, ui_pair, ui_pair_contrast;
 
 extern WINDOW         *gridw;
 extern ScrollInfo     gridscrl;
@@ -439,10 +440,10 @@ void draw_grid_full(Grid *grid, Ant *ant);
  * Suitable for calling in loops as it does less work than draw_grid__full
  * @param grid Grid from which to draw
  * @param ant Ant to be drawn in the grid (NULL for no ant)
- * @param old_pos Position of cell that has changed and should be drawn
+ * @param prev_pos Position of cell that has changed and should be drawn
  * @see draw_grid_full(Grid *)
  */
-void draw_grid_iter(Grid *grid, Ant *ant, Vector2i old_pos);
+void draw_grid_iter(Grid *grid, Ant *ant, Vector2i prev_pos);
 
 /**
  * Scrolls the grid relative to the current gridscrl position
