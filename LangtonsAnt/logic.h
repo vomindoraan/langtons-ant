@@ -85,7 +85,7 @@ typedef struct ant {
 typedef short color_t;
 
 /** Turn direction for given rule */
-typedef char turn_t;
+typedef signed char turn_t;
 
 /** Color rules container */
 typedef struct colors {

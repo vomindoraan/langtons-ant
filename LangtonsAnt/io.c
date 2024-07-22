@@ -245,8 +245,7 @@ int save_grid_bitmap(char* filename, Grid* grid)
 		for (j = 0; j < width; j++) {
 			Vector2i pos = (Vector2i) { j, i };  // Flip axes
 			color_t color = GRID_COLOR_AT(grid, pos);
-			memcpy_s(image[i*width + j], sizeof(pixel_t),
-			         color_map[color], sizeof(pixel_t));
+			memcpy(image[i*width + j], color_map[color], sizeof(pixel_t));
 		}
 	}
 

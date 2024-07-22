@@ -129,19 +129,22 @@ static void read_filename(char *filename)
 
 static input_t io_button_clicked(bool load)
 {
-	Simulation *sim;
 	char filename[FILENAME_BUF_LEN] = { 0 }, bmp_filename[FILENAME_BUF_LEN] = { 0 };
 	read_filename(filename);
 	if (load) {
-		load_status = (sim = load_simulation(filename)) ? STATUS_SUCCESS : STATUS_FAILURE;
+        Simulation *sim = load_simulation(filename);
+		load_status = sim ? STATUS_SUCCESS : STATUS_FAILURE;
 		if (sim) {
 			return set_simulation(sim);
 		}
 	} else {
-		save_status = (save_simulation(filename, stgs.linked_sim) != EOF) ? STATUS_SUCCESS : STATUS_FAILURE;
-		strcpy_s(bmp_filename, FILENAME_BUF_LEN, filename);
-		strcat_s(bmp_filename, FILENAME_BUF_LEN, ".bmp");
-		save_grid_bitmap(bmp_filename, stgs.linked_sim->grid);
+        int e = save_simulation(filename, stgs.linked_sim);
+		save_status = (e != EOF) ? STATUS_SUCCESS : STATUS_FAILURE;
+		if (strlen(filename) + 4 < FILENAME_BUF_LEN) {
+			strcpy(bmp_filename, filename);
+			strcat(bmp_filename, ".bmp");
+			save_grid_bitmap(bmp_filename, stgs.linked_sim->grid);
+		}
 	}
 	return INPUT_MENU_CHANGED;
 }
@@ -158,13 +161,22 @@ input_t menu_key_command(int key)
 		return isize_button_clicked(-1);
 
 		/* Speed */
-	case 'Q': case 'q': case '=': case PADPLUS:
+	case 'Q': case 'q': case '=':
+#ifdef PDCURSES
+	case PADPLUS:
+#endif
 		return speed_button_clicked(1);
-	case 'Z': case 'z': case '-': case PADMINUS:
+	case 'Z': case 'z': case '-':
+#ifdef PDCURSES
+	case PADMINUS:
+#endif
 		return speed_button_clicked(-1);
 
 		/* Step+ */
-	case 'E': case 'e': case '.': case PADSTOP:
+	case 'E': case 'e': case '.':
+#ifdef PDCURSES
+	case PADSTOP:
+#endif
 		return stepup_button_clicked();
 
 		/* Direction */
@@ -178,7 +190,10 @@ input_t menu_key_command(int key)
 		return dir_button_clicked(DIR_LEFT);
 
 		/* Control */
-	case ' ': case '\n': case PADENTER:
+	case ' ': case '\n':
+#ifdef PDCURSES
+	case PADENTER:
+#endif
 		return is_simulation_running(sim) ? pause_button_clicked() : play_button_clicked();
 	case 'R': case 'r':
 		return reset_simulation();
@@ -211,7 +226,7 @@ input_t menu_mouse_command(void)
 	Vector2i event_pos, pos, tile;
 	size_t i;
 
-	nc_getmouse(&event);
+	getmouse(&event);
 	event_pos.y = event.y, event_pos.x = event.x;
 	pos = abs2rel(event_pos, menu_pos);
 

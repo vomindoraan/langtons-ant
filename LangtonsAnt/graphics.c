@@ -1,5 +1,6 @@
 #include "graphics.h"
 
+#include <assert.h>
 #include <math.h>
 
 #ifdef _WIN32
@@ -178,13 +179,30 @@ void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left, bool overwrite
 
 chtype dir2arrow(Direction dir)
 {
-	static const chtype arrows[] = { ACS_UARROW, ACS_RARROW, ACS_DARROW, ACS_LARROW };
-	return arrows[dir];
+	switch (dir) {
+	case DIR_UP:
+		return ACS_UARROW;
+	case DIR_RIGHT:
+		return ACS_RARROW;
+	case DIR_DOWN:
+		return ACS_DARROW;
+	case DIR_LEFT:
+		return ACS_LARROW;
+	default:
+		return assert(0), ' ';
+	}
 }
 
 chtype turn2arrow(turn_t turn)
 {
-	return (turn == TURN_LEFT)  ? '<'
-	     : (turn == TURN_RIGHT) ? '>'
-	     : '-';
+	switch (turn) {
+	case TURN_LEFT:
+		return '<';
+	case TURN_RIGHT:
+		return '>';
+	case TURN_NONE:
+		return '-';
+	default:
+		return assert(0), ' ';
+	}
 }

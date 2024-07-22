@@ -23,28 +23,52 @@ input_t grid_key_command(Grid *grid, Ant *ant, int key)
 		break;
 
 		/* Scroll - numpad keys */
-	case '8': case KEY_A2:
+	case '8':
+#ifdef PDCURSES
+	case KEY_A2:
+#endif
 		scroll_grid(grid, -SCROLL_STEP_LARGE, 0);
 		break;
-	case '2': case KEY_C2:
+	case '2':
+#ifdef PDCURSES
+	case KEY_C2:
+#endif
 		scroll_grid(grid,  SCROLL_STEP_LARGE, 0);
 		break;
-	case '4': case KEY_B1:
+	case '4':
+#ifdef PDCURSES
+	case KEY_B1:
+#endif
 		scroll_grid(grid, 0, -SCROLL_STEP_LARGE);
 		break;
-	case '6': case KEY_B3:
+	case '6':
+#ifdef PDCURSES
+	case KEY_B3:
+#endif
 		scroll_grid(grid, 0,  SCROLL_STEP_LARGE);
 		break;
-	case '7': case KEY_A1:
+	case '7':
+#ifdef PDCURSES
+	case KEY_A1:
+#endif
 		scroll_grid(grid, -SCROLL_STEP_LARGE, -SCROLL_STEP_LARGE);
 		break;
-	case '9': case KEY_A3:
+	case '9':
+#ifdef PDCURSES
+	case KEY_A3:
+#endif
 		scroll_grid(grid, -SCROLL_STEP_LARGE,  SCROLL_STEP_LARGE);
 		break;
-	case '1': case KEY_C1:
+	case '1':
+#ifdef PDCURSES
+	case KEY_C1:
+#endif
 		scroll_grid(grid,  SCROLL_STEP_LARGE, -SCROLL_STEP_LARGE);
 		break;
-	case '3': case KEY_C3:
+	case '3':
+#ifdef PDCURSES
+	case KEY_C3:
+#endif
 		scroll_grid(grid,  SCROLL_STEP_LARGE,  SCROLL_STEP_LARGE);
 		break;
 
@@ -63,12 +87,18 @@ input_t grid_key_command(Grid *grid, Ant *ant, int key)
 		break;
 
 		/* Jump to ant */
-	case 'F': case 'f': case '5': case KEY_B2:
+	case 'F': case 'f': case '5':
+#ifdef PDCURSES
+	case KEY_B2:
+#endif
 		set_scroll(grid, pos.y, pos.x);
 		break;
 
 		/* Jump to center */
-	case 'C': case 'c': case '0': case PAD0:
+	case 'C': case 'c': case '0':
+#ifdef PDCURSES
+	case PAD0:
+#endif
 		set_scroll(grid, 0, 0);
 		break;
 
@@ -112,7 +142,7 @@ input_t grid_mouse_command(Grid *grid)
 	MEVENT event;
 	int step;
 
-	nc_getmouse(&event);
+	getmouse(&event);
 	step = (event.bstate & BUTTON1_CLICKED) ? SCROLL_STEP_SMALL
 	     : (event.bstate & BUTTON3_CLICKED) ? grid->size // Can be anything large
 	     : 0;
