@@ -147,10 +147,10 @@ static void draw_edge(void)
 		mvwhline(menuw, sparse_msg_pos.y, sparse_msg_pos.x, ' ', strlen(sparse_msg));
 	}
 
-	mvwhline(menuw, 0,   0,   ACS_BLOCK, h);
-	mvwvline(menuw, 0,   0,   ACS_BLOCK, v);
-	mvwhline(menuw, v-1, 0,   ACS_BLOCK, h);
-	mvwvline(menuw, 0,   h-1, ACS_BLOCK, v);
+	mvwhline(menuw, 0,   0,   FILL_CHAR, h);
+	mvwvline(menuw, 0,   0,   FILL_CHAR, v);
+	mvwhline(menuw, v-1, 0,   FILL_CHAR, h);
+	mvwvline(menuw, 0,   h-1, FILL_CHAR, v);
 }
 
 static void draw_logo(void)
@@ -216,10 +216,10 @@ static void draw_color_tile(Vector2i top_left, color_t c)
 
 	/* Draw frame */
 	wattrset(menuw, is_def ? pair : fg_pair);
-	mvwhline(menuw, y,     x,     ACS_BLOCK, s);
-	mvwvline(menuw, y,     x,     ACS_BLOCK, s);
-	mvwhline(menuw, y+s-1, x,     ACS_BLOCK, s);
-	mvwvline(menuw, y,     x+s-1, ACS_BLOCK, s);
+	mvwhline(menuw, y,     x,     FILL_CHAR, s);
+	mvwvline(menuw, y,     x,     FILL_CHAR, s);
+	mvwhline(menuw, y+s-1, x,     FILL_CHAR, s);
+	mvwvline(menuw, y,     x+s-1, FILL_CHAR, s);
 
 	/* Draw direction arrow */
 	if (!is_def) {
@@ -322,7 +322,7 @@ static void draw_speed(void)
 
 	/* Draw slider */
 	wattrset(menuw, fg_pair);
-	mvwvline(menuw, slider_pos.y+1, slider_pos.x-3, ACS_BLOCK, 3);
+	mvwvline(menuw, slider_pos.y+1, slider_pos.x-3, FILL_CHAR, 3);
 
 	/* Draw arrow buttons */
 	wattrset(menuw, pair);
@@ -402,7 +402,7 @@ static void draw_io_buttons(void)
 	wattrset(menuw, ui_pair);
 	draw_rect(menuw, menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
 	draw_rect(menuw, menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
-	wattron(menuw, A_REVERSE);
+	wattrset(menuw, bg_pair);
 	draw_rect(menuw, inner1, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
 	draw_rect(menuw, inner2, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
 
@@ -417,11 +417,11 @@ static void draw_io_buttons(void)
 	/* Draw status indicators */
 	if (load_status != STATUS_NONE) {
 		wattrset(menuw, GET_PAIR_FOR((load_status == STATUS_SUCCESS) ? COLOR_LIME : COLOR_RED));
-		mvwvline(menuw, menu_load_pos.y, menu_load_pos.x+MENU_BUTTON_WIDTH, ACS_BLOCK, MENU_BUTTON_HEIGHT);
+		mvwvline(menuw, menu_load_pos.y, menu_load_pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
 	}
 	if (save_status != STATUS_NONE) {
 		wattrset(menuw, GET_PAIR_FOR((save_status == STATUS_SUCCESS) ? COLOR_LIME : COLOR_RED));
-		mvwvline(menuw, menu_save_pos.y, menu_save_pos.x+MENU_BUTTON_WIDTH, ACS_BLOCK, MENU_BUTTON_HEIGHT);
+		mvwvline(menuw, menu_save_pos.y, menu_save_pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
 	}
 }
 
@@ -461,10 +461,10 @@ static void draw_steps(void)
 	for (d = digits; d < digits+8; d++) {
 		if (*d != ' ') {
 			int digit = *d - '0';
-			wattroff(menuw, A_REVERSE);
+			wattrset(menuw, fg_pair);
 			draw_sprite(menuw, (SpriteInfo) { digit_sprites[digit], 3, 5 }, tl, TRUE);
 		} else {
-			wattron(menuw, A_REVERSE);
+			wattrset(menuw, bg_pair);
 			draw_rect(menuw, tl, 3, 5);
 		}
 		tl.x += 4;

@@ -33,14 +33,14 @@ static void draw_buffer_zone(int total, int offset)
 {
 	int n = GRID_WINDOW_SIZE, i;
 	for (i = 0; i < offset; i++) {
-		mvwhline(gridw, i,     i,     ACS_BLOCK, n-i);
-		mvwvline(gridw, i,     i,     ACS_BLOCK, n-i);
-		mvwhline(gridw, n-1-i, i,     ACS_BLOCK, n-i);
-		mvwvline(gridw, i,     n-1-i, ACS_BLOCK, n-i);
+		mvwhline(gridw, i,     i,     FILL_CHAR, n-i);
+		mvwvline(gridw, i,     i,     FILL_CHAR, n-i);
+		mvwhline(gridw, n-1-i, i,     FILL_CHAR, n-i);
+		mvwvline(gridw, i,     n-1-i, FILL_CHAR, n-i);
 	}
 	if ((n-total-2*offset) % 2) {
-		mvwhline(gridw, n-1-i, i, ACS_BLOCK, n-i);
-		mvwvline(gridw, i, n-1-i, ACS_BLOCK, n-i);
+		mvwhline(gridw, n-1-i, i, FILL_CHAR, n-i);
+		mvwvline(gridw, i, n-1-i, FILL_CHAR, n-i);
 	}
 }
 
@@ -58,8 +58,8 @@ static void draw_scrollbars(color_t def)
 
 	/* Scrollbar background */
 	wattrset(gridw, sb_bg_pair);
-	mvwhline(gridw, n, 0, ACS_BLOCK, n);
-	mvwvline(gridw, 0, n, ACS_BLOCK, n);
+	mvwhline(gridw, n, 0, FILL_CHAR, n);
+	mvwvline(gridw, 0, n, FILL_CHAR, n);
 
 	/* Scrollbar arrows */
 	wattron(gridw, A_REVERSE);
@@ -70,8 +70,8 @@ static void draw_scrollbars(color_t def)
 
 	/* Scrollbar sliders */
 	wattrset(gridw, sb_fg_pair);
-	mvwhline(gridw, n, h, ACS_BLOCK, size);
-	mvwvline(gridw, v, n, ACS_BLOCK, size);
+	mvwhline(gridw, n, h, FILL_CHAR, size);
+	mvwvline(gridw, v, n, FILL_CHAR, size);
 }
 
 static bool draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
@@ -114,11 +114,11 @@ static void bordered(Grid *grid, Ant *ant, int line_width)
 	wattrset(gridw, fg_pair);
 	for (i = 0; i < GRID_WINDOW_SIZE; i += cs+line_width) {
 		for (j = 0; j < line_width; j++) {
-			mvwhline(gridw, o+i+j, o,     ACS_BLOCK, t);
-			mvwvline(gridw, o,     o+i+j, ACS_BLOCK, t);
+			mvwhline(gridw, o+i+j, o,     FILL_CHAR, t);
+			mvwvline(gridw, o,     o+i+j, FILL_CHAR, t);
 		}
 	}
-	
+
 	/* Draw cells */
 	for (i = 0; i < gs; i++) {
 		for (j = 0; j < gs; j++) {
@@ -179,7 +179,7 @@ void draw_grid_full(Grid *grid, Ant *ant)
 		int i;
 		wattrset(gridw, bg_pair);
 		for (i = 0; i < GRID_WINDOW_SIZE; i++) {
-			mvwhline(gridw, i, 0, ACS_BLOCK, GRID_WINDOW_SIZE);
+			mvwhline(gridw, i, 0, FILL_CHAR, GRID_WINDOW_SIZE);
 		}
 	}
 	wnoutrefresh(gridw);

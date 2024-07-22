@@ -10,11 +10,16 @@
 
 #include "include/curses.h"
 
+/*------------------------ Character graphics macros -------------------------*/
+
 /** @name Preferred console font settings */
 ///@{
 #define CONSOLE_FONT_FACE L"Px437 IBM EGA 8x8"
 #define CONSOLE_FONT_SIZE 8
 ///@}
+
+/** Fill character used for drawing */
+#define FILL_CHAR (' ' | A_REVERSE)
 
 
 /*--------------------------- Display color macros ---------------------------*/
@@ -36,7 +41,7 @@
 #define COLOR_GRAY    8
 #define COLOR_WHITE   15
 
-#ifdef PDC_RGB        /* RGB */
+#ifdef CURSES_RGB
 #define COLOR_MAROON  1
 #define COLOR_GREEN   2
 #define COLOR_NAVY    4
@@ -44,7 +49,7 @@
 #define COLOR_RED     9
 #define COLOR_LIME    10
 #define COLOR_BLUE    12
-#else                 /* BGR */
+#else
 #define COLOR_NAVY    1
 #define COLOR_GREEN   2
 #define COLOR_MAROON  4
