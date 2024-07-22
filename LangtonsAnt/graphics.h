@@ -215,6 +215,13 @@ typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE } IOStatus;
 /** Escape key literal for input handling */
 #define KEY_ESC 0x1B
 
+/** @name Mouse button event flags */
+///@{
+#define MOUSE_LB_EVENT BUTTON1_PRESSED
+#define MOUSE_RB_EVENT BUTTON3_PRESSED
+#define MOUSE_MASK     (MOUSE_LB_EVENT | MOUSE_RB_EVENT)
+///@}
+
 /** @name Window state change flags */
 ///@{
 #define INPUT_NO_CHANGE    0

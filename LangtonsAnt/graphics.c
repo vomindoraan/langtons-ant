@@ -64,16 +64,17 @@ void init_graphics(color_t fg_color, color_t bg_color)
 	initscr();
 	resize_term(GRID_WINDOW_SIZE, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH);
 	curs_set(0);
-	
+
 	noecho();
 	cbreak();
-	mousemask(BUTTON1_CLICKED | BUTTON3_CLICKED, NULL); // Left and right click
+	mousemask(MOUSE_MASK, NULL);
+	mouseinterval(0); // React on key press instead of release (click)
 	keypad(stdscr, TRUE);
 	nodelay(stdscr, TRUE);
 
 	start_color();
 	init_def_pairs(fg_color, bg_color);
-	
+
 	init_grid_window();
 	init_menu_window();
 
