@@ -8,7 +8,10 @@ static input_t handle_input(Simulation *sim)
 	MEVENT mouse, *pmouse = NULL;
 	input_t ret = INPUT_NO_CHANGE;
 
-	key = getch(); // These functions must be called only once per loop
+	// These functions must be called only once per loop
+	if ((key = getch()) == ERR) {
+		return INPUT_NO_CHANGE;
+	}
 	if (getmouse(&mouse) != ERR) {
 		pmouse = &mouse;
 	}
