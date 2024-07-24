@@ -114,7 +114,7 @@ static input_t stop_button_clicked(void)
 	return has_simulation_started(stgs.linked_sim) ? reset_simulation() : clear_simulation();
 }
 
-static void read_filename(char *filename)
+static bool read_filename(char *filename)
 {
 	iow = newwin(3, INPUT_WINDOW_WIDTH, io_pos.y, io_pos.x); // TODO move to window drawing file
 	wbkgd(iow, GET_PAIR_FOR(COLOR_GRAY) | A_REVERSE);
@@ -125,24 +125,35 @@ static void read_filename(char *filename)
 	mvwgetnstr(iow, 1, 1, filename, FILENAME_BUF_LEN-1);
 	noecho();
 	delwin(iow);
+	return strlen(filename) > 0 && strlen(filename)+4 < FILENAME_BUF_LEN;
 }
 
-static input_t io_button_clicked(bool load)
+static input_t load_button_clicked(void)
 {
-	char filename[FILENAME_BUF_LEN] = { 0 }, bmp_filename[FILENAME_BUF_LEN] = { 0 };
-	read_filename(filename);
-	if (load) {
-		Simulation *sim = load_simulation(filename);
+	char filename[FILENAME_BUF_LEN] = { 0 };
+	if (read_filename(filename)) {
+		Simulation* sim = load_simulation(filename);
 		load_status = sim ? STATUS_SUCCESS : STATUS_FAILURE;
 		if (sim) {
 			return set_simulation(sim);
 		}
-	} else if (strlen(filename) > 0 && strlen(filename) + 4 < FILENAME_BUF_LEN) {
+	} else {
+		load_status = STATUS_FAILURE;
+	}
+	return INPUT_MENU_CHANGED;
+}
+
+static input_t save_button_clicked(void)
+{
+	char filename[FILENAME_BUF_LEN] = { 0 }, bmp_filename[FILENAME_BUF_LEN] = { 0 };
+	if (read_filename(filename)) {
 		int e = save_simulation(filename, stgs.linked_sim);
 		save_status = (e != EOF) ? STATUS_SUCCESS : STATUS_FAILURE;
 		strcpy(bmp_filename, filename);
 		strcat(bmp_filename, ".bmp");
 		save_grid_bitmap(bmp_filename, stgs.linked_sim->grid);
+	} else {
+		save_status = STATUS_FAILURE;
 	}
 	return INPUT_MENU_CHANGED;
 }
@@ -157,6 +168,16 @@ input_t menu_key_command(int key, MEVENT *pmouse)
 		return isize_button_clicked(1);
 	case '[':
 		return isize_button_clicked(-1);
+
+		/* Ant direction */
+	case 'W': case 'w':
+		return dir_button_clicked(DIR_UP);
+	case 'D': case 'd':
+		return dir_button_clicked(DIR_RIGHT);
+	case 'S': case 's':
+		return dir_button_clicked(DIR_DOWN);
+	case 'A': case 'a':
+		return dir_button_clicked(DIR_LEFT);
 
 		/* Speed */
 	case 'Q': case 'q': case '=':
@@ -177,16 +198,6 @@ input_t menu_key_command(int key, MEVENT *pmouse)
 #endif
 		return stepup_button_clicked();
 
-		/* Direction */
-	case 'W': case 'w':
-		return dir_button_clicked(DIR_UP);
-	case 'D': case 'd':
-		return dir_button_clicked(DIR_RIGHT);
-	case 'S': case 's':
-		return dir_button_clicked(DIR_DOWN);
-	case 'A': case 'a':
-		return dir_button_clicked(DIR_LEFT);
-
 		/* Control */
 	case ' ': case '\n':
 #ifdef PDCURSES
@@ -200,9 +211,9 @@ input_t menu_key_command(int key, MEVENT *pmouse)
 
 		/* IO */
 	case KEY_F(1):
-		return io_button_clicked(TRUE);
+		return load_button_clicked();
 	case KEY_F(2):
-		return io_button_clicked(FALSE);
+		return save_button_clicked();
 
 		/* Quit */
 	case KEY_ESC:
@@ -240,7 +251,7 @@ input_t menu_mouse_command(MEVENT *pmouse)
 		}
 	}
 
-	/* Color tiles clicked? */
+	/* Color tiles */
 	for (i = 0; i <= stgs.colors->n; i++) {
 		tile = get_menu_tile_pos(i);
 		if (area_contains(tile, MENU_TILE_SIZE, MENU_TILE_SIZE, pos)) {
@@ -257,7 +268,7 @@ input_t menu_mouse_command(MEVENT *pmouse)
 		return ret | INPUT_MENU_CHANGED;
 	}
 
-	/* Init size buttons clicked? */
+	/* Init size buttons */
 	if (area_contains(menu_isize_u_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
 		return ret | isize_button_clicked(1);
 	}
@@ -265,7 +276,7 @@ input_t menu_mouse_command(MEVENT *pmouse)
 		return ret | isize_button_clicked(-1);
 	}
 
-	/* Direction buttons clicked? */
+	/* Ant direction buttons */
 	if (area_contains(menu_dir_u_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
 		return ret | dir_button_clicked(DIR_UP);
 	}
@@ -279,7 +290,7 @@ input_t menu_mouse_command(MEVENT *pmouse)
 		return ret | dir_button_clicked(DIR_LEFT);
 	}
 
-	/* Speed buttons clicked? */
+	/* Speed buttons */
 	if (area_contains(menu_speed_u_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
 		return ret | speed_button_clicked(1);
 	}
@@ -287,12 +298,12 @@ input_t menu_mouse_command(MEVENT *pmouse)
 		return ret | speed_button_clicked(-1);
 	}
 
-	/* Step+ button clicked? */
+	/* Step+ button */
 	if (area_contains(menu_stepup_pos, MENU_STEPUP_SIZE, MENU_STEPUP_SIZE, pos)) {
 		return ret | stepup_button_clicked();
 	}
 
-	/* Control buttons clicked? */
+	/* Control buttons */
 	if (area_contains(menu_play_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
 		return ret | play_button_clicked();
 	}
@@ -303,12 +314,12 @@ input_t menu_mouse_command(MEVENT *pmouse)
 		return ret | stop_button_clicked();
 	}
 
-	/* IO buttons clicked? */
+	/* IO buttons */
 	if (area_contains(menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
-		return ret | io_button_clicked(TRUE);
+		return ret | load_button_clicked();
 	}
 	if (area_contains(menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
-		return ret | io_button_clicked(FALSE);
+		return ret | save_button_clicked();
 	}
 
 	return ret;

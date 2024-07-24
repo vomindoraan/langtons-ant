@@ -162,8 +162,10 @@ input_t grid_mouse_command(Grid *grid, MEVENT *pmouse)
 			scrollbar_clicked(grid, pmouse, SB_VERTICAL);
 		}
 		return INPUT_GRID_CHANGED;
+	}
+
 	/* Horizontal scrollbar */
-	} else if (pmouse->y == GRID_VIEW_SIZE && pmouse->x < GRID_VIEW_SIZE) {
+	if (pmouse->y == GRID_VIEW_SIZE && pmouse->x < GRID_VIEW_SIZE) {
 		if (pmouse->x == 0) {
 			scroll_grid(grid, 0, -step);
 		} else if (pmouse->x == GRID_VIEW_SIZE-1) {
