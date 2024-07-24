@@ -132,13 +132,13 @@ static input_t io_button_clicked(bool load)
 	char filename[FILENAME_BUF_LEN] = { 0 }, bmp_filename[FILENAME_BUF_LEN] = { 0 };
 	read_filename(filename);
 	if (load) {
-        Simulation *sim = load_simulation(filename);
+		Simulation *sim = load_simulation(filename);
 		load_status = sim ? STATUS_SUCCESS : STATUS_FAILURE;
 		if (sim) {
 			return set_simulation(sim);
 		}
 	} else {
-        int e = save_simulation(filename, stgs.linked_sim);
+		int e = save_simulation(filename, stgs.linked_sim);
 		save_status = (e != EOF) ? STATUS_SUCCESS : STATUS_FAILURE;
 		if (strlen(filename) + 4 < FILENAME_BUF_LEN) {
 			strcpy(bmp_filename, filename);
@@ -149,7 +149,7 @@ static input_t io_button_clicked(bool load)
 	return INPUT_MENU_CHANGED;
 }
 
-input_t menu_key_command(int key)
+input_t menu_key_command(int key, MEVENT *pmouse)
 {
 	Simulation *sim = stgs.linked_sim;
 
@@ -212,43 +212,43 @@ input_t menu_key_command(int key)
 		return INPUT_NO_CHANGE;
 
 	case KEY_MOUSE:
-		return menu_mouse_command();
+		assert(pmouse);
+		return menu_mouse_command(pmouse);
 
 	default:
 		return INPUT_NO_CHANGE;
 	}
 }
 
-input_t menu_mouse_command(void)
+input_t menu_mouse_command(MEVENT *pmouse)
 {
 	input_t ret = INPUT_NO_CHANGE;
-	MEVENT event;
 	Vector2i event_pos, pos, tile;
 	size_t i;
 
-	if (getmouse(&event) != OK) {
+	if (!pmouse) {
 		return INPUT_NO_CHANGE;
 	}
 
-	event_pos.y = event.y, event_pos.x = event.x;
+	event_pos.y = pmouse->y, event_pos.x = pmouse->x;
 	pos = abs2rel(event_pos, menu_pos);
 
 	if (dialogw) {
 		if (area_contains(dialog_pos, DIALOG_WINDOW_WIDTH, DIALOG_WINDOW_HEIGHT, event_pos)) {
-			return dialog_mouse_command(event);
+			return dialog_mouse_command(pmouse);
 		} else {
 			close_dialog();
 			ret = INPUT_MENU_CHANGED;
 		}
 	}
 
-	/* Color tiles clicked */
+	/* Color tiles clicked? */
 	for (i = 0; i <= stgs.colors->n; i++) {
 		tile = get_menu_tile_pos(i);
 		if (area_contains(tile, MENU_TILE_SIZE, MENU_TILE_SIZE, pos)) {
-			if (event.bstate & MOUSE_LB_EVENT) {
+			if (pmouse->bstate & MOUSE_LB_EVENT) {
 				open_dialog(pos, (i == stgs.colors->n) ? CIDX_NEWCOLOR : (color_t)i);
-			} else if (event.bstate & MOUSE_RB_EVENT) {
+			} else if (pmouse->bstate & MOUSE_RB_EVENT) {
 				open_dialog(pos, CIDX_DEFAULT);
 			}
 			return ret | INPUT_MENU_CHANGED;
@@ -259,7 +259,7 @@ input_t menu_mouse_command(void)
 		return ret | INPUT_MENU_CHANGED;
 	}
 
-	/* Init size buttons clicked */
+	/* Init size buttons clicked? */
 	if (area_contains(menu_isize_u_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
 		return ret | isize_button_clicked(1);
 	}
@@ -267,7 +267,7 @@ input_t menu_mouse_command(void)
 		return ret | isize_button_clicked(-1);
 	}
 
-	/* Direction buttons clicked */
+	/* Direction buttons clicked? */
 	if (area_contains(menu_dir_u_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
 		return ret | dir_button_clicked(DIR_UP);
 	}
@@ -281,7 +281,7 @@ input_t menu_mouse_command(void)
 		return ret | dir_button_clicked(DIR_LEFT);
 	}
 
-	/* Speed buttons clicked */
+	/* Speed buttons clicked? */
 	if (area_contains(menu_speed_u_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
 		return ret | speed_button_clicked(1);
 	}
@@ -289,12 +289,12 @@ input_t menu_mouse_command(void)
 		return ret | speed_button_clicked(-1);
 	}
 
-	/* Step+ button clicked */
+	/* Step+ button clicked? */
 	if (area_contains(menu_stepup_pos, MENU_STEPUP_SIZE, MENU_STEPUP_SIZE, pos)) {
 		return ret | stepup_button_clicked();
 	}
 
-	/* Control buttons clicked */
+	/* Control buttons clicked? */
 	if (area_contains(menu_play_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
 		return ret | play_button_clicked();
 	}
@@ -305,7 +305,7 @@ input_t menu_mouse_command(void)
 		return ret | stop_button_clicked();
 	}
 
-	/* IO buttons clicked */
+	/* IO buttons clicked? */
 	if (area_contains(menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
 		return ret | io_button_clicked(TRUE);
 	}

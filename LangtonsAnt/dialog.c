@@ -146,26 +146,32 @@ Vector2i get_dialog_tile_pos(color_t color)
 	return pos;
 }
 
-input_t dialog_mouse_command(MEVENT event)
+input_t dialog_mouse_command(MEVENT *pmouse)
 {
-	Vector2i pos = abs2rel((Vector2i) { event.y, event.x }, dialog_pos), tl;
+	Vector2i pos, tl;
 	bool del = FALSE;
 	color_t i;
+
+	if (!pmouse) {
+		return INPUT_NO_CHANGE;
+	}
+
+	pos = abs2rel((Vector2i) { pmouse->y, pmouse->x }, dialog_pos);
 
 	if (cidx != CIDX_DEFAULT) {
 		if (area_contains(left_pos, DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT, pos)) {
 			picked_turn = TURN_LEFT;
-			goto exit;
+			goto button_clicked;
 		}
 		if (area_contains(right_pos, DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT, pos)) {
 			picked_turn = TURN_RIGHT;
-			goto exit;
+			goto button_clicked;
 		}
 	}
 
 	if (cidx >= 0 && area_contains(delete_pos, DIALOG_DELETE_WIDTH, DIALOG_DELETE_HEIGHT, pos)) {
 		del = TRUE;
-		goto exit;
+		goto button_clicked;
 	}
 
 	for (i = 0; i < COLOR_COUNT; i++) {
@@ -173,13 +179,13 @@ input_t dialog_mouse_command(MEVENT event)
 		if ((cidx == CIDX_DEFAULT || !color_exists(stgs.colors, i))
 				&& area_contains(tl, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, pos)) {
 			picked_color = i;
-			goto exit;
+			goto button_clicked;
 		}
 	}
 
 	return INPUT_NO_CHANGE;
 
-exit:
+button_clicked:
 	switch (cidx) {
 	case CIDX_NEWCOLOR:
 		if (picked_color != COLOR_NONE && picked_turn != TURN_NONE) {
@@ -187,12 +193,14 @@ exit:
 			close_dialog();
 		}
 		return INPUT_MENU_CHANGED;
+
 	case CIDX_DEFAULT:
 		assert(stgs.colors && stgs.linked_sim->colors);
 		colors_delete(stgs.colors);
 		stgs.colors = colors_new(picked_color);
 		close_dialog();
 		return clear_simulation();
+
 	default:
 		if (cidx < 0 || cidx >= COLOR_COUNT) {
 			return INPUT_NO_CHANGE;

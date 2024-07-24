@@ -77,9 +77,8 @@ void init_graphics(color_t fg_color, color_t bg_color)
 
 	init_grid_window();
 	init_menu_window();
-
-	if (gridw == NULL || menuw == NULL) {
-		printw("Couldn't initialize graphics: Terminal font too large");
+	if (!gridw || !menuw) {
+		printw("Couldn't initialize graphics, terminal font probably too large");
 		wnoutrefresh(stdscr);
 	}
 
