@@ -12,17 +12,25 @@
 /*------------------------- Input/output attributes --------------------------*/
 
 /** Maximum filename buffer length on Windows */
-#define FILENAME_BUF_LEN   256
+#define FILENAME_BUF_LEN 256
 
 /** Total number of fields in a Colors struct */
 #define COLORS_TOTAL_FIELDS (COLOR_COUNT*2 + 4)
 
 /** @name Bitmap file attributes */
 ///@{
-#define BYTES_PER_PIXEL  3   // BGR
+#define BYTES_PER_PIXEL  3 // BGR
 #define FILE_HEADER_SIZE 14
 #define INFO_HEADER_SIZE 40
 ///@}
+
+/*------------------------- Input/output color types -------------------------*/
+
+/** Bitmap pixel type (24-bit BGR) */
+typedef byte pixel_t[BYTES_PER_PIXEL]; // TODO make into a struct?
+
+/** Maps internal colors to bitmap-compatible pixel format */
+extern const pixel_t color_map[COLOR_COUNT];
 
 
 /*----------------------------------------------------------------------------*
@@ -75,12 +83,6 @@ int save_grid_bitmap(char *filename, Grid *grid);
 /*----------------------------------------------------------------------------*
  *                                  bitmap.c                                  *
  *----------------------------------------------------------------------------*/
-
-/** Bitmap pixel type (24-bit BGR) */
-typedef byte pixel_t[BYTES_PER_PIXEL];
-
-/** Maps internal colors to bitmap-compatible pixel format */
-extern const pixel_t color_map[COLOR_COUNT];
 
 /**
  * Create bitmap file from image byte array
