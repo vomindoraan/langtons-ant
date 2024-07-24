@@ -510,21 +510,21 @@ void draw_menu_iter(void)
 {
 	Simulation *sim = stgs.linked_sim;
 	static bool sparse = FALSE;
-#if LOOP_OPT_STEPS
+#ifdef LOOP_OPT_ENABLE
 	static size_t prev_steps = 0;
-	size_t delta = LOOP_OPT_STEPS / (LOOP_MAX_SPEED - LOOP_OPT_SPEED + 1);
-	size_t threshold = delta * (stgs.speed - LOOP_OPT_SPEED + 1);
+	size_t threshold = (stgs.speed == LOOP_MAX_SPEED) ? LOOP_MAX_OPT
+	                 : LOOP_DEF_OPT * (stgs.speed - LOOP_OPT_SPEED + 1);
 	bool do_draw = sim->steps-prev_steps >= threshold;
 #endif
 
 	if (!sparse && is_grid_sparse(sim->grid)) {
 		sparse = TRUE;
-#if LOOP_OPT_STEPS
+#ifdef LOOP_OPT_ENABLE
 		do_draw = TRUE;
 #endif
 		draw_edge();
 	}
-#if LOOP_OPT_STEPS
+#ifdef LOOP_OPT_ENABLE
 	if (do_draw) {
 #endif
 		draw_dir_arrow();
@@ -535,7 +535,7 @@ void draw_menu_iter(void)
 		if (dialogw) {
 			draw_dialog();
 		}
-#if LOOP_OPT_STEPS
+#ifdef LOOP_OPT_ENABLE
 		prev_steps = sim->steps;
 	}
 #endif
