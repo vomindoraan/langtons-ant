@@ -212,7 +212,7 @@ input_t menu_key_command(int key, MEVENT *pmouse)
 		return INPUT_NO_CHANGE;
 
 	case KEY_MOUSE:
-		assert(pmouse);
+		//assert(pmouse);
 		return menu_mouse_command(pmouse);
 
 	default:

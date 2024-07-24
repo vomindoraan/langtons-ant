@@ -105,7 +105,7 @@ input_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *pmouse)
 		break;
 
 	case KEY_MOUSE:
-		assert(pmouse);
+		//assert(pmouse);
 		return grid_mouse_command(grid, pmouse);
 
 	default:
