@@ -106,7 +106,7 @@ input_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *pmouse)
 
 	case KEY_MOUSE:
 		//assert(pmouse);
-		return grid_mouse_command(grid, pmouse);
+		return grid_mouse_command(grid, ant, pmouse);
 
 	default:
 		return INPUT_NO_CHANGE;
@@ -140,8 +140,10 @@ static void scrollbar_clicked(Grid *grid, MEVENT *mevent, ScrollbarType sbtype)
 	}
 }
 
-input_t grid_mouse_command(Grid *grid, MEVENT *pmouse)
+input_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *pmouse)
 {
+	Vector2i center = { grid->size / 2, grid->size / 2 };
+	Vector2i pos = abs2rel(ant->pos, center);
 	int step;
 
 	if (!pmouse) {
@@ -176,5 +178,7 @@ input_t grid_mouse_command(Grid *grid, MEVENT *pmouse)
 		return INPUT_GRID_CHANGED;
 	}
 
-	return INPUT_NO_CHANGE;
+	/* Grid proper - jump to ant */
+	set_scroll(grid, pos.y, pos.x);
+	return INPUT_GRID_CHANGED;
 }

@@ -497,11 +497,12 @@ input_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *pmouse);
 /**
  * Handles mouse commands passed to the grid window
  * @param grid Grid to be acted upon
+ * @param ant Ant to be acted upon
  * @param pmouse Pointer to mouse event if one happened; NULL otherwise
  * @return INPUT_GRID_CHANGED if grid changed; INPUT_NO_CHANGE otherwise
  * @see grid_key_command(Grid *, Ant *, int)
  */
-input_t grid_mouse_command(Grid *grid, MEVENT *pmouse);
+input_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *pmouse);
 
 
 /*----------------------------------------------------------------------------*
