@@ -122,14 +122,14 @@ static void scrollbar_clicked(Grid *grid, MEVENT *mevent, ScrollbarType sbtype)
 	int n = GRID_VIEW_SIZE, mid = n/2, step = n-2;
 	Vector2i pos = { mevent->y, mevent->x }, rel;
 
-	if (mevent->bstate & BUTTON1_CLICKED) {
+	if (mevent->bstate & MOUSE_LB_EVENT) {
 		if (sbtype == SB_VERTICAL) {
 			rel = abs2rel(pos, (Vector2i) { mid+gridscrl.vcenter, GRID_VIEW_SIZE });
 		} else {
 			rel = abs2rel(pos, (Vector2i) { GRID_VIEW_SIZE, mid+gridscrl.hcenter });
 		}
 		scroll_grid(grid, sgn(rel.y)*step, sgn(rel.x)*step);
-	} else if (mevent->bstate & BUTTON3_CLICKED) {
+	} else if (mevent->bstate & MOUSE_RB_EVENT) {
 		if (sbtype == SB_VERTICAL) {
 			rel = abs2rel(pos, (Vector2i) { mid, GRID_VIEW_SIZE });
 			set_scroll(grid, (int)(rel.y/gridscrl.scale), gridscrl.x);
@@ -148,8 +148,8 @@ input_t grid_mouse_command(Grid *grid, MEVENT *pmouse)
 		return INPUT_NO_CHANGE;
 	}
 
-	step = (pmouse->bstate & BUTTON1_CLICKED) ? SCROLL_STEP_SMALL
-	     : (pmouse->bstate & BUTTON3_CLICKED) ? grid->size // Can be anything large
+	step = (pmouse->bstate & MOUSE_LB_EVENT) ? SCROLL_STEP_SMALL
+	     : (pmouse->bstate & MOUSE_RB_EVENT) ? grid->size // Can be anything large
 	     : 0;
 
 	/* Vertical scrollbar */
