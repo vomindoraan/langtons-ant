@@ -122,15 +122,15 @@ static bool read_filename(char *filename)
 	waddstr(iow, " Path: ");
 	wattroff(iow, fg_pair);
 	echo();
-	mvwgetnstr(iow, 1, 1, filename, FILENAME_BUF_LEN-1);
+	mvwgetnstr(iow, 1, 1, filename, FILENAME_SIZE-1);
 	noecho();
 	delwin(iow);
-	return strlen(filename) > 0 && strlen(filename)+4 < FILENAME_BUF_LEN;
+	return strlen(filename) > 0 && strlen(filename)+4 < FILENAME_SIZE;
 }
 
 static input_t load_button_clicked(void)
 {
-	char filename[FILENAME_BUF_LEN] = { 0 };
+	char filename[FILENAME_SIZE] = { 0 };
 	if (read_filename(filename)) {
 		Simulation* sim = load_simulation(filename);
 		load_status = sim ? STATUS_SUCCESS : STATUS_FAILURE;
@@ -145,7 +145,7 @@ static input_t load_button_clicked(void)
 
 static input_t save_button_clicked(void)
 {
-	char filename[FILENAME_BUF_LEN] = { 0 }, bmp_filename[FILENAME_BUF_LEN] = { 0 };
+	char filename[FILENAME_SIZE] = { 0 }, bmp_filename[FILENAME_SIZE] = { 0 };
 	if (read_filename(filename)) {
 		int e = save_simulation(filename, stgs.linked_sim);
 		save_status = (e != EOF) ? STATUS_SUCCESS : STATUS_FAILURE;

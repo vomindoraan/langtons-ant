@@ -11,8 +11,8 @@
 
 /*------------------------- Input/output attributes --------------------------*/
 
-/** Maximum filename buffer length on Windows */
-#define FILENAME_BUF_LEN 256
+/** Filename buffer size */
+#define FILENAME_SIZE 256
 
 /** Total number of fields in a Colors struct */
 #define COLORS_TOTAL_FIELDS (COLOR_COUNT*2 + 4)
