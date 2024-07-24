@@ -137,14 +137,12 @@ static input_t io_button_clicked(bool load)
 		if (sim) {
 			return set_simulation(sim);
 		}
-	} else {
+	} else if (strlen(filename) > 0 && strlen(filename) + 4 < FILENAME_BUF_LEN) {
 		int e = save_simulation(filename, stgs.linked_sim);
 		save_status = (e != EOF) ? STATUS_SUCCESS : STATUS_FAILURE;
-		if (strlen(filename) + 4 < FILENAME_BUF_LEN) {
-			strcpy(bmp_filename, filename);
-			strcat(bmp_filename, ".bmp");
-			save_grid_bitmap(bmp_filename, stgs.linked_sim->grid);
-		}
+		strcpy(bmp_filename, filename);
+		strcat(bmp_filename, ".bmp");
+		save_grid_bitmap(bmp_filename, stgs.linked_sim->grid);
 	}
 	return INPUT_MENU_CHANGED;
 }
