@@ -37,7 +37,9 @@ void game_loop(void)
 		if (is_simulation_running(sim)) {
 			Vector2i prev_pos = sim->ant->pos;
 			if (simulation_step(sim)) {
-				napms(LOOP_DELAY / (1 << stgs.speed)); // TODO fixed timestep loop
+				int delta = (LOOP_MAX_DELAY - LOOP_MIN_DELAY) / (LOOP_MAX_SPEED - LOOP_MIN_SPEED + 1);
+				int delay = delta * (LOOP_MAX_SPEED - stgs.speed);
+				napms(delay); // TODO fixed timestep loop
 				draw_grid_iter(sim->grid, sim->ant, prev_pos);
 				draw_menu_iter();
 			} else {

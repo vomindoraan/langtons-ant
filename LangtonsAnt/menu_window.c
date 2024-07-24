@@ -512,7 +512,8 @@ void draw_menu_iter(void)
 	static bool sparse = FALSE;
 #if LOOP_OPT_STEPS
 	static size_t prev_steps = 0;
-	double threshold = exp(max(stgs.speed-LOOP_OPT_SPEED, 0)); // ~1096 @ speed 9
+	size_t delta = LOOP_OPT_STEPS / (LOOP_MAX_SPEED - LOOP_OPT_SPEED + 1);
+	size_t threshold = delta * (stgs.speed - LOOP_OPT_SPEED + 1);
 	bool do_draw = sim->steps-prev_steps >= threshold;
 #endif
 
