@@ -530,6 +530,10 @@ void draw_menu_iter(void)
 		draw_state_func();
 		draw_steps();
 		wnoutrefresh(menuw);
+
+		if (dialogw) {
+			draw_dialog();
+		}
 #if LOOP_OPT_STEPS
 		prev_steps = sim->steps;
 	}
