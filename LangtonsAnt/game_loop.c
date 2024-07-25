@@ -4,18 +4,19 @@ static bool run_loop = TRUE;
 
 static input_t handle_input(Simulation *sim)
 {
+	input_t ret;
 	int key;
 	MEVENT mouse, *pmouse = NULL;
-	input_t ret = INPUT_NO_CHANGE;
 
 	// These functions must be called only once per loop
 	if ((key = getch()) == ERR) {
 		return INPUT_NO_CHANGE;
 	}
-	if (getmouse(&mouse) != ERR) {
+	if (key == KEY_MOUSE && getmouse(&mouse) != ERR) {
 		pmouse = &mouse;
 	}
 
+	ret = INPUT_NO_CHANGE;
 	if (sim) {
 		ret |= grid_key_command(sim->grid, sim->ant, key, pmouse);
 	}

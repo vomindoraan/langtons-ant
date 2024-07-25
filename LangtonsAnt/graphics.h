@@ -219,7 +219,10 @@ typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE } IOStatus;
 ///@{
 #define MOUSE_LB_EVENT BUTTON1_PRESSED
 #define MOUSE_RB_EVENT BUTTON3_PRESSED
-#define MOUSE_MASK     (MOUSE_LB_EVENT | MOUSE_RB_EVENT)
+#define MOUSE_MASK     (BUTTON1_PRESSED | BUTTON3_PRESSED \
+                       | BUTTON1_CLICKED | BUTTON3_CLICKED)
+// WARN ncurses mouse handling breaks if mouseinterval(0) is set and only *_PRESSED
+//      is selected without *_CLICKED or *_RELEASED
 ///@}
 
 /** @name Window state change flags */
