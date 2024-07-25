@@ -72,9 +72,9 @@ void loop() {
 
         auto& tft = displays[index];
         tft.background(r, g, b);
-        tft.setRotation((index >= COLOR_COUNT/2) ? 2 : 0);
-        unsigned turnColor = IS_WHITE(r, g, b) ? GRAY : WHITE; 
-        tft.drawChar(35, 45, turn, turnColor, turnColor, 10);
+        tft.setRotation((index >= COLOR_COUNT/2) ? 1 : 3);
+        unsigned turnColor = IS_WHITE(r, g, b) ? GRAY : WHITE;
+        tft.drawChar(52, 30, turn, turnColor, turnColor, 10);
         index++;
     }
 
