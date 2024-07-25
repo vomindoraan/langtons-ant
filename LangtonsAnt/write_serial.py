@@ -33,6 +33,7 @@ def connect() -> Serial:
     serial.open()
     logging.info("Connected to serial device on %s at %d baud",
                  serial.port, SERIAL_BAUD_RATE)
+    return serial
 
 
 if __name__ == '__main__':
@@ -40,8 +41,11 @@ if __name__ == '__main__':
     #     logging.error("Missing message argument")
     #     sys.exit(-1)
     # msg = sys.argv[1].encode('utf-8')
-    msg = input()
-    logging.debug("Sending message: %s", msg)
+    try:
+        msg = input()
+    except EOFError:
+        msg = ""
+    logging.info("Sending message: \"%s\"", msg)
 
     try:
         serial = connect()

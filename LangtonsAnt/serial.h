@@ -4,10 +4,10 @@
 #include "io.h"
 
 /* Message format: {BBGGRR,T} */
-#define COLOR_RULE_SIZE      (BYTES_PER_PIXEL*2 + 1 + 3)
-#define COLOR_RULES_MSG_LEN  (COLOR_COUNT * COLOR_RULE_SIZE)
+#define COLOR_RULE_FMT       "{%02hhx%02hhx%02hhx,%c}"
+#define COLOR_RULE_LEN       (BYTES_PER_PIXEL*2 + 1 + 3)
+#define COLOR_RULES_MSG_LEN  (COLOR_COUNT * COLOR_RULE_LEN)
 #define COLOR_RULES_MSG_SIZE (COLOR_RULES_MSG_LEN + 1)
-#define COLOR_RULES_MSG_FMT  "{%02hhx%02hhx%02hhx,%c}"
 
 typedef struct color_rule {
 	color_t color;

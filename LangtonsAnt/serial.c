@@ -7,6 +7,7 @@
 bool colors_to_color_rules(Colors *colors, ColorRules rules)
 {
 	color_t c;
+	bool do_for = TRUE;
 	int i = 0;
 
 	if (!colors) {
@@ -14,14 +15,13 @@ bool colors_to_color_rules(Colors *colors, ColorRules rules)
 	}
 
 	/* Add existing colors to rules */
-	c = colors->first;
-	do {
+	for (c = colors->first; do_for; c = colors->next[c]) {
 		if (c == COLOR_NONE) {
 			break;
 		}
 		rules[i++] = (ColorRule) { c, colors->turn[c] };
-		c = colors->next[c];
-	} while (c != colors->last);
+		do_for = c != colors->last;
+	}
 
 	/* Mark remaining color rules as invalid */
 	for (; i < COLOR_COUNT; i++) {
@@ -44,8 +44,8 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg)
 		color_t c = rules[i].color;
 		turn_t t = rules[i].turn;
 		const pixel_t *pbgr = &color_map[c];
-		char tmp[COLOR_RULE_SIZE+1];
-		snprintf(tmp, COLOR_RULE_SIZE+1, COLOR_RULES_MSG_FMT,
+		char tmp[COLOR_RULE_LEN+1];
+		snprintf(tmp, COLOR_RULE_LEN+1, COLOR_RULE_FMT,
 		         (*pbgr)[0], (*pbgr)[1], (*pbgr)[2], turn2arrow(t) & 0xFF);
 		strcat(msg, tmp);
 	}
@@ -57,7 +57,7 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg)
 //	int i = 0;
 //	pixel_t pbgr;
 //	turn_t turn;
-//	while (sscanf(str, COLOR_RULES_MSG_FMT, &pbgr[0], &pbgr[1], &pbgr[2], &turn) == 4) {
+//	while (sscanf(str, COLOR_RULE_FMT, &pbgr[0], &pbgr[1], &pbgr[2], &turn) == 4) {
 //	}
 //}
 
@@ -71,7 +71,7 @@ bool serial_send_colors(Colors *colors)
 	colors_to_color_rules(colors, &rules);
 	serialize_color_rules(rules, msg);
 
-	if ((pipe = popen(SERIAL_SCRIPT, "w")) == EOF) {
+	if (!(pipe = popen(SERIAL_SCRIPT, "w"))) {
 		return FALSE;
 	}
 
