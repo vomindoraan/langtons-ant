@@ -9,7 +9,7 @@
 #define INPUT_WINDOW_HEIGHT 3
 
 static WINDOW *iow;
-static const Vector2i io_pos = { MENU_CONTROLS_POS-22, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH-INPUT_WINDOW_WIDTH-2 };
+static const Vector2i io_pos = { MENU_CONTROLS_Y-22, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH-INPUT_WINDOW_WIDTH-2 };
 
 input_t set_simulation(Simulation *sim)
 {

@@ -10,20 +10,20 @@ Settings stgs;
 IOStatus load_status, save_status;
 
 const Vector2i menu_pos         = { 0, GRID_WINDOW_SIZE };
-const Vector2i menu_isize_u_pos = { MENU_LOGO_HEIGHT+2,   MENU_WINDOW_WIDTH-9 };
-const Vector2i menu_isize_d_pos = { MENU_LOGO_HEIGHT+5,   MENU_WINDOW_WIDTH-9 };
-const Vector2i menu_dir_u_pos   = { MENU_DIRECTION_POS+2, MENU_WINDOW_WIDTH-8 };
-const Vector2i menu_dir_r_pos   = { MENU_DIRECTION_POS+4, MENU_WINDOW_WIDTH-4 };
-const Vector2i menu_dir_d_pos   = { MENU_DIRECTION_POS+7, MENU_WINDOW_WIDTH-8 };
-const Vector2i menu_dir_l_pos   = { MENU_DIRECTION_POS+4, MENU_WINDOW_WIDTH-11 };
-const Vector2i menu_speed_u_pos = { MENU_SPEED_POS+2,     MENU_WINDOW_WIDTH-9 };
-const Vector2i menu_speed_d_pos = { MENU_SPEED_POS+21,    MENU_WINDOW_WIDTH-9 };
-const Vector2i menu_stepup_pos  = { MENU_SPEED_POS+20,    MENU_RIGHT_COLUMN+3 };
-const Vector2i menu_play_pos    = { MENU_CONTROLS_POS,    2 };
-const Vector2i menu_pause_pos   = { MENU_CONTROLS_POS,    MENU_BUTTON_WIDTH+4 };
-const Vector2i menu_stop_pos    = { MENU_CONTROLS_POS,    2*MENU_BUTTON_WIDTH+6 };
-const Vector2i menu_load_pos    = { MENU_CONTROLS_POS-2*MENU_BUTTON_HEIGHT-4, MENU_WINDOW_WIDTH-MENU_BUTTON_WIDTH-3 };
-const Vector2i menu_save_pos    = { MENU_CONTROLS_POS-MENU_BUTTON_HEIGHT-2,   MENU_WINDOW_WIDTH-MENU_BUTTON_WIDTH-3 };
+const Vector2i menu_isize_u_pos = { MENU_ISIZE_Y+2,     MENU_RIGHT_COL+9 };
+const Vector2i menu_isize_d_pos = { MENU_ISIZE_Y+5,     MENU_RIGHT_COL+9 };
+const Vector2i menu_dir_u_pos   = { MENU_DIRECTION_Y+2, MENU_RIGHT_COL+10 };
+const Vector2i menu_dir_r_pos   = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL+14 };
+const Vector2i menu_dir_d_pos   = { MENU_DIRECTION_Y+7, MENU_RIGHT_COL+10 };
+const Vector2i menu_dir_l_pos   = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL+7 };
+const Vector2i menu_speed_u_pos = { MENU_SPEED_Y+2,     MENU_RIGHT_COL+9 };
+const Vector2i menu_speed_d_pos = { MENU_SPEED_Y+21,    MENU_RIGHT_COL+9 };
+const Vector2i menu_stepup_pos  = { MENU_SPEED_Y+20,    MENU_RIGHT_COL+3 };
+const Vector2i menu_play_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL+2 };
+const Vector2i menu_pause_pos   = { MENU_CONTROLS_Y,    MENU_LEFT_COL+MENU_BUTTON_WIDTH+4 };
+const Vector2i menu_stop_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL+2*MENU_BUTTON_WIDTH+6 };
+const Vector2i menu_load_pos    = { MENU_CONTROLS_Y-2*MENU_BUTTON_HEIGHT-4, MENU_RIGHT_COL+15-MENU_BUTTON_WIDTH };
+const Vector2i menu_save_pos    = { MENU_CONTROLS_Y-MENU_BUTTON_HEIGHT-2,   MENU_RIGHT_COL+15-MENU_BUTTON_WIDTH };
 
 static const char *logo_msg   = " 14-COLOR 2D TURING MACHINE SIMULATOR ";
 static const char *rules_msg  = "RULES:";
@@ -36,23 +36,23 @@ static const char *size_msg   = "GRID SIZE:";
 static const char *sparse_msg = "SPARSE";
 static const char *steps_msg  = "STEPS:";
 
-static const Vector2i logo_pos       = { 3,  1 };
-static const Vector2i logo_msg_pos   = { 12, 2 };
-static const Vector2i rules_pos      = { MENU_LOGO_HEIGHT+5,  MENU_TILE_SIZE+MENU_TILE_HSEP+3 };
-static const Vector2i rules_msg_pos  = { MENU_LOGO_HEIGHT,    2 };
-static const Vector2i isize_pos      = { MENU_LOGO_HEIGHT+2,  MENU_WINDOW_WIDTH-5 };
-static const Vector2i isize_msg_pos  = { MENU_LOGO_HEIGHT,    MENU_RIGHT_COLUMN };
-static const Vector2i dir_msg_pos    = { MENU_DIRECTION_POS,  MENU_RIGHT_COLUMN };
-static const Vector2i speed_pos      = { MENU_SPEED_POS+2,    MENU_WINDOW_WIDTH-5 };
-static const Vector2i speed_msg_pos  = { MENU_SPEED_POS,      MENU_RIGHT_COLUMN };
-static const Vector2i stepup_msg_pos = { MENU_SPEED_POS+18,   MENU_RIGHT_COLUMN+2 };
-static const Vector2i func_pos       = { MENU_FUNCTION_POS+2, MENU_RIGHT_COLUMN+4 };
-static const Vector2i func_msg_pos   = { MENU_FUNCTION_POS,   MENU_RIGHT_COLUMN };
-static const Vector2i size_pos       = { MENU_STATUS_POS,     MENU_WINDOW_WIDTH-2 };
-static const Vector2i size_msg_pos   = { MENU_STATUS_POS,     2 };
-static const Vector2i sparse_msg_pos = { MENU_STATUS_POS+3,   2 };
-static const Vector2i steps_pos      = { MENU_STATUS_POS+2,   9 };
-static const Vector2i steps_msg_pos  = { MENU_STATUS_POS+6,   2 };
+static const Vector2i logo_pos       = { MENU_LOGO_Y,       MENU_LEFT_COL+1 };
+static const Vector2i logo_msg_pos   = { MENU_LOGO_Y+9,     MENU_LEFT_COL+2 };
+static const Vector2i rules_pos      = { MENU_RULES_Y+5,    MENU_LEFT_COL+MENU_TILE_SIZE+MENU_TILE_HSEP+3 };
+static const Vector2i rules_msg_pos  = { MENU_RULES_Y,      MENU_LEFT_COL+2 };
+static const Vector2i isize_pos      = { MENU_ISIZE_Y+2,    MENU_RIGHT_COL+13 };
+static const Vector2i isize_msg_pos  = { MENU_ISIZE_Y,      MENU_RIGHT_COL };
+static const Vector2i dir_msg_pos    = { MENU_DIRECTION_Y,  MENU_RIGHT_COL };
+static const Vector2i speed_pos      = { MENU_SPEED_Y+2,    MENU_RIGHT_COL+13 };
+static const Vector2i speed_msg_pos  = { MENU_SPEED_Y,      MENU_RIGHT_COL };
+static const Vector2i stepup_msg_pos = { MENU_SPEED_Y+18,   MENU_RIGHT_COL+2 };
+static const Vector2i func_pos       = { MENU_FUNCTION_Y+2, MENU_RIGHT_COL+4 };
+static const Vector2i func_msg_pos   = { MENU_FUNCTION_Y,   MENU_RIGHT_COL };
+static const Vector2i size_pos       = { MENU_STATUS_Y,     MENU_LEFT_COL+12 };
+static const Vector2i size_msg_pos   = { MENU_STATUS_Y,     MENU_LEFT_COL+2 };
+static const Vector2i sparse_msg_pos = { MENU_STATUS_Y+3,   MENU_LEFT_COL+2 };
+static const Vector2i steps_pos      = { MENU_STATUS_Y+2,   MENU_LEFT_COL+9 };
+static const Vector2i steps_msg_pos  = { MENU_STATUS_Y+6,   MENU_LEFT_COL+2 };
 
 static const byte logo_sprite[] = {
 	0x70, 0x00, 0x02, 0x00, 0x10, 0x20, 0x00, 0x02,
@@ -433,7 +433,7 @@ static void draw_grid_size(void)
 	char str[29];
 	sprintf(str, "%28d", size);
 	wattrset(menuw, fg_pair);
-	mvwaddstr(menuw, size_pos.y, size_pos.x-28, str);
+	mvwaddstr(menuw, size_pos.y, size_pos.x, str);
 }
 
 static void draw_steps(void)
