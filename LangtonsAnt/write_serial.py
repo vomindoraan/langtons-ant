@@ -53,4 +53,4 @@ if __name__ == '__main__':
         logging.exception("Couldn't connect: %s", e)
         sys.exit(-2)
 
-    serial.write(msg.encode('utf-8'))
+    serial.write(msg.encode('utf-8') + b'\0')
