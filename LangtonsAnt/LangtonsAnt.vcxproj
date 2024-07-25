@@ -96,6 +96,7 @@
     <ClInclude Include="io.h" />
     <ClInclude Include="logic.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="serial.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ant_sprites.c" />
@@ -111,6 +112,7 @@
     <ClCompile Include="grid.c" />
     <ClCompile Include="grid_window.c" />
     <ClCompile Include="ant.c" />
+    <ClCompile Include="serial.c" />
     <ClCompile Include="simulation.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
