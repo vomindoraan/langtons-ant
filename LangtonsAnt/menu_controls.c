@@ -247,7 +247,7 @@ input_t menu_mouse_command(MEVENT *pmouse)
 			return dialog_mouse_command(pmouse);
 		} else {
 			close_dialog();
-			ret = INPUT_MENU_CHANGED;
+			return INPUT_MENU_CHANGED;
 		}
 	}
 
@@ -260,66 +260,66 @@ input_t menu_mouse_command(MEVENT *pmouse)
 			} else if (pmouse->bstate & MOUSE_RB_EVENT) {
 				open_dialog(pos, CIDX_DEFAULT);
 			}
-			return ret | INPUT_MENU_CHANGED;
+			return INPUT_MENU_CHANGED;
 		}
 	}
 	if (area_contains(get_menu_cdef_pos(), strlen(dialog_cdef_msg), 1, pos)) {
 		open_dialog(pos, CIDX_DEFAULT);
-		return ret | INPUT_MENU_CHANGED;
+		return INPUT_MENU_CHANGED;
 	}
 
 	/* Init size buttons */
 	if (area_contains(menu_isize_u_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
-		return ret | isize_button_clicked(1);
+		return isize_button_clicked(1);
 	}
 	if (area_contains(menu_isize_d_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
-		return ret | isize_button_clicked(-1);
+		return isize_button_clicked(-1);
 	}
 
 	/* Ant direction buttons */
 	if (area_contains(menu_dir_u_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
-		return ret | dir_button_clicked(DIR_UP);
+		return dir_button_clicked(DIR_UP);
 	}
 	if (area_contains(menu_dir_r_pos, MENU_RLARROW_WIDTH, MENU_RLARROW_HEIGHT, pos)) {
-		return ret | dir_button_clicked(DIR_RIGHT);
+		return dir_button_clicked(DIR_RIGHT);
 	}
 	if (area_contains(menu_dir_d_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
-		return ret | dir_button_clicked(DIR_DOWN);
+		return dir_button_clicked(DIR_DOWN);
 	}
 	if (area_contains(menu_dir_l_pos, MENU_RLARROW_WIDTH, MENU_RLARROW_HEIGHT, pos)) {
-		return ret | dir_button_clicked(DIR_LEFT);
+		return dir_button_clicked(DIR_LEFT);
 	}
 
 	/* Speed buttons */
 	if (area_contains(menu_speed_u_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
-		return ret | speed_button_clicked(1);
+		return speed_button_clicked(1);
 	}
 	if (area_contains(menu_speed_d_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
-		return ret | speed_button_clicked(-1);
+		return speed_button_clicked(-1);
 	}
 
 	/* Step+ button */
 	if (area_contains(menu_stepup_pos, MENU_STEPUP_SIZE, MENU_STEPUP_SIZE, pos)) {
-		return ret | stepup_button_clicked();
+		return stepup_button_clicked();
 	}
 
 	/* Control buttons */
 	if (area_contains(menu_play_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
-		return ret | play_button_clicked();
+		return play_button_clicked();
 	}
 	if (area_contains(menu_pause_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
-		return ret | pause_button_clicked();
+		return pause_button_clicked();
 	}
 	if (area_contains(menu_stop_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
-		return ret | stop_button_clicked();
+		return stop_button_clicked();
 	}
 
 	/* IO buttons */
 	if (area_contains(menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
-		return ret | load_button_clicked();
+		return load_button_clicked();
 	}
 	if (area_contains(menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
-		return ret | save_button_clicked();
+		return save_button_clicked();
 	}
 
 	return ret;
