@@ -22,8 +22,8 @@ const Vector2i menu_stepup_pos  = { MENU_SPEED_Y+20,    MENU_RIGHT_COL+1 };
 const Vector2i menu_play_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL+2 };
 const Vector2i menu_pause_pos   = { MENU_CONTROLS_Y,    MENU_LEFT_COL+MENU_BUTTON_WIDTH+4 };
 const Vector2i menu_stop_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL+2*MENU_BUTTON_WIDTH+6 };
-const Vector2i menu_load_pos    = { MENU_CONTROLS_Y-2*MENU_BUTTON_HEIGHT-4, MENU_RIGHT_COL+15-MENU_BUTTON_WIDTH };
-const Vector2i menu_save_pos    = { MENU_CONTROLS_Y-MENU_BUTTON_HEIGHT-2,   MENU_RIGHT_COL+15-MENU_BUTTON_WIDTH };
+//const Vector2i menu_load_pos    = { MENU_CONTROLS_Y-2*MENU_BUTTON_HEIGHT-4, MENU_RIGHT_COL+15-MENU_BUTTON_WIDTH };
+const Vector2i menu_load_pos    = { MENU_CONTROLS_Y-MENU_BUTTON_HEIGHT-2,   MENU_RIGHT_COL+15-MENU_BUTTON_WIDTH };
 
 static const char *logo_msg   = " 14-COLOR 2D TURING MACHINE SIMULATOR ";
 static const char *rules_msg  = "COLOR RULES:";
@@ -398,32 +398,32 @@ static void draw_control_buttons(void)
 static void draw_io_buttons(void)
 {
 	Vector2i inner1 = { menu_load_pos.y+1, menu_load_pos.x+1 };
-	Vector2i inner2 = { menu_save_pos.y+1, menu_save_pos.x+1 };
+	//Vector2i inner2 = { menu_save_pos.y+1, menu_save_pos.x+1 };
 
 	wattrset(menuw, ui_pair);
 	draw_rect(menuw, menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
-	draw_rect(menuw, menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
+	//draw_rect(menuw, menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
 	wattrset(menuw, bg_pair);
 	draw_rect(menuw, inner1, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
-	draw_rect(menuw, inner2, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
+	//draw_rect(menuw, inner2, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
 
 	wattrset(menuw, fg_pair);
-	mvwaddstr(menuw, inner1.y+1, inner1.x, " LOAD    ");
-	mvwaddstr(menuw, inner1.y+2, inner1.x, "  FROM   ");
-	mvwaddstr(menuw, inner1.y+3, inner1.x, "    FILE ");
-	mvwaddstr(menuw, inner2.y+1, inner2.x, " SAVE    ");
-	mvwaddstr(menuw, inner2.y+2, inner2.x, "   TO    ");
-	mvwaddstr(menuw, inner2.y+3, inner2.x, "    FILE ");
+	mvwaddstr(menuw, inner1.y+1, inner1.x, "  LOAD   ");
+	mvwaddstr(menuw, inner1.y+2, inner1.x, "   AN    ");
+	mvwaddstr(menuw, inner1.y+3, inner1.x, " EXAMPLE ");
+	//mvwaddstr(menuw, inner2.y+1, inner2.x, " SAVE    ");
+	//mvwaddstr(menuw, inner2.y+2, inner2.x, "   TO    ");
+	//mvwaddstr(menuw, inner2.y+3, inner2.x, "    FILE ");
 
-	/* Draw status indicators */
-	if (load_status != STATUS_NONE) {
-		wattrset(menuw, GET_PAIR_FOR((load_status == STATUS_SUCCESS) ? COLOR_LIME : COLOR_RED));
-		mvwvline(menuw, menu_load_pos.y, menu_load_pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
-	}
-	if (save_status != STATUS_NONE) {
-		wattrset(menuw, GET_PAIR_FOR((save_status == STATUS_SUCCESS) ? COLOR_LIME : COLOR_RED));
-		mvwvline(menuw, menu_save_pos.y, menu_save_pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
-	}
+	///* Draw status indicators */
+	//if (load_status != STATUS_NONE) {
+	//	wattrset(menuw, GET_PAIR_FOR((load_status == STATUS_SUCCESS) ? COLOR_LIME : COLOR_RED));
+	//	mvwvline(menuw, menu_load_pos.y, menu_load_pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
+	//}
+	//if (save_status != STATUS_NONE) {
+	//	wattrset(menuw, GET_PAIR_FOR((save_status == STATUS_SUCCESS) ? COLOR_LIME : COLOR_RED));
+	//	mvwvline(menuw, menu_save_pos.y, menu_save_pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
+	//}
 }
 
 static void draw_grid_size(void)

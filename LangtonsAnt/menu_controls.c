@@ -8,8 +8,23 @@
 #define INPUT_WINDOW_WIDTH  (MENU_WINDOW_WIDTH-4)
 #define INPUT_WINDOW_HEIGHT 3
 
+#define ARR_SIZE(a) (sizeof(a) / sizeof(a[0]))
+
 static WINDOW *iow;
 static const Vector2i io_pos = { MENU_CONTROLS_Y-22, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH-INPUT_WINDOW_WIDTH-2 };
+
+static const char* example_files[] = {
+	"examples/highway.lant",
+	"examples/spiral.lant",
+	"examples/triangle.lant",
+	"examples/square.lant",
+	"examples/zigzag.lant",
+	"examples/cauliflower.lant",
+	"examples/square3.lant",
+	"examples/test.lant",
+	"examples/square2.lant",
+	"examples/sword.lant",
+};
 
 input_t set_simulation(Simulation *sim)
 {
@@ -130,33 +145,31 @@ static bool read_filename(char *filename)
 
 static input_t load_button_clicked(void)
 {
-	char filename[FILENAME_SIZE] = { 0 };
-	if (read_filename(filename)) {
-		Simulation *sim = load_simulation(filename);
-		load_status = sim ? STATUS_SUCCESS : STATUS_FAILURE;
-		if (sim) {
-			return set_simulation(sim);
-		}
-	} else {
-		load_status = STATUS_FAILURE;
+	static int index = 0;
+	const char *filename = example_files[index];
+	index = (index + 1) % ARR_SIZE(example_files);
+
+	Simulation *sim = load_simulation(filename);
+	if (sim) {
+		return set_simulation(sim);
 	}
 	return INPUT_MENU_CHANGED;
 }
 
-static input_t save_button_clicked(void)
-{
-	char filename[FILENAME_SIZE] = { 0 }, bmp_filename[FILENAME_SIZE] = { 0 };
-	if (read_filename(filename)) {
-		int e = save_simulation(filename, stgs.linked_sim);
-		save_status = (e != EOF) ? STATUS_SUCCESS : STATUS_FAILURE;
-		strcpy(bmp_filename, filename);
-		strcat(bmp_filename, ".bmp");
-		save_grid_bitmap(bmp_filename, stgs.linked_sim->grid);
-	} else {
-		save_status = STATUS_FAILURE;
-	}
-	return INPUT_MENU_CHANGED;
-}
+//static input_t save_button_clicked(void)
+//{
+//	char filename[FILENAME_SIZE] = { 0 }, bmp_filename[FILENAME_SIZE] = { 0 };
+//	if (read_filename(filename)) {
+//		int e = save_simulation(filename, stgs.linked_sim);
+//		save_status = (e != EOF) ? STATUS_SUCCESS : STATUS_FAILURE;
+//		strcpy(bmp_filename, filename);
+//		strcat(bmp_filename, ".bmp");
+//		save_grid_bitmap(bmp_filename, stgs.linked_sim->grid);
+//	} else {
+//		save_status = STATUS_FAILURE;
+//	}
+//	return INPUT_MENU_CHANGED;
+//}
 
 input_t menu_key_command(int key, MEVENT *pmouse)
 {
@@ -212,8 +225,8 @@ input_t menu_key_command(int key, MEVENT *pmouse)
 		/* IO */
 	case KEY_F(1):
 		return load_button_clicked();
-	case KEY_F(2):
-		return save_button_clicked();
+	//case KEY_F(2):
+	//	return save_button_clicked();
 
 		/* Quit */
 	case KEY_ESC:
@@ -318,9 +331,9 @@ input_t menu_mouse_command(MEVENT *pmouse)
 	if (area_contains(menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
 		return load_button_clicked();
 	}
-	if (area_contains(menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
-		return save_button_clicked();
-	}
+	//if (area_contains(menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
+	//	return save_button_clicked();
+	//}
 
 	return ret;
 }
