@@ -127,9 +127,9 @@ typedef struct scroll_info {
 
 /** @name Menu window attributes */
 ///@{
-#define MENU_WINDOW_WIDTH   42
+#define MENU_WINDOW_WIDTH   44
 #define MENU_WINDOW_HEIGHT  GRID_WINDOW_SIZE
-#define MENU_MARGIN_WIDTH   0
+#define MENU_MARGIN_WIDTH   1
 #define MENU_LEFT_COL       MENU_MARGIN_WIDTH
 #define MENU_RIGHT_COL      (MENU_WINDOW_WIDTH-MENU_MARGIN_WIDTH-18)
 #define MENU_LOGO_Y         3
