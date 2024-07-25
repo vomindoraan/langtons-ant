@@ -20,7 +20,7 @@ input_t set_simulation(Simulation *sim)
 	stgs.colors = sim->colors;
 	stgs.init_size = sim->grid->init_size;
 	reset_scroll();
-	return INPUT_MENU_CHANGED | INPUT_GRID_CHANGED;
+	return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED | INPUT_COLORS_CHANGED;
 }
 
 input_t reset_simulation(void)
@@ -31,7 +31,7 @@ input_t reset_simulation(void)
 	}
 	stgs.linked_sim = simulation_new(stgs.colors, stgs.init_size);
 	reset_scroll();
-	return INPUT_MENU_CHANGED | INPUT_GRID_CHANGED;
+	return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED | INPUT_COLORS_CHANGED;
 }
 
 input_t clear_simulation(void)
@@ -59,7 +59,7 @@ static input_t isize_button_clicked(int d)
 static input_t dir_button_clicked(Direction dir)
 {
 	stgs.linked_sim->ant->dir = dir;
-	return INPUT_MENU_CHANGED | INPUT_GRID_CHANGED;
+	return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED;
 }
 
 static input_t speed_button_clicked(int d)
@@ -80,7 +80,7 @@ static input_t stepup_button_clicked(void)
 	if (sim && has_enough_colors(sim->colors)) {
 		simulation_halt(sim);
 		simulation_step(sim);
-		return INPUT_MENU_CHANGED | INPUT_GRID_CHANGED;
+		return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED;
 	}
 	return INPUT_NO_CHANGE;
 }

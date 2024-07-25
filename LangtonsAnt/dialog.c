@@ -192,7 +192,7 @@ button_clicked:
 			add_color(stgs.colors, picked_color, picked_turn);
 			close_dialog();
 		}
-		return INPUT_MENU_CHANGED;
+		return INPUT_MENU_CHANGED | INPUT_COLORS_CHANGED;
 
 	case CIDX_DEFAULT:
 		assert(stgs.colors && stgs.linked_sim->colors);
@@ -212,7 +212,6 @@ button_clicked:
 				set_turn(stgs.colors, cidx, picked_turn);
 			}
 			close_dialog();
-			return INPUT_MENU_CHANGED;
 		} else if (del) {
 			remove_color(stgs.colors, get_color_at(stgs.colors, cidx));
 			if (!has_enough_colors(stgs.colors)) {
@@ -220,6 +219,6 @@ button_clicked:
 			}
 			close_dialog();
 		}
-		return INPUT_MENU_CHANGED;
+		return INPUT_MENU_CHANGED | INPUT_COLORS_CHANGED;
 	}
 }
