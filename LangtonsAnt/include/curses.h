@@ -2,17 +2,17 @@
 #define __CURSES_H__
 
 #if defined(_WIN32)
-	#define CURSES_BGR
-	#define NCURSES_MOUSE_VERSION
-	#include <pdcurses.h>
+#	define CURSES_BGR
+#	define NCURSES_MOUSE_VERSION
+#	include <pdcurses.h>
 
 #elif defined(__linux__)
-	#define CURSES_RGB
-	#define NCURSES_ENABLE_STDBOOL_H 0
-	#include <ncurses.h>
+#	define CURSES_RGB
+#	define NCURSES_ENABLE_STDBOOL_H 0
+#	include <ncurses.h>
 
 #else
-	#error "Unsupported platform"
+#	error "Unsupported platform"
 
 #endif
 

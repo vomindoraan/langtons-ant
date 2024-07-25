@@ -132,7 +132,7 @@ static input_t load_button_clicked(void)
 {
 	char filename[FILENAME_SIZE] = { 0 };
 	if (read_filename(filename)) {
-		Simulation* sim = load_simulation(filename);
+		Simulation *sim = load_simulation(filename);
 		load_status = sim ? STATUS_SUCCESS : STATUS_FAILURE;
 		if (sim) {
 			return set_simulation(sim);
