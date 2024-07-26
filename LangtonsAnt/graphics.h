@@ -385,13 +385,13 @@ void draw_square(WINDOW *w, Vector2i top_left, size_t size);
 void draw_rect(WINDOW *w, Vector2i top_left, size_t width, size_t height);
 
 /**
- * Utility function for drawing thin rectangular borders
+ * Utility function for drawing thin rectangular frames
  * @param w Window to draw to
  * @param top_left Box origin
  * @param width Box width
  * @param height Box height
  */
-void draw_border(WINDOW *w, Vector2i top_left, size_t width, size_t height);
+void draw_frame(WINDOW *w, Vector2i top_left, size_t width, size_t height);
 
 /**
  * Utility function for drawing monochrome sprites

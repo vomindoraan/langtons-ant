@@ -145,7 +145,7 @@ void draw_rect(WINDOW *w, Vector2i top_left, size_t width, size_t height)
 	}
 }
 
-void draw_border(WINDOW *w, Vector2i top_left, size_t width, size_t height)
+void draw_frame(WINDOW *w, Vector2i top_left, size_t width, size_t height)
 {
 	size_t y = height-1, x = width-1, i;
 	if (width == 0 || height == 0) {
