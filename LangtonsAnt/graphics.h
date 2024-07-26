@@ -129,19 +129,25 @@ typedef struct scroll_info {
 ///@{
 #define MENU_WINDOW_WIDTH   44
 #define MENU_WINDOW_HEIGHT  GRID_WINDOW_SIZE
-#define MENU_MARGIN_WIDTH   1
-#define MENU_LEFT_COL       MENU_MARGIN_WIDTH
-#define MENU_RIGHT_COL      (MENU_WINDOW_WIDTH-MENU_MARGIN_WIDTH-18)
-#define MENU_LOGO_Y         3
-#define MENU_RULES_Y        16
-#define MENU_ISIZE_Y        16
-#define MENU_DIRECTION_Y    (MENU_ISIZE_Y+10)
-#define MENU_SPEED_Y        (MENU_DIRECTION_Y+12)
-#define MENU_FUNCTION_Y     (MENU_SPEED_Y+26)
-#define MENU_CONTROLS_Y     89
+#define MENU_H_MARGIN       3
+#define MENU_V_MARGIN       3
+#define MENU_H_PADDING      2
+#define MENU_V_PADDING      4
+#define MENU_LEFT_COL       MENU_H_MARGIN
+#define MENU_RIGHT_COL      (MENU_WINDOW_WIDTH-MENU_H_MARGIN-16)
+#define MENU_LOGO_WIDTH     40
+#define MENU_LOGO_HEIGHT    8
+#define MENU_LOGO_Y         MENU_V_MARGIN
+#define MENU_RULES_Y        (MENU_LOGO_Y+MENU_LOGO_HEIGHT+MENU_V_PADDING+1)
+#define MENU_ISIZE_Y        MENU_RULES_Y
+#define MENU_DIRECTION_Y    (MENU_ISIZE_Y+MENU_V_PADDING+7)
+#define MENU_SPEED_Y        (MENU_DIRECTION_Y+MENU_V_PADDING+9)
+#define MENU_SPEED_HEIGHT   17
+#define MENU_FUNCTION_Y     (MENU_SPEED_Y+MENU_SPEED_HEIGHT+MENU_V_PADDING+6)
+#define MENU_CONTROLS_Y     (MENU_STATUS_Y-10)
 #define MENU_STATUS_Y       (MENU_WINDOW_HEIGHT-10)
-#define MENU_EDGE_COLOR     COLOR_NAVY
-#define MENU_EDGE_COLOR_S   COLOR_MAROON
+#define MENU_BORDER_COLOR   COLOR_NAVY
+#define MENU_BORDER_COLOR_S COLOR_MAROON
 #define MENU_ACTIVE_COLOR   COLOR_BLUE
 #define MENU_INACTIVE_COLOR COLOR_GRAY
 ///@}
@@ -150,6 +156,8 @@ typedef struct scroll_info {
 ///@{
 #define MENU_BUTTON_WIDTH   11
 #define MENU_BUTTON_HEIGHT  7
+#define MENU_BUTTON_PWIDTH  (MENU_BUTTON_WIDTH+MENU_H_PADDING)
+#define MENU_BUTTON_PHEIGHT (MENU_BUTTON_HEIGHT+MENU_H_PADDING)
 #define MENU_PLAY_COLOR     COLOR_GREEN
 #define MENU_PAUSE_COLOR    COLOR_YELLOW
 #define MENU_STOP_COLOR     COLOR_RED
@@ -219,14 +227,26 @@ typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE } IOStatus;
 /** Escape key literal for input handling */
 #define KEY_ESC 0x1B
 
+/** Should react on key press instead of release (click)? */
+#define MOUSE_ACT_ON_PRESS TRUE
+
 /** @name Mouse button event flags */
 ///@{
-#define MOUSE_LB_EVENT BUTTON1_PRESSED
-#define MOUSE_RB_EVENT BUTTON3_PRESSED
-#define MOUSE_MASK     (BUTTON1_PRESSED | BUTTON3_PRESSED \
-                       | BUTTON1_CLICKED | BUTTON3_CLICKED)
-// WARN ncurses mouse handling breaks if mouseinterval(0) is set and only *_PRESSED
-//      is selected without *_CLICKED or *_RELEASED
+#if MOUSE_ACT_ON_PRESS
+#	define MOUSE_LB_EVENT BUTTON1_PRESSED
+#	define MOUSE_RB_EVENT BUTTON3_PRESSED
+#	ifdef NCURSES
+		// WARN ncurses mouse handling breaks if mouseinterval(0) is set and only
+		//      *_PRESSED is selected without *_CLICKED or *_RELEASED
+#		define MOUSE_MASK  (BUTTON1_PRESSED | BUTTON3_PRESSED | BUTTON1_CLICKED | BUTTON3_CLICKED)
+#	else
+#		define MOUSE_MASK  (BUTTON1_PRESSED | BUTTON3_PRESSED)
+#	endif
+#else
+#	define MOUSE_LB_EVENT BUTTON1_CLICKED
+#	define MOUSE_RB_EVENT BUTTON2_CLICKED
+#	define MOUSE_MASK     (BUTTON1_CLICKED | BUTTON2_CLICKED)
+#endif
 ///@}
 
 /** @name Window state change flags */
@@ -250,7 +270,7 @@ typedef byte input_t;
 #define LOOP_MAX_SPEED  9    /**< Maximum allowed speed multiplier */
 #define LOOP_MAX_DELAY  150  /**< Maximum delay in ms (at minimum speed) */
 #define LOOP_MIN_DELAY  0    /**< Minimum delay in ms (at maximum speed) */
-#define LOOP_OPT_ENABLE      /**< Should optimize drawing by skipping steps? */
+#define LOOP_OPT_ENABLE TRUE /**< Should optimize drawing by skipping steps? */
 #define LOOP_OPT_SPEED  3    /**< Threshold speed at which to begin skipping */
 #define LOOP_DEF_OPT    3    /**< Default number of steps to skip */
 #define LOOP_MAX_OPT    1097 /**< Number of steps to skip at maximum speed */
@@ -283,7 +303,7 @@ extern const Vector2i menu_pos;
 extern const Vector2i menu_isize_u_pos, menu_isize_d_pos;
 extern const Vector2i menu_dir_u_pos, menu_dir_r_pos, menu_dir_d_pos, menu_dir_l_pos;
 extern const Vector2i menu_speed_u_pos, menu_speed_d_pos, menu_stepup_pos;
-extern const Vector2i menu_play_pos, menu_pause_pos, menu_stop_pos;
+extern const Vector2i menu_play_pos, menu_stop_pos;
 extern const Vector2i menu_load_pos/*, menu_save_pos*/;
 
 extern WINDOW         *dialogw;

@@ -102,26 +102,16 @@ static input_t stepup_button_clicked(void)
 
 static input_t play_button_clicked(void)
 {
-	input_t ret = INPUT_NO_CHANGE;
-	Simulation *sim = stgs.linked_sim;
-	if (is_simulation_running(sim)) {
-		ret |= reset_simulation();
-		sim = stgs.linked_sim;
-	}
-	if (sim && has_enough_colors(sim->colors)) {
-		simulation_run(sim);
-		ret |= INPUT_MENU_CHANGED;
-	}
-	return ret;
-}
-
-static input_t pause_button_clicked(void)
-{
 	Simulation *sim = stgs.linked_sim;
 	if (is_simulation_running(sim)) {
 		simulation_halt(sim);
+		return INPUT_MENU_CHANGED;
 	}
-	return INPUT_MENU_CHANGED;
+	if (sim && has_enough_colors(sim->colors)) {
+		simulation_run(sim);
+		return INPUT_MENU_CHANGED;
+	}
+	return INPUT_NO_CHANGE;
 }
 
 static input_t stop_button_clicked(void)
@@ -216,9 +206,9 @@ input_t menu_key_command(int key, MEVENT *pmouse)
 #ifdef PDCURSES
 	case PADENTER:
 #endif
-		return is_simulation_running(sim) ? pause_button_clicked() : play_button_clicked();
+		return play_button_clicked();
 	case 'R': case 'r':
-		return reset_simulation();
+		return stop_button_clicked();
 	case 'X': case 'x': case '\b':
 		return clear_simulation();
 
@@ -322,9 +312,6 @@ input_t menu_mouse_command(MEVENT *pmouse)
 	/* Control buttons */
 	if (area_contains(menu_play_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
 		return play_button_clicked();
-	}
-	if (area_contains(menu_pause_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
-		return pause_button_clicked();
 	}
 	if (area_contains(menu_stop_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
 		return stop_button_clicked();
