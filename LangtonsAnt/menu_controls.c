@@ -17,13 +17,11 @@ static const char* example_files[] = {
 	"examples/highway.lant",
 	"examples/spiral.lant",
 	"examples/triangle.lant",
+	"examples/sword.lant",
 	"examples/square.lant",
 	"examples/zigzag.lant",
 	"examples/cauliflower.lant",
 	"examples/square3.lant",
-	"examples/test.lant",
-	"examples/square2.lant",
-	"examples/sword.lant",
 };
 
 input_t set_simulation(Simulation *sim)
