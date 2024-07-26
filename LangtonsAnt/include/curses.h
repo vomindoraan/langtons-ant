@@ -5,11 +5,17 @@
 #	define CURSES_BGR
 #	define NCURSES_MOUSE_VERSION
 #	include <pdcurses.h>
+#	ifndef PDCURSES
+#		define PDCURSES
+#	endif
 
 #elif defined(__linux__)
 #	define CURSES_RGB
 #	define NCURSES_ENABLE_STDBOOL_H 0
 #	include <ncurses.h>
+#	ifndef NCURSES
+#		define NCURSES
+#	endif
 
 #else
 #	error "Unsupported platform"
