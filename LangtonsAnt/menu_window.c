@@ -17,12 +17,12 @@ const Vector2i menu_dir_r_pos   = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL+14 };
 const Vector2i menu_dir_d_pos   = { MENU_DIRECTION_Y+7, MENU_RIGHT_COL+10 };
 const Vector2i menu_dir_l_pos   = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL+7 };
 const Vector2i menu_speed_u_pos = { MENU_SPEED_Y+2,     MENU_RIGHT_COL+9 };
-const Vector2i menu_speed_d_pos = { MENU_SPEED_Y+21,    MENU_RIGHT_COL+9 };
+const Vector2i menu_speed_d_pos = { MENU_SPEED_Y+MENU_SPEED_HEIGHT+4,    MENU_RIGHT_COL+9 };
 const Vector2i menu_stepup_pos  = { MENU_SPEED_Y+20,    MENU_RIGHT_COL+1 };
-const Vector2i menu_play_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL+2 };
-const Vector2i menu_stop_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL+MENU_BUTTON_WIDTH+4 };
-const Vector2i menu_save_pos    = { MENU_CONTROLS_Y,    MENU_RIGHT_COL+15-MENU_BUTTON_WIDTH };
-const Vector2i menu_load_pos    = { MENU_CONTROLS_Y-MENU_BUTTON_HEIGHT-2, MENU_RIGHT_COL+15-MENU_BUTTON_WIDTH };
+const Vector2i menu_play_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL };
+const Vector2i menu_stop_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL+MENU_BUTTON_PWIDTH };
+const Vector2i menu_save_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL+2*MENU_BUTTON_PWIDTH };
+const Vector2i menu_load_pos    = { MENU_CONTROLS_Y-MENU_BUTTON_PHEIGHT, MENU_LEFT_COL+2*MENU_BUTTON_PWIDTH };
 
 static const char *logo_msg   = " 14-COLOR 2D TURING MACHINE SIMULATOR ";
 static const char *rules_msg  = "COLOR RULES:";
@@ -35,10 +35,10 @@ static const char *size_msg   = "GRID SIZE:";
 static const char *sparse_msg = "SPARSE";
 static const char *steps_msg  = "STEPS:";
 
-static const Vector2i logo_pos       = { MENU_LOGO_Y,       MENU_LEFT_COL+1 };
-static const Vector2i logo_msg_pos   = { MENU_LOGO_Y+9,     MENU_LEFT_COL+2 };
-static const Vector2i rules_pos      = { MENU_RULES_Y+5,    MENU_LEFT_COL+MENU_TILE_SIZE+MENU_TILE_HSEP+3 };
-static const Vector2i rules_msg_pos  = { MENU_RULES_Y,      MENU_LEFT_COL+2 };
+static const Vector2i logo_pos       = { MENU_LOGO_Y,       MENU_LEFT_COL-1 }; // TODO remove white border from sprite
+static const Vector2i logo_msg_pos   = { MENU_LOGO_Y+9,     MENU_LEFT_COL };
+static const Vector2i rules_pos      = { MENU_RULES_Y+5,    MENU_LEFT_COL+MENU_TILE_SIZE+MENU_TILE_HSEP+1 };
+static const Vector2i rules_msg_pos  = { MENU_RULES_Y,      MENU_LEFT_COL };
 static const Vector2i isize_pos      = { MENU_ISIZE_Y+2,    MENU_RIGHT_COL+13 };
 static const Vector2i isize_msg_pos  = { MENU_ISIZE_Y,      MENU_RIGHT_COL };
 static const Vector2i dir_msg_pos    = { MENU_DIRECTION_Y,  MENU_RIGHT_COL };
@@ -47,11 +47,11 @@ static const Vector2i speed_msg_pos  = { MENU_SPEED_Y,      MENU_RIGHT_COL };
 static const Vector2i stepup_msg_pos = { MENU_SPEED_Y+18,   MENU_RIGHT_COL };
 static const Vector2i func_pos       = { MENU_FUNCTION_Y+2, MENU_RIGHT_COL+4 };
 static const Vector2i func_msg_pos   = { MENU_FUNCTION_Y,   MENU_RIGHT_COL };
-static const Vector2i size_pos       = { MENU_STATUS_Y,     MENU_LEFT_COL+12 };
-static const Vector2i size_msg_pos   = { MENU_STATUS_Y,     MENU_LEFT_COL+2 };
-static const Vector2i sparse_msg_pos = { MENU_STATUS_Y+3,   MENU_LEFT_COL+2 };
-static const Vector2i steps_pos      = { MENU_STATUS_Y+2,   MENU_LEFT_COL+9 };
-static const Vector2i steps_msg_pos  = { MENU_STATUS_Y+6,   MENU_LEFT_COL+2 };
+static const Vector2i size_pos       = { MENU_STATUS_Y,     MENU_LEFT_COL+10 };
+static const Vector2i size_msg_pos   = { MENU_STATUS_Y,     MENU_LEFT_COL };
+static const Vector2i sparse_msg_pos = { MENU_STATUS_Y+3,   MENU_LEFT_COL };
+static const Vector2i steps_pos      = { MENU_STATUS_Y+2,   MENU_LEFT_COL+7 };
+static const Vector2i steps_msg_pos  = { MENU_STATUS_Y+6,   MENU_LEFT_COL };
 
 static const byte logo_sprite[] = {
 	0x70, 0x00, 0x02, 0x00, 0x10, 0x20, 0x00, 0x02,
@@ -92,8 +92,8 @@ void init_menu_window(void)
 	wbkgd(menuw, fg_pair);
 	keypad(menuw, TRUE);
 	nodelay(menuw, TRUE);
-	assert(!IS_COLOR_BRIGHT(MENU_EDGE_COLOR)
-	    && !IS_COLOR_BRIGHT(MENU_EDGE_COLOR_S)
+	assert(!IS_COLOR_BRIGHT(MENU_BORDER_COLOR)
+	    && !IS_COLOR_BRIGHT(MENU_BORDER_COLOR_S)
 	    && !IS_COLOR_BRIGHT(MENU_ACTIVE_COLOR)
 	    && !IS_COLOR_BRIGHT(MENU_INACTIVE_COLOR));
 }
@@ -133,16 +133,16 @@ Vector2i get_menu_cdef_pos(void)
 	};
 }
 
-static void draw_edge(void)
+static void draw_border(void)
 {
 	Simulation *sim = stgs.linked_sim;
 	size_t h = MENU_WINDOW_WIDTH, v = MENU_WINDOW_HEIGHT;
 
 	if (sim && is_grid_sparse(sim->grid)) {
-		wattrset(menuw, GET_PAIR_FOR(MENU_EDGE_COLOR_S));
+		wattrset(menuw, GET_PAIR_FOR(MENU_BORDER_COLOR_S));
 		mvwaddstr(menuw, sparse_msg_pos.y, sparse_msg_pos.x, sparse_msg);
 	} else {
-		wattrset(menuw, GET_PAIR_FOR(MENU_EDGE_COLOR));
+		wattrset(menuw, GET_PAIR_FOR(MENU_BORDER_COLOR));
 		mvwhline(menuw, sparse_msg_pos.y, sparse_msg_pos.x, ' ', strlen(sparse_msg));
 	}
 
@@ -154,12 +154,14 @@ static void draw_edge(void)
 
 static void draw_logo(void)
 {
-	wattrset(menuw, GET_PAIR_FOR(MENU_EDGE_COLOR));
-	draw_sprite(menuw, (SpriteInfo) { logo_sprite, 40, 8 }, logo_pos, FALSE);
+	wattrset(menuw, GET_PAIR_FOR(MENU_BORDER_COLOR));
+	draw_sprite(menuw, (SpriteInfo) { logo_sprite, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT },
+	            logo_pos, FALSE);
 	wattron(menuw, A_REVERSE);
 	mvwaddstr(menuw, logo_msg_pos.y, logo_msg_pos.x, logo_msg);
 	wattrset(menuw, GET_PAIR_FOR(MENU_ACTIVE_COLOR)); // TODO add copyright window
-	draw_sprite(menuw, (SpriteInfo) { logo_highlight_sprite, 40, 8 }, logo_pos, FALSE);
+	draw_sprite(menuw, (SpriteInfo) { logo_highlight_sprite, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT},
+	            logo_pos, FALSE);
 }
 
 static void draw_color_arrow(Vector2i pos1, Vector2i pos2)
@@ -473,7 +475,7 @@ static void draw_steps(void)
 
 static void draw_labels(void)
 {
-	wattrset(menuw, GET_PAIR_FOR(MENU_EDGE_COLOR));
+	wattrset(menuw, GET_PAIR_FOR(MENU_BORDER_COLOR));
 	mvwaddstr(menuw, rules_msg_pos.y,  rules_msg_pos.x,  rules_msg);
 	mvwaddstr(menuw, isize_msg_pos.y,  isize_msg_pos.x,  isize_msg);
 	mvwaddstr(menuw, dir_msg_pos.y,    dir_msg_pos.x,    dir_msg);
@@ -486,7 +488,7 @@ static void draw_labels(void)
 
 void draw_menu_full(void)
 {
-	draw_edge();
+	draw_border();
 	draw_logo();
 	draw_color_list();
 	draw_init_size();
@@ -521,7 +523,7 @@ void draw_menu_iter(void)
 #if LOOP_OPT_ENABLE
 		do_draw = TRUE;
 #endif
-		draw_edge();
+		draw_border();
 	}
 #if LOOP_OPT_ENABLE
 	if (do_draw) {
