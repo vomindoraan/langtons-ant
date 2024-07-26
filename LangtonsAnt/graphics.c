@@ -70,7 +70,9 @@ void init_graphics(color_t fg_color, color_t bg_color)
 	keypad(stdscr, TRUE);
 	nodelay(stdscr, TRUE);
 	mousemask(MOUSE_MASK, NULL);
-	mouseinterval(0); // React on key press instead of release (click)
+#if MOUSE_ACT_ON_PRESS
+	mouseinterval(0);
+#endif
 
 	start_color();
 	init_def_pairs(fg_color, bg_color);
