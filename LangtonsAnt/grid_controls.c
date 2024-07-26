@@ -143,10 +143,14 @@ static void scrollbar_clicked(Grid *grid, MEVENT *mevent, ScrollbarType sbtype)
 input_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *pmouse)
 {
 	Vector2i center = { grid->size / 2, grid->size / 2 };
-	Vector2i pos = abs2rel(ant->pos, center);
+	Vector2i event_pos, pos;
 	int step;
 
 	if (!pmouse) {
+		return INPUT_NO_CHANGE;
+	}
+	event_pos.y = pmouse->y, event_pos.x = pmouse->x;
+	if (!area_contains(grid_pos, GRID_WINDOW_SIZE, GRID_WINDOW_SIZE, event_pos)) {
 		return INPUT_NO_CHANGE;
 	}
 
@@ -179,6 +183,7 @@ input_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *pmouse)
 	}
 
 	/* Grid proper - jump to ant */
+	pos = abs2rel(ant->pos, center);
 	set_scroll(grid, pos.y, pos.x);
 	return INPUT_GRID_CHANGED;
 }
