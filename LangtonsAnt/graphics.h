@@ -262,7 +262,7 @@ typedef byte input_t;
 #define LOOP_MAX_SPEED  9    /**< Maximum allowed speed multiplier */
 #define LOOP_MAX_DELAY  150  /**< Maximum delay in ms (at minimum speed) */
 #define LOOP_MIN_DELAY  0    /**< Minimum delay in ms (at maximum speed) */
-#define LOOP_OPT_ENABLE      /**< Should optimize drawing by skipping steps? */
+#define LOOP_OPT_ENABLE TRUE /**< Should optimize drawing by skipping steps? */
 #define LOOP_OPT_SPEED  3    /**< Threshold speed at which to begin skipping */
 #define LOOP_DEF_OPT    3    /**< Default number of steps to skip */
 #define LOOP_MAX_OPT    1097 /**< Number of steps to skip at maximum speed */
