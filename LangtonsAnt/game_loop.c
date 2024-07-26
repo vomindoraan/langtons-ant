@@ -17,6 +17,11 @@ static input_t handle_input(Simulation *sim)
 	}
 	if (key == KEY_MOUSE && getmouse(&mouse) != ERR) {
 		pmouse = &mouse;
+#if defined(MOUSE_ACT_ON_PRESS) && defined(NCURSES)
+		if (pmouse->bstate & (BUTTON1_RELEASED | BUTTON3_RELEASED)) {
+			return INPUT_NO_CHANGE; // Prevent double press
+		}
+#endif
 	}
 
 	ret = INPUT_NO_CHANGE;
