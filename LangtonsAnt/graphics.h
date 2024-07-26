@@ -295,7 +295,7 @@ extern const Vector2i menu_pos;
 extern const Vector2i menu_isize_u_pos, menu_isize_d_pos;
 extern const Vector2i menu_dir_u_pos, menu_dir_r_pos, menu_dir_d_pos, menu_dir_l_pos;
 extern const Vector2i menu_speed_u_pos, menu_speed_d_pos, menu_stepup_pos;
-extern const Vector2i menu_play_pos, menu_pause_pos, menu_stop_pos;
+extern const Vector2i menu_play_pos, menu_stop_pos;
 extern const Vector2i menu_load_pos, menu_save_pos;
 
 extern WINDOW         *dialogw;

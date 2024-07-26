@@ -20,10 +20,9 @@ const Vector2i menu_speed_u_pos = { MENU_SPEED_Y+2,     MENU_RIGHT_COL+9 };
 const Vector2i menu_speed_d_pos = { MENU_SPEED_Y+21,    MENU_RIGHT_COL+9 };
 const Vector2i menu_stepup_pos  = { MENU_SPEED_Y+20,    MENU_RIGHT_COL+1 };
 const Vector2i menu_play_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL+2 };
-const Vector2i menu_pause_pos   = { MENU_CONTROLS_Y,    MENU_LEFT_COL+MENU_BUTTON_WIDTH+4 };
-const Vector2i menu_stop_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL+2*MENU_BUTTON_WIDTH+6 };
-const Vector2i menu_load_pos    = { MENU_CONTROLS_Y-2*MENU_BUTTON_HEIGHT-4, MENU_RIGHT_COL+15-MENU_BUTTON_WIDTH };
-const Vector2i menu_save_pos    = { MENU_CONTROLS_Y-MENU_BUTTON_HEIGHT-2,   MENU_RIGHT_COL+15-MENU_BUTTON_WIDTH };
+const Vector2i menu_stop_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL+MENU_BUTTON_WIDTH+4 };
+const Vector2i menu_save_pos    = { MENU_CONTROLS_Y,    MENU_RIGHT_COL+15-MENU_BUTTON_WIDTH };
+const Vector2i menu_load_pos    = { MENU_CONTROLS_Y-MENU_BUTTON_HEIGHT-2, MENU_RIGHT_COL+15-MENU_BUTTON_WIDTH };
 
 static const char *logo_msg   = " 14-COLOR 2D TURING MACHINE SIMULATOR ";
 static const char *rules_msg  = "COLOR RULES:";
@@ -372,26 +371,26 @@ static void draw_control_buttons(void)
 {
 	Vector2i o = { (MENU_BUTTON_HEIGHT-5)/2, (MENU_BUTTON_WIDTH-5)/2 };
 	Vector2i pos1 = { menu_play_pos.y  + o.y, menu_play_pos.x  + o.x };
-	Vector2i pos2 = { menu_pause_pos.y + o.y, menu_pause_pos.x + o.x };
-	Vector2i pos3 = { menu_stop_pos.y  + o.y, menu_stop_pos.x  + o.x };
+	Vector2i pos2 = { menu_stop_pos.y  + o.y, menu_stop_pos.x  + o.x };
 
 	wattrset(menuw, ui_pair);
 	draw_rect(menuw, menu_play_pos,  MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
-	draw_rect(menuw, menu_pause_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
 	draw_rect(menuw, menu_stop_pos,  MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
 
-	wattrset(menuw, GET_PAIR_FOR(has_enough_colors(stgs.colors) ? MENU_PLAY_COLOR : MENU_INACTIVE_COLOR));
-	draw_sprite(menuw, (SpriteInfo) { button_sprites[0], 5, 5 }, pos1, FALSE);
-
-	wattrset(menuw, GET_PAIR_FOR(is_simulation_running(stgs.linked_sim) ? MENU_PAUSE_COLOR : MENU_INACTIVE_COLOR));
-	draw_sprite(menuw, (SpriteInfo) { button_sprites[1], 5, 5 }, pos2, FALSE);
+	if (is_simulation_running(stgs.linked_sim)) {
+		wattrset(menuw, GET_PAIR_FOR(MENU_PAUSE_COLOR));
+		draw_sprite(menuw, (SpriteInfo) { button_sprites[1], 5, 5 }, pos1, FALSE);
+	} else {
+		wattrset(menuw, GET_PAIR_FOR(has_enough_colors(stgs.colors) ? MENU_PLAY_COLOR : MENU_INACTIVE_COLOR));
+		draw_sprite(menuw, (SpriteInfo) { button_sprites[0], 5, 5 }, pos1, FALSE);
+	}
 
 	if (has_simulation_started(stgs.linked_sim)) {
 		wattrset(menuw, GET_PAIR_FOR(MENU_STOP_COLOR));
-		draw_sprite(menuw, (SpriteInfo) { button_sprites[2], 5, 5 }, pos3, FALSE);
+		draw_sprite(menuw, (SpriteInfo) { button_sprites[2], 5, 5 }, pos2, FALSE);
 	} else {
 		wattrset(menuw, GET_PAIR_FOR(!is_colors_empty(stgs.colors) ? MENU_CLEAR_COLOR : MENU_INACTIVE_COLOR));
-		draw_sprite(menuw, (SpriteInfo) { button_sprites[3], 5, 5 }, pos3, FALSE);
+		draw_sprite(menuw, (SpriteInfo) { button_sprites[3], 5, 5 }, pos2, FALSE);
 	}
 }
 
