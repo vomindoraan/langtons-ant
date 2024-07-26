@@ -1,6 +1,6 @@
 #include "graphics.h"
-#	include "serial.h"
 #ifdef SERIAL_COLORS
+#	include "serial.h"
 #endif
 
 static bool run_loop = TRUE;
@@ -41,8 +41,8 @@ void game_loop(void)
 	while (run_loop) {
 		input_t input = handle_input(sim);
 		input_t grid_changed = input & INPUT_GRID_CHANGED, menu_changed = input & INPUT_MENU_CHANGED;
-		input_t colors_changed = input & INPUT_COLORS_CHANGED;
 #ifdef SERIAL_COLORS
+		input_t colors_changed = input & INPUT_COLORS_CHANGED;
 #endif
 		sim = stgs.linked_sim;
 
