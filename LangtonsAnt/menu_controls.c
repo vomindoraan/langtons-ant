@@ -251,9 +251,10 @@ input_t menu_mouse_command(MEVENT *pmouse)
 	if (!pmouse) {
 		return INPUT_NO_CHANGE;
 	}
-
 	event_pos.y = pmouse->y, event_pos.x = pmouse->x;
-	pos = abs2rel(event_pos, menu_pos);
+	if (!area_contains(menu_pos, MENU_WINDOW_WIDTH, MENU_WINDOW_HEIGHT, event_pos)) {
+		return INPUT_NO_CHANGE;
+	}
 
 	if (dialogw) {
 		if (area_contains(dialog_pos, DIALOG_WINDOW_WIDTH, DIALOG_WINDOW_HEIGHT, event_pos)) {
@@ -263,6 +264,8 @@ input_t menu_mouse_command(MEVENT *pmouse)
 			return INPUT_MENU_CHANGED;
 		}
 	}
+
+	pos = abs2rel(event_pos, menu_pos);
 
 	/* Color tiles */
 	for (i = 0; i <= stgs.colors->n; i++) {
