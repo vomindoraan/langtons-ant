@@ -55,7 +55,7 @@ static void draw_colors(void)
 			draw_square(dialogw, outer, DIALOG_TILE_SIZE);
 			if (picked_color == i) {
 				wattron(dialogw, A_REVERSE);
-				draw_border(dialogw, outer, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE);
+				draw_frame(dialogw, outer, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE);
 			}
 		} else {
 			inner.y = outer.y+1, inner.x = outer.x+1;
@@ -97,8 +97,8 @@ static void draw_buttons(void)
 	mvwaddch(dialogw, left_pos.y+ymid,  left_pos.x+xmid,  turn2arrow(TURN_LEFT));
 	mvwaddch(dialogw, right_pos.y+ymid, right_pos.x+xmid, turn2arrow(TURN_RIGHT));
 	if (picked_turn != TURN_NONE) {
-		draw_border(dialogw, (picked_turn == TURN_LEFT) ? left_pos : right_pos,
-		            DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
+		draw_frame(dialogw, (picked_turn == TURN_LEFT) ? left_pos : right_pos,
+		           DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT);
 	}
 
 	/* Additional X button in case of delete dialog */
