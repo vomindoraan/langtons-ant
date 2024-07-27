@@ -9,7 +9,7 @@ Grid *grid_new(Colors *colors, size_t init_size)
 {
 	Grid *grid = malloc(sizeof(Grid));
 	size_t i;
-	grid->c = malloc(init_size * sizeof(byte*));
+	grid->c = malloc(init_size * sizeof(byte *));
 	for (i = 0; i < init_size; i++) {
 		grid->c[i] = malloc(init_size);
 		memset(grid->c[i], (byte)colors->def, init_size);
@@ -87,7 +87,7 @@ void grid_silent_expand(Grid *grid)
 		return;
 	}
 	if (!grid->tmp) {
-		grid->tmp = malloc(size * sizeof(byte*));
+		grid->tmp = malloc(size * sizeof(byte *));
 		grid->tmp_size = 0;
 	}
 	for (i = 0; i < GRID_MAX_SILENT_EXPAND && grid->tmp_size < size; i++) {
@@ -99,7 +99,7 @@ static void grid_fill_tmp(Grid *grid)
 {
 	size_t size = grid->size * GRID_MULT;
 	if (!grid->tmp) {
-		grid->tmp = malloc(size * sizeof(byte*));
+		grid->tmp = malloc(size * sizeof(byte *));
 		grid->tmp_size = 0;
 	}
 	while (grid->tmp_size < size) {
@@ -131,7 +131,7 @@ static void grid_expand_n(Grid *grid)
 static void grid_expand_s(Grid *grid)
 {
 	size_t old = grid->size, size = GRID_MULT*old, i;
-	SparseCell **new = malloc(size*sizeof(SparseCell*)), *t;
+	SparseCell **new = malloc(size * sizeof(SparseCell *)), *t;
 
 	for (i = 0; i < size; i++) {
 		if (is_in_old_matrix_row(i, old)) {
@@ -177,7 +177,7 @@ void grid_make_sparse(Grid *grid)
 
 	grid_delete_tmp(grid);
 
-	grid->csr = calloc(size, sizeof(SparseCell*));
+	grid->csr = calloc(size, sizeof(SparseCell *));
 	for (i = 0; i < size; i++) {
 		curr = grid->csr + i;
 		for (j = 0; j < size; j++) {

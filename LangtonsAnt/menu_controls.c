@@ -8,8 +8,6 @@
 #define INPUT_WINDOW_WIDTH  (MENU_WINDOW_WIDTH-4)
 #define INPUT_WINDOW_HEIGHT 3
 
-#define ARR_SIZE(a) (sizeof(a) / sizeof(a[0]))
-
 static WINDOW *iow;
 static const Vector2i io_pos = { MENU_CONTROLS_Y-22, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH-INPUT_WINDOW_WIDTH-2 };
 
@@ -135,7 +133,7 @@ static input_t load_button_clicked(void)
 {
 	static int index = 0;
 	const char *filename = example_files[index];
-	index = (index + 1) % ARR_SIZE(example_files);
+	index = (index + 1) % alen(example_files);
 
 	Simulation *sim = load_simulation(filename);
 	if (sim) {

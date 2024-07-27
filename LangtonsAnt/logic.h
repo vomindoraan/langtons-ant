@@ -21,6 +21,9 @@
 /** Standard sign macro */
 #define sgn(x)    ((x > 0) - (x < 0))
 
+/** Standard array size macro */
+#define alen(a) (sizeof(a) / sizeof(a[0]))
+
 ///@{
 /** Curses boolean literal */
 #ifndef FALSE
@@ -188,7 +191,7 @@ bool has_enough_colors(Colors *colors);
 
 Grid *grid_new(Colors *colors, size_t init_size);
 void grid_delete(Grid *grid);
-void grid_silent_expand(Grid*);
+void grid_silent_expand(Grid *grid);
 void grid_expand(Grid *grid, Ant *ant);
 void grid_make_sparse(Grid *grid);
 bool is_grid_sparse(Grid *grid);

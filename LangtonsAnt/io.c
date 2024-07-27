@@ -122,7 +122,7 @@ Simulation *load_simulation(char *filename)
 	}
 
 	if (is_sparse) {
-		sim->grid->csr = malloc(sim->grid->size*sizeof(SparseCell*));
+		sim->grid->csr = malloc(sim->grid->size * sizeof(SparseCell *));
 		size_t colp;
 		SparseCell *cell;
 
@@ -148,7 +148,7 @@ Simulation *load_simulation(char *filename)
 			}
 		}
 	} else {
-		sim->grid->c = malloc(sim->grid->size * sizeof(byte*));
+		sim->grid->c = malloc(sim->grid->size * sizeof(byte *));
 		for (i = 0; i < sim->grid->size; i++) {
 			sim->grid->c[i] = malloc(sim->grid->size);
 			if (feof(input)) {
