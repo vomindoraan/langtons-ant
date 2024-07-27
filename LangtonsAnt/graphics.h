@@ -133,13 +133,15 @@ typedef struct scroll_info {
 #define MENU_V_MARGIN       3
 #define MENU_H_PADDING      2
 #define MENU_V_PADDING      4
-#define MENU_LEFT_COL       MENU_H_MARGIN
-#define MENU_RIGHT_COL      (MENU_WINDOW_WIDTH-MENU_H_MARGIN-16)
+#define MENU_LEFT_COL_X     MENU_H_MARGIN
+#define MENU_RIGHT_COL_X    (MENU_WINDOW_WIDTH-MENU_H_MARGIN-16)
+#define MENU_LEFT_COL_Y     (MENU_LOGO_Y+MENU_LOGO_HEIGHT+MENU_V_PADDING+1)
+#define MENU_RIGHT_COL_Y    MENU_LEFT_COL_Y
 #define MENU_LOGO_WIDTH     40
 #define MENU_LOGO_HEIGHT    8
 #define MENU_LOGO_Y         MENU_V_MARGIN
-#define MENU_RULES_Y        (MENU_LOGO_Y+MENU_LOGO_HEIGHT+MENU_V_PADDING+1)
-#define MENU_ISIZE_Y        MENU_RULES_Y
+#define MENU_RULES_Y        MENU_LEFT_COL_Y
+#define MENU_ISIZE_Y        MENU_RIGHT_COL_Y
 #define MENU_DIRECTION_Y    (MENU_ISIZE_Y+MENU_V_PADDING+7)
 #define MENU_SPEED_Y        (MENU_DIRECTION_Y+MENU_V_PADDING+9)
 #define MENU_SPEED_HEIGHT   17
@@ -152,7 +154,7 @@ typedef struct scroll_info {
 #define MENU_INACTIVE_COLOR COLOR_GRAY
 ///@}
 
-/** @name Menu buttons attributes */
+/** @name Menu button attributes */
 ///@{
 #define MENU_BUTTON_WIDTH   11
 #define MENU_BUTTON_HEIGHT  7
