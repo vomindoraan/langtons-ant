@@ -111,7 +111,7 @@
 /** @name Scroll utility macros */
 ///@{
 #define ORIGIN_COORD(gs, vs, sc)     ((gs)/2-(vs)/2+(sc))
-#define ORIGIN_POS(gs, vs, scy, scx) (Vector2i) { ORIGIN_COORD(gs, vs, scy), ORIGIN_COORD(gs, vs, scx) }
+#define ORIGIN_POS(gs, vs, scy, scx) ((Vector2i) { ORIGIN_COORD(gs, vs, scy), ORIGIN_COORD(gs, vs, scx) })
 ///@}
 
 /** Structure for managing scroll data */

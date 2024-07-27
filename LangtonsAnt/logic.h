@@ -14,15 +14,15 @@
 
 ///@{
 /** Standard max/min macro */
-#define max(a, b) (((a) > (b)) ? (a) : (b))
-#define min(a, b) (((a) < (b)) ? (a) : (b))
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 ///@}
 
 /** Standard sign macro */
-#define sgn(x)    ((x > 0) - (x < 0))
+#define SGN(x)    ((x > 0) - (x < 0))
 
-/** Standard array size macro */
-#define alen(a) (sizeof(a) / sizeof(a[0]))
+/** Static array length macro */
+#define LEN(a)    (sizeof(a) / sizeof(a[0]))
 
 ///@{
 /** Curses boolean literal */
@@ -47,7 +47,7 @@ typedef unsigned char byte;
 #define VECTOR_EQ(v1, v2) ((v1).y == (v2).y && (v1).x == (v2).x)
 
 /** Vector representing an out-of-bounds position */
-#define VECTOR_INVALID    (Vector2i) { INT_MIN, INT_MIN }
+#define VECTOR_INVALID    ((Vector2i) { INT_MIN, INT_MIN })
 
 /** Vector container */
 typedef struct vector2i {

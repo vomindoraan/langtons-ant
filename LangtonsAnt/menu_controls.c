@@ -55,9 +55,9 @@ static input_t isize_button_clicked(int d)
 {
 	Simulation *sim = stgs.linked_sim;
 	if (d > 0) {
-		stgs.init_size = min(stgs.init_size+d, GRID_MAX_INIT_SIZE);
+		stgs.init_size = MIN(stgs.init_size+d, GRID_MAX_INIT_SIZE);
 	} else if (d < 0) {
-		stgs.init_size = max(stgs.init_size+d, GRID_MIN_INIT_SIZE);
+		stgs.init_size = MAX(stgs.init_size+d, GRID_MIN_INIT_SIZE);
 	} else {
 		return INPUT_NO_CHANGE;
 	}
@@ -76,9 +76,9 @@ static input_t dir_button_clicked(Direction dir)
 static input_t speed_button_clicked(int d)
 {
 	if (d > 0) {
-		stgs.speed = min(stgs.speed+d, LOOP_MAX_SPEED);
+		stgs.speed = MIN(stgs.speed+d, LOOP_MAX_SPEED);
 	} else if (d < 0) {
-		stgs.speed = max(stgs.speed+d, LOOP_MIN_SPEED);
+		stgs.speed = MAX(stgs.speed+d, LOOP_MIN_SPEED);
 	} else {
 		return INPUT_NO_CHANGE;
 	}
@@ -133,7 +133,7 @@ static input_t load_button_clicked(void)
 {
 	static int index = 0;
 	const char *filename = example_files[index];
-	index = (index + 1) % alen(example_files);
+	index = (index + 1) % LEN(example_files);
 
 	Simulation *sim = load_simulation(filename);
 	if (sim) {

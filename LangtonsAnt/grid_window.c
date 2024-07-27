@@ -47,7 +47,7 @@ static void draw_buffer_zone(int total, int offset)
 static void draw_scrollbars(color_t def)
 {
 	int n = GRID_VIEW_SIZE, mid = n/2, step = n-2;
-	int size = (int)(max(step*gridscrl.scale, 1));
+	int size = (int)(MAX(step*gridscrl.scale, 1));
 	int h = mid + gridscrl.hcenter - size/2;
 	int v = mid + gridscrl.vcenter - size/2;
 	chtype sb_fg_pair = AVAILABLE_PAIR(def, COLOR_WHITE, COLOR_SILVER);
@@ -133,7 +133,7 @@ static void bordered(Grid *grid, Ant *ant, int line_width)
 
 static void borderless(Grid *grid, Ant *ant)
 {
-	int gs = grid->size, vgs = min(gs, GRID_VIEW_SIZE), i, j;
+	int gs = grid->size, vgs = MIN(gs, GRID_VIEW_SIZE), i, j;
 	int cs = CELL_SIZE(vgs, 0);
 	int t = TOTAL_SIZE(vgs, 0, cs);
 	int o = OFFSET_SIZE(t);
@@ -188,7 +188,7 @@ void draw_grid_full(Grid *grid, Ant *ant)
 
 void draw_grid_iter(Grid *grid, Ant *ant, Vector2i prev_pos)
 {
-	int gs = grid->size, vgs = min(gs, GRID_VIEW_SIZE);
+	int gs = grid->size, vgs = MIN(gs, GRID_VIEW_SIZE);
 	int lw = (gs == GRID_SIZE_SMALL(grid))  ? LINE_WIDTH_SMALL
 	       : (gs == GRID_SIZE_MEDIUM(grid)) ? LINE_WIDTH_MEDIUM
 	       : LINE_WIDTH_LARGE;
@@ -221,14 +221,14 @@ void scroll_grid(Grid *grid, int dy, int dx)
 
 void set_scroll(Grid *grid, int y, int x)
 {
-	int gs = grid->size, n = GRID_VIEW_SIZE, clamp = max(gs/2-n/2, 0);
+	int gs = grid->size, n = GRID_VIEW_SIZE, clamp = MAX(gs/2-n/2, 0);
 
 	if (!gridscrl.enabled) {
 		return;
 	}
 
-	y = sgn(y) * min(abs(y), clamp);
-	x = sgn(x) * min(abs(x), clamp);
+	y = SGN(y) * MIN(abs(y), clamp);
+	x = SGN(x) * MIN(abs(x), clamp);
 
 	gridscrl.y = y, gridscrl.x = x;
 	gridscrl.hcenter = (int)(gridscrl.scale * x);

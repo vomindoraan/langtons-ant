@@ -128,7 +128,7 @@ Vector2i get_menu_tile_pos(size_t index)
 Vector2i get_menu_cdef_pos(void)
 {
 	return (Vector2i) {
-		.y = get_menu_tile_pos(min(stgs.colors->n, MENU_TILES_PER_COL)).y + MENU_TILE_SIZE + MENU_TILE_VSEP + 1,
+		.y = get_menu_tile_pos(MIN(stgs.colors->n, MENU_TILES_PER_COL)).y + MENU_TILE_SIZE + MENU_TILE_VSEP + 1,
 		.x = rules_pos.x - MENU_TILE_SIZE - MENU_TILE_HSEP + 1
 	};
 }
@@ -173,7 +173,7 @@ static void draw_color_arrow(Vector2i pos1, Vector2i pos2)
 
 	if (pos1.x == pos2.x) {
 		dy = abs(pos1.y - pos2.y) - ts;
-		mvwvline(menuw, min(pos1.y, pos2.y)+ts, pos1.x+o, ACS_VLINE, dy);
+		mvwvline(menuw, MIN(pos1.y, pos2.y)+ts, pos1.x+o, ACS_VLINE, dy);
 		if (pos1.y < pos2.y) {
 			mvwaddch(menuw, pos2.y-1,  pos1.x+o, ACS_DARROW);
 		} else {
