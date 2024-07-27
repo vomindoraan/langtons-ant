@@ -19,10 +19,10 @@ const Vector2i menu_dir_l_pos   = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL_X+7 };
 const Vector2i menu_speed_u_pos = { MENU_SPEED_Y+2,     MENU_RIGHT_COL_X+9 };
 const Vector2i menu_speed_d_pos = { MENU_SPEED_Y+MENU_SPEED_HEIGHT+4, MENU_RIGHT_COL_X+9 };
 const Vector2i menu_stepup_pos  = { MENU_SPEED_Y+20,    MENU_RIGHT_COL_X+1 };
-const Vector2i menu_play_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL_X };
-const Vector2i menu_stop_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL_X+MENU_BUTTON_PWIDTH };
-const Vector2i menu_load_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL_X+2*MENU_BUTTON_PWIDTH };
-//const Vector2i menu_save_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL_X+2*MENU_BUTTON_PWIDTH };
+const Vector2i menu_play_pos    = { MENU_CONTROLS_Y,    MENU_PLAY_X };
+const Vector2i menu_stop_pos    = { MENU_CONTROLS_Y,    MENU_STOP_X };
+const Vector2i menu_load_pos    = { MENU_CONTROLS_Y,    MENU_LOAD_X };
+//const Vector2i menu_save_pos    = { MENU_CONTROLS_Y,    MENU_SAVE_X };
 
 static const char *logo_msg   = " 14-COLOR 2D TURING MACHINE SIMULATOR ";
 static const char *rules_msg  = "COLOR RULES:";
