@@ -5,11 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define INPUT_WINDOW_WIDTH  (MENU_WINDOW_WIDTH-4)
-#define INPUT_WINDOW_HEIGHT 3
+//#define INPUT_WINDOW_WIDTH  (MENU_WINDOW_WIDTH-4)
+//#define INPUT_WINDOW_HEIGHT 3
 
 static WINDOW *iow;
-static const Vector2i io_pos = { MENU_CONTROLS_Y-22, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH-INPUT_WINDOW_WIDTH-2 };
+//static const Vector2i io_pos = { MENU_CONTROLS_Y-22, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH-INPUT_WINDOW_WIDTH-2 };
 
 static const char* example_files[] = {
 	"examples/highway.lant",
@@ -115,39 +115,42 @@ static input_t stop_button_clicked(void)
 	return has_simulation_started(stgs.linked_sim) ? reset_simulation() : clear_simulation();
 }
 
-static bool read_filename(char *filename)
-{
-	iow = newwin(3, INPUT_WINDOW_WIDTH, io_pos.y, io_pos.x); // TODO move to window drawing file
-	wbkgd(iow, GET_PAIR_FOR(COLOR_GRAY) | A_REVERSE);
-	wattron(iow, fg_pair);
-	waddstr(iow, " Path: ");
-	wattroff(iow, fg_pair);
-	echo();
-	mvwgetnstr(iow, 1, 1, filename, FILENAME_SIZE-1);
-	noecho();
-	delwin(iow);
-	return strlen(filename) > 0 && strlen(filename)+4 < FILENAME_SIZE;
-}
+//static bool read_filename(char *filename)
+//{
+//	iow = newwin(3, INPUT_WINDOW_WIDTH, io_pos.y, io_pos.x); // TODO move to window drawing file
+//	wbkgd(iow, GET_PAIR_FOR(COLOR_GRAY) | A_REVERSE);
+//	wattron(iow, fg_pair);
+//	waddstr(iow, " Path: ");
+//	wattroff(iow, fg_pair);
+//	echo();
+//	mvwgetnstr(iow, 1, 1, filename, FILENAME_SIZE-1);
+//	noecho();
+//	delwin(iow);
+//	return strlen(filename) > 0 && strlen(filename)+4 < FILENAME_SIZE;
+//}
 
 static input_t load_button_clicked(void)
 {
 	static int index = 0;
-	const char *filename = example_files[index];
+	Simulation *sim;
+	char *filename = example_files[index];
 	index = (index + 1) % LEN(example_files);
 
-	Simulation *sim = load_simulation(filename);
-	if (sim) {
+	// TODO add loading indicator
+	if (sim = load_simulation(filename)) {
+		load_status = STATUS_SUCCESS;
 		return set_simulation(sim);
+	} else {
+		load_status = STATUS_FAILURE;
+		return INPUT_MENU_CHANGED;
 	}
-	return INPUT_MENU_CHANGED;
 }
 
 //static input_t save_button_clicked(void)
 //{
 //	char filename[FILENAME_SIZE] = { 0 }, bmp_filename[FILENAME_SIZE] = { 0 };
-//	if (read_filename(filename)) {
-//		int e = save_simulation(filename, stgs.linked_sim);
-//		save_status = (e != EOF) ? STATUS_SUCCESS : STATUS_FAILURE;
+//	if (read_filename(filename) && save_simulation(filename, stgs.linked_sim) != EOF) {
+//		save_status = STATUS_SUCCESS;
 //		strcpy(bmp_filename, filename);
 //		strcat(bmp_filename, ".bmp");
 //		save_grid_bitmap(bmp_filename, stgs.linked_sim->grid);
