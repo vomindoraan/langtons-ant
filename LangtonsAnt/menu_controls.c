@@ -73,12 +73,12 @@ static state_t dir_button_clicked(Direction dir)
 	return STATE_GRID_CHANGED | STATE_MENU_CHANGED;
 }
 
-static state_t speed_button_clicked(int d)
+static state_t speed_button_clicked(int delta)
 {
-	if (d > 0) {
-		stgs.speed = MIN(stgs.speed+d, LOOP_MAX_SPEED);
-	} else if (d < 0) {
-		stgs.speed = MAX(stgs.speed+d, LOOP_MIN_SPEED);
+	if (delta > 0) {
+		stgs.speed = MIN(stgs.speed+delta, LOOP_MAX_SPEED);
+	} else if (delta < 0) {
+		stgs.speed = MAX(stgs.speed+delta, LOOP_MIN_SPEED);
 	} else {
 		return STATE_NO_CHANGE;
 	}
@@ -115,7 +115,7 @@ static state_t stop_button_clicked(void)
 	return has_simulation_started(stgs.linked_sim) ? reset_simulation() : clear_simulation();
 }
 
-//static bool read_filename(char *filename)
+//static bool read_filename(const char *filename)
 //{
 //	iow = newwin(3, INPUT_WINDOW_WIDTH, io_pos.y, io_pos.x); // TODO move to window drawing file
 //	wbkgd(iow, GET_PAIR_FOR(COLOR_GRAY) | A_REVERSE);
@@ -133,7 +133,7 @@ static state_t load_button_clicked(void)
 {
 	static int index = 0;
 	Simulation *sim;
-	char *filename = example_files[index];
+	const char *filename = example_files[index];
 	index = (index + 1) % LEN(example_files);
 
 	// TODO add loading indicator
@@ -186,7 +186,7 @@ state_t menu_key_command(int key, MEVENT *mouse)
 #ifdef PDCURSES
 	case PADPLUS:
 #endif
-		return speed_button_clicked(1);
+		return speed_button_clicked(+1);
 	case 'Z': case 'z': case '-':
 #ifdef PDCURSES
 	case PADMINUS:
@@ -297,7 +297,7 @@ state_t menu_mouse_command(MEVENT *mouse)
 
 	/* Speed buttons */
 	if (area_contains(menu_speed_u_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
-		return speed_button_clicked(1);
+		return speed_button_clicked(+1);
 	}
 	if (area_contains(menu_speed_d_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
 		return speed_button_clicked(-1);

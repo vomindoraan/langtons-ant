@@ -41,7 +41,8 @@ void game_loop(void)
 
 	while (run_loop) {
 		state_t input = handle_input(sim);
-		state_t grid_changed = input & STATE_GRID_CHANGED, menu_changed = input & STATE_MENU_CHANGED;
+		state_t grid_changed = input & STATE_GRID_CHANGED;
+		state_t menu_changed = input & STATE_MENU_CHANGED;
 #ifdef SERIAL_COLORS
 		state_t colors_changed = input & STATE_COLORS_CHANGED;
 #endif
@@ -53,6 +54,7 @@ void game_loop(void)
 				int delta = (LOOP_MAX_DELAY - LOOP_MIN_DELAY) / (LOOP_MAX_SPEED - LOOP_MIN_SPEED + 1);
 				int delay = delta * (LOOP_MAX_SPEED - stgs.speed);
 				napms(delay); // TODO fixed timestep loop
+
 				draw_grid_iter(sim->grid, sim->ant, prev_pos);
 				draw_menu_iter();
 			} else {
