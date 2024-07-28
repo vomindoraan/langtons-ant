@@ -115,20 +115,6 @@ static state_t stop_button_clicked(void)
 	return has_simulation_started(stgs.linked_sim) ? reset_simulation() : clear_simulation();
 }
 
-//static bool read_filename(const char *filename)
-//{
-//	iow = newwin(3, INPUT_WINDOW_WIDTH, io_pos.y, io_pos.x); // TODO move to window drawing file
-//	wbkgd(iow, GET_PAIR_FOR(COLOR_GRAY) | A_REVERSE);
-//	wattron(iow, fg_pair);
-//	waddstr(iow, " Path: ");
-//	wattroff(iow, fg_pair);
-//	echo();
-//	mvwgetnstr(iow, 1, 1, filename, FILENAME_SIZE-1);
-//	noecho();
-//	delwin(iow);
-//	return strlen(filename) > 0 && strlen(filename)+4 < FILENAME_SIZE;
-//}
-
 static state_t load_button_clicked(void)
 {
 	static int index = 0;
@@ -145,6 +131,20 @@ static state_t load_button_clicked(void)
 		return STATE_MENU_CHANGED;
 	}
 }
+
+//static bool read_filename(const char *filename)
+//{
+//	iow = newwin(3, INPUT_WINDOW_WIDTH, io_pos.y, io_pos.x); // TODO move to window drawing file
+//	wbkgd(iow, GET_PAIR_FOR(COLOR_GRAY) | A_REVERSE);
+//	wattron(iow, fg_pair);
+//	waddstr(iow, " Path: ");
+//	wattroff(iow, fg_pair);
+//	echo();
+//	mvwgetnstr(iow, 1, 1, filename, FILENAME_SIZE-1);
+//	noecho();
+//	delwin(iow);
+//	return strlen(filename) > 0 && strlen(filename)+4 < FILENAME_SIZE;
+//}
 
 //static state_t save_button_clicked(void)
 //{
