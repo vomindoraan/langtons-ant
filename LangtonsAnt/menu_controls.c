@@ -160,7 +160,7 @@ static input_t load_button_clicked(void)
 //	return INPUT_MENU_CHANGED;
 //}
 
-input_t menu_key_command(int key, MEVENT *pmouse)
+input_t menu_key_command(int key, MEVENT *mouse)
 {
 	Simulation *sim = stgs.linked_sim;
 
@@ -223,46 +223,46 @@ input_t menu_key_command(int key, MEVENT *pmouse)
 		return INPUT_NO_CHANGE;
 
 	case KEY_MOUSE:
-		//assert(pmouse);
-		return menu_mouse_command(pmouse);
+		//assert(mouse);
+		return menu_mouse_command(mouse);
 
 	default:
 		return INPUT_NO_CHANGE;
 	}
 }
 
-input_t menu_mouse_command(MEVENT *pmouse)
+input_t menu_mouse_command(MEVENT *mouse)
 {
 	input_t ret = INPUT_NO_CHANGE;
-	Vector2i event_pos, pos, tile;
+	Vector2i mouse_pos, pos, tile;
 	size_t i;
 
-	if (!pmouse) {
+	if (!mouse) {
 		return INPUT_NO_CHANGE;
 	}
-	event_pos.y = pmouse->y, event_pos.x = pmouse->x;
-	if (!area_contains(menu_pos, MENU_WINDOW_WIDTH, MENU_WINDOW_HEIGHT, event_pos)) {
+	mouse_pos.y = mouse->y, mouse_pos.x = mouse->x;
+	if (!area_contains(menu_pos, MENU_WINDOW_WIDTH, MENU_WINDOW_HEIGHT, mouse_pos)) {
 		return INPUT_NO_CHANGE;
 	}
 
 	if (dialogw) {
-		if (area_contains(dialog_pos, DIALOG_WINDOW_WIDTH, DIALOG_WINDOW_HEIGHT, event_pos)) {
-			return dialog_mouse_command(pmouse);
+		if (area_contains(dialog_pos, DIALOG_WINDOW_WIDTH, DIALOG_WINDOW_HEIGHT, mouse_pos)) {
+			return dialog_mouse_command(mouse);
 		} else {
 			close_dialog();
 			return INPUT_MENU_CHANGED;
 		}
 	}
 
-	pos = abs2rel(event_pos, menu_pos);
+	pos = abs2rel(mouse_pos, menu_pos);
 
 	/* Color tiles */
 	for (i = 0; i <= stgs.colors->n; i++) {
 		tile = get_menu_tile_pos(i);
 		if (area_contains(tile, MENU_TILE_SIZE, MENU_TILE_SIZE, pos)) {
-			if (pmouse->bstate & MOUSE_LB_EVENT) {
+			if (mouse->bstate & MOUSE_LB_EVENT) {
 				open_dialog(pos, (i == stgs.colors->n) ? CIDX_NEWCOLOR : (color_t)i);
-			} else if (pmouse->bstate & MOUSE_RB_EVENT) {
+			} else if (mouse->bstate & MOUSE_RB_EVENT) {
 				open_dialog(pos, CIDX_DEFAULT);
 			}
 			return INPUT_MENU_CHANGED;

@@ -9,26 +9,27 @@ static input_t handle_input(Simulation *sim)
 {
 	input_t ret;
 	int key;
-	MEVENT mouse, *pmouse = NULL;
+	MEVENT m, *mouse = &m;
 
 	// These functions must be called only once per loop
 	if ((key = getch()) == ERR) {
 		return INPUT_NO_CHANGE;
 	}
-	if (key == KEY_MOUSE && getmouse(&mouse) != ERR) {
-		pmouse = &mouse;
+	if (key == KEY_MOUSE && getmouse(mouse) != ERR) {
 #if defined(MOUSE_ACT_ON_PRESS) && defined(NCURSES)
-		if (pmouse->bstate & (BUTTON1_RELEASED | BUTTON3_RELEASED)) {
+		if (mouse->bstate & (BUTTON1_RELEASED | BUTTON3_RELEASED)) {
 			return INPUT_NO_CHANGE; // Prevent double press
 		}
 #endif
+	} else {
+		mouse = NULL;
 	}
 
 	ret = INPUT_NO_CHANGE;
 	if (sim) {
-		ret |= grid_key_command(sim->grid, sim->ant, key, pmouse);
+		ret |= grid_key_command(sim->grid, sim->ant, key, mouse);
 	}
-	ret |= menu_key_command(key, pmouse);
+	ret |= menu_key_command(key, mouse);
 	return ret;
 }
 

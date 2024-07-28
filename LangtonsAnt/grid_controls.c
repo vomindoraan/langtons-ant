@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-input_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *pmouse)
+input_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse)
 {
 	Vector2i center = { grid->size/2, grid->size/2 };
 	Vector2i pos = abs2rel(ant->pos, center);
@@ -105,8 +105,8 @@ input_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *pmouse)
 		break;
 
 	case KEY_MOUSE:
-		//assert(pmouse);
-		return grid_mouse_command(grid, ant, pmouse);
+		//assert(mouse);
+		return grid_mouse_command(grid, ant, mouse);
 
 	default:
 		return INPUT_NO_CHANGE;
@@ -140,44 +140,44 @@ static void scrollbar_clicked(Grid *grid, MEVENT *mevent, ScrollbarType sbtype)
 	}
 }
 
-input_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *pmouse)
+input_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse)
 {
 	Vector2i center = { grid->size / 2, grid->size / 2 };
-	Vector2i event_pos, pos;
+	Vector2i mouse_pos, pos;
 	int step;
 
-	if (!pmouse) {
+	if (!mouse) {
 		return INPUT_NO_CHANGE;
 	}
-	event_pos.y = pmouse->y, event_pos.x = pmouse->x;
-	if (!area_contains(grid_pos, GRID_WINDOW_SIZE, GRID_WINDOW_SIZE, event_pos)) {
+	mouse_pos.y = mouse->y, mouse_pos.x = mouse->x;
+	if (!area_contains(grid_pos, GRID_WINDOW_SIZE, GRID_WINDOW_SIZE, mouse_pos)) {
 		return INPUT_NO_CHANGE;
 	}
 
-	step = (pmouse->bstate & MOUSE_LB_EVENT) ? SCROLL_STEP_SMALL
-	     : (pmouse->bstate & MOUSE_RB_EVENT) ? grid->size // Can be anything large
+	step = (mouse->bstate & MOUSE_LB_EVENT) ? SCROLL_STEP_SMALL
+	     : (mouse->bstate & MOUSE_RB_EVENT) ? grid->size // Can be anything large
 	     : 0;
 
 	/* Vertical scrollbar */
-	if (pmouse->x == GRID_VIEW_SIZE && pmouse->y < GRID_VIEW_SIZE) {
-		if (pmouse->y == 0) {
+	if (mouse->x == GRID_VIEW_SIZE && mouse->y < GRID_VIEW_SIZE) {
+		if (mouse->y == 0) {
 			scroll_grid(grid, -step, 0);
-		} else if (pmouse->y == GRID_VIEW_SIZE-1) {
+		} else if (mouse->y == GRID_VIEW_SIZE-1) {
 			scroll_grid(grid,  step, 0);
 		} else {
-			scrollbar_clicked(grid, pmouse, SB_VERTICAL);
+			scrollbar_clicked(grid, mouse, SB_VERTICAL);
 		}
 		return INPUT_GRID_CHANGED;
 	}
 
 	/* Horizontal scrollbar */
-	if (pmouse->y == GRID_VIEW_SIZE && pmouse->x < GRID_VIEW_SIZE) {
-		if (pmouse->x == 0) {
+	if (mouse->y == GRID_VIEW_SIZE && mouse->x < GRID_VIEW_SIZE) {
+		if (mouse->x == 0) {
 			scroll_grid(grid, 0, -step);
-		} else if (pmouse->x == GRID_VIEW_SIZE-1) {
+		} else if (mouse->x == GRID_VIEW_SIZE-1) {
 			scroll_grid(grid, 0,  step);
 		} else {
-			scrollbar_clicked(grid, pmouse, SB_HORIZONTAL);
+			scrollbar_clicked(grid, mouse, SB_HORIZONTAL);
 		}
 		return INPUT_GRID_CHANGED;
 	}

@@ -146,18 +146,18 @@ Vector2i get_dialog_tile_pos(color_t color)
 	return pos;
 }
 
-input_t dialog_mouse_command(MEVENT *pmouse)
+input_t dialog_mouse_command(MEVENT *mouse)
 {
 	input_t ret;
 	Vector2i pos, tl;
 	bool del = FALSE;
 	color_t i;
 
-	if (!pmouse) {
+	if (!mouse) {
 		return INPUT_NO_CHANGE;
 	}
 
-	pos = abs2rel((Vector2i) { pmouse->y, pmouse->x }, dialog_pos);
+	pos = abs2rel((Vector2i) { mouse->y, mouse->x }, dialog_pos);
 
 	if (cidx != CIDX_DEFAULT) {
 		if (area_contains(left_pos, DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT, pos)) {
