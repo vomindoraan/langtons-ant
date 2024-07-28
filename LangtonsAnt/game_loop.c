@@ -5,27 +5,27 @@
 
 static bool run_loop = TRUE;
 
-static input_t handle_input(Simulation *sim)
+static state_t handle_input(Simulation *sim)
 {
-	input_t ret;
+	state_t ret;
 	int key;
 	MEVENT m, *mouse = &m;
 
 	// These functions must be called only once per loop
 	if ((key = getch()) == ERR) {
-		return INPUT_NO_CHANGE;
+		return STATE_NO_CHANGE;
 	}
 	if (key == KEY_MOUSE && getmouse(mouse) != ERR) {
 #if defined(MOUSE_ACT_ON_PRESS) && defined(NCURSES)
 		if (mouse->bstate & (BUTTON1_RELEASED | BUTTON3_RELEASED)) {
-			return INPUT_NO_CHANGE; // Prevent double press
+			return STATE_NO_CHANGE; // Prevent double press
 		}
 #endif
 	} else {
 		mouse = NULL;
 	}
 
-	ret = INPUT_NO_CHANGE;
+	ret = STATE_NO_CHANGE;
 	if (sim) {
 		ret |= grid_key_command(sim->grid, sim->ant, key, mouse);
 	}
@@ -40,10 +40,10 @@ void game_loop(void)
 	draw_menu_full();
 
 	while (run_loop) {
-		input_t input = handle_input(sim);
-		input_t grid_changed = input & INPUT_GRID_CHANGED, menu_changed = input & INPUT_MENU_CHANGED;
+		state_t input = handle_input(sim);
+		state_t grid_changed = input & STATE_GRID_CHANGED, menu_changed = input & STATE_MENU_CHANGED;
 #ifdef SERIAL_COLORS
-		input_t colors_changed = input & INPUT_COLORS_CHANGED;
+		state_t colors_changed = input & STATE_COLORS_CHANGED;
 #endif
 		sim = stgs.linked_sim;
 

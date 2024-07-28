@@ -22,7 +22,7 @@ static const char* example_files[] = {
 	"examples/square3.lant",
 };
 
-input_t set_simulation(Simulation *sim)
+state_t set_simulation(Simulation *sim)
 {
 	assert(stgs.linked_sim);
 	simulation_delete(stgs.linked_sim);
@@ -31,10 +31,10 @@ input_t set_simulation(Simulation *sim)
 	stgs.colors = sim->colors;
 	stgs.init_size = sim->grid->init_size;
 	reset_scroll();
-	return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED | INPUT_COLORS_CHANGED;
+	return STATE_GRID_CHANGED | STATE_MENU_CHANGED | STATE_COLORS_CHANGED;
 }
 
-input_t reset_simulation(void)
+state_t reset_simulation(void)
 {
 	Simulation *sim = stgs.linked_sim;
 	if (sim) {
@@ -42,16 +42,16 @@ input_t reset_simulation(void)
 	}
 	stgs.linked_sim = simulation_new(stgs.colors, stgs.init_size);
 	reset_scroll();
-	return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED | INPUT_COLORS_CHANGED;
+	return STATE_GRID_CHANGED | STATE_MENU_CHANGED | STATE_COLORS_CHANGED;
 }
 
-input_t clear_simulation(void)
+state_t clear_simulation(void)
 {
 	remove_all_colors(stgs.colors);
 	return reset_simulation();
 }
 
-static input_t isize_button_clicked(int d)
+static state_t isize_button_clicked(int d)
 {
 	Simulation *sim = stgs.linked_sim;
 	if (d > 0) {
@@ -59,58 +59,58 @@ static input_t isize_button_clicked(int d)
 	} else if (d < 0) {
 		stgs.init_size = MAX(stgs.init_size+d, GRID_MIN_INIT_SIZE);
 	} else {
-		return INPUT_NO_CHANGE;
+		return STATE_NO_CHANGE;
 	}
 	if (!is_simulation_running(sim) && !has_simulation_started(sim)) { // Sanity check
 		return reset_simulation();
 	}
-	return INPUT_MENU_CHANGED;
+	return STATE_MENU_CHANGED;
 }
 
-static input_t dir_button_clicked(Direction dir)
+static state_t dir_button_clicked(Direction dir)
 {
 	stgs.linked_sim->ant->dir = dir;
-	return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED;
+	return STATE_GRID_CHANGED | STATE_MENU_CHANGED;
 }
 
-static input_t speed_button_clicked(int d)
+static state_t speed_button_clicked(int d)
 {
 	if (d > 0) {
 		stgs.speed = MIN(stgs.speed+d, LOOP_MAX_SPEED);
 	} else if (d < 0) {
 		stgs.speed = MAX(stgs.speed+d, LOOP_MIN_SPEED);
 	} else {
-		return INPUT_NO_CHANGE;
+		return STATE_NO_CHANGE;
 	}
-	return INPUT_MENU_CHANGED;
+	return STATE_MENU_CHANGED;
 }
 
-static input_t stepup_button_clicked(void)
+static state_t stepup_button_clicked(void)
 {
 	Simulation *sim = stgs.linked_sim;
 	if (sim && has_enough_colors(sim->colors)) {
 		simulation_halt(sim);
 		simulation_step(sim);
-		return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED;
+		return STATE_GRID_CHANGED | STATE_MENU_CHANGED;
 	}
-	return INPUT_NO_CHANGE;
+	return STATE_NO_CHANGE;
 }
 
-static input_t play_button_clicked(void)
+static state_t play_button_clicked(void)
 {
 	Simulation *sim = stgs.linked_sim;
 	if (is_simulation_running(sim)) {
 		simulation_halt(sim);
-		return INPUT_MENU_CHANGED;
+		return STATE_MENU_CHANGED;
 	}
 	if (sim && has_enough_colors(sim->colors)) {
 		simulation_run(sim);
-		return INPUT_MENU_CHANGED;
+		return STATE_MENU_CHANGED;
 	}
-	return INPUT_NO_CHANGE;
+	return STATE_NO_CHANGE;
 }
 
-static input_t stop_button_clicked(void)
+static state_t stop_button_clicked(void)
 {
 	return has_simulation_started(stgs.linked_sim) ? reset_simulation() : clear_simulation();
 }
@@ -129,7 +129,7 @@ static input_t stop_button_clicked(void)
 //	return strlen(filename) > 0 && strlen(filename)+4 < FILENAME_SIZE;
 //}
 
-static input_t load_button_clicked(void)
+static state_t load_button_clicked(void)
 {
 	static int index = 0;
 	Simulation *sim;
@@ -142,11 +142,11 @@ static input_t load_button_clicked(void)
 		return set_simulation(sim);
 	} else {
 		load_status = STATUS_FAILURE;
-		return INPUT_MENU_CHANGED;
+		return STATE_MENU_CHANGED;
 	}
 }
 
-//static input_t save_button_clicked(void)
+//static state_t save_button_clicked(void)
 //{
 //	char filename[FILENAME_SIZE] = { 0 }, bmp_filename[FILENAME_SIZE] = { 0 };
 //	if (read_filename(filename) && save_simulation(filename, stgs.linked_sim) != EOF) {
@@ -157,10 +157,10 @@ static input_t load_button_clicked(void)
 //	} else {
 //		save_status = STATUS_FAILURE;
 //	}
-//	return INPUT_MENU_CHANGED;
+//	return STATE_MENU_CHANGED;
 //}
 
-input_t menu_key_command(int key, MEVENT *mouse)
+state_t menu_key_command(int key, MEVENT *mouse)
 {
 	Simulation *sim = stgs.linked_sim;
 
@@ -220,29 +220,29 @@ input_t menu_key_command(int key, MEVENT *mouse)
 		/* Quit */
 	case KEY_ESC:
 		stop_game_loop();
-		return INPUT_NO_CHANGE;
+		return STATE_NO_CHANGE;
 
 	case KEY_MOUSE:
 		//assert(mouse);
 		return menu_mouse_command(mouse);
 
 	default:
-		return INPUT_NO_CHANGE;
+		return STATE_NO_CHANGE;
 	}
 }
 
-input_t menu_mouse_command(MEVENT *mouse)
+state_t menu_mouse_command(MEVENT *mouse)
 {
-	input_t ret = INPUT_NO_CHANGE;
+	state_t ret = STATE_NO_CHANGE;
 	Vector2i mouse_pos, pos, tile;
 	size_t i;
 
 	if (!mouse) {
-		return INPUT_NO_CHANGE;
+		return STATE_NO_CHANGE;
 	}
 	mouse_pos.y = mouse->y, mouse_pos.x = mouse->x;
 	if (!area_contains(menu_pos, MENU_WINDOW_WIDTH, MENU_WINDOW_HEIGHT, mouse_pos)) {
-		return INPUT_NO_CHANGE;
+		return STATE_NO_CHANGE;
 	}
 
 	if (dialogw) {
@@ -250,7 +250,7 @@ input_t menu_mouse_command(MEVENT *mouse)
 			return dialog_mouse_command(mouse);
 		} else {
 			close_dialog();
-			return INPUT_MENU_CHANGED;
+			return STATE_MENU_CHANGED;
 		}
 	}
 
@@ -265,12 +265,12 @@ input_t menu_mouse_command(MEVENT *mouse)
 			} else if (mouse->bstate & MOUSE_RB_EVENT) {
 				open_dialog(pos, CIDX_DEFAULT);
 			}
-			return INPUT_MENU_CHANGED;
+			return STATE_MENU_CHANGED;
 		}
 	}
 	if (area_contains(get_menu_cdef_pos(), strlen(dialog_cdef_msg), 1, pos)) {
 		open_dialog(pos, CIDX_DEFAULT);
-		return INPUT_MENU_CHANGED;
+		return STATE_MENU_CHANGED;
 	}
 
 	/* Init size buttons */

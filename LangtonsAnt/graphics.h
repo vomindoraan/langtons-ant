@@ -257,14 +257,14 @@ typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE } IOStatus;
 
 /** @name Window state change flags */
 ///@{
-#define INPUT_NO_CHANGE      0
-#define INPUT_GRID_CHANGED   1
-#define INPUT_MENU_CHANGED   2
-#define INPUT_COLORS_CHANGED 4
+#define STATE_NO_CHANGE      0
+#define STATE_GRID_CHANGED   1
+#define STATE_MENU_CHANGED   2
+#define STATE_COLORS_CHANGED 4
 ///@}
 
-/** Window state change as a result of input events (bitwise OR of INPUT_* fields) */
-typedef byte input_t;
+/** Window state change as a result of input events (bitwise OR of STATE_* fields) */
+typedef byte state_t;
 
 
 /*------------------------- Loop performance macros --------------------------*/
@@ -526,20 +526,20 @@ void reset_scroll(void);
  * @param ant Ant to be acted upon
  * @param key Key that was pressed
  * @param mouse Pointer to mouse event if one happened; NULL otherwise
- * @return INPUT_GRID_CHANGED if grid changed; INPUT_NO_CHANGE otherwise
+ * @return STATE_GRID_CHANGED if grid changed; STATE_NO_CHANGE otherwise
  * @see grid_mouse_command(Grid *)
  */
-input_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse);
+state_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse);
 
 /**
  * Handles mouse commands passed to the grid window
  * @param grid Grid to be acted upon
  * @param ant Ant to be acted upon
  * @param mouse Pointer to mouse event if one happened; NULL otherwise
- * @return INPUT_GRID_CHANGED if grid changed; INPUT_NO_CHANGE otherwise
+ * @return STATE_GRID_CHANGED if grid changed; STATE_NO_CHANGE otherwise
  * @see grid_key_command(Grid *, Ant *, int)
  */
-input_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse);
+state_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse);
 
 
 /*----------------------------------------------------------------------------*
@@ -592,46 +592,46 @@ Vector2i get_menu_cdef_pos(void);
 /**
  * Deletes the old simulation and settings and sets them to the passed state
  * @param sim Simulation whose state to use
- * @return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED | INPUT_COLORS_CHANGED
+ * @return STATE_GRID_CHANGED | STATE_MENU_CHANGED | STATE_COLORS_CHANGED
  * @see reset_simulation(void)
  * @see clear_simulation(void)
  */
-input_t set_simulation(Simulation *sim);
+state_t set_simulation(Simulation *sim);
 
 /**
  * Resets and remakes the active simulation using the current settings
- * @return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED | INPUT_COLORS_CHANGED
+ * @return STATE_GRID_CHANGED | STATE_MENU_CHANGED | STATE_COLORS_CHANGED
  * @see clear_simulation(void)
  * @see set_simulation(Simulation *)
  */
-input_t reset_simulation(void);
+state_t reset_simulation(void);
 
 /**
  * Clears the current settings and resets the active simulation
- * @return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED | INPUT_COLORS_CHANGED
+ * @return STATE_GRID_CHANGED | STATE_MENU_CHANGED | STATE_COLORS_CHANGED
  * @see reset_simulation(void)
  * @see set_simulation(Simulation *)
  */
-input_t clear_simulation(void);
+state_t clear_simulation(void);
 
 /**
  * Handles key commands passed to the menu window
  * @param key Key that was pressed
  * @param mouse Pointer to mouse event if one happened; NULL otherwise
- * @return INPUT_GRID_CHANGED if grid changed | INPUT_MENU_CHANGED if menu changed;
- *         INPUT_NO_CHANGE otherwise
+ * @return STATE_GRID_CHANGED if grid changed | STATE_MENU_CHANGED if menu changed;
+ *         STATE_NO_CHANGE otherwise
  * @see menu_mouse_command(MEVENT *)
  */
-input_t menu_key_command(int key, MEVENT *mouse);
+state_t menu_key_command(int key, MEVENT *mouse);
 
 /**
  * Handles mouse commands passed to the menu window
  * @param mouse Pointer to mouse event if one happened; NULL otherwise
- * @return INPUT_GRID_CHANGED if grid changed | INPUT_MENU_CHANGED if menu changed
- *         | INPUT_COLORS_CHANGED if color rules changed; INPUT_NO_CHANGE otherwise
+ * @return STATE_GRID_CHANGED if grid changed | STATE_MENU_CHANGED if menu changed
+ *         | STATE_COLORS_CHANGED if color rules changed; STATE_NO_CHANGE otherwise
  * @see menu_key_command(int)
  */
-input_t menu_mouse_command(MEVENT *mouse);
+state_t menu_mouse_command(MEVENT *mouse);
 
 
 /*----------------------------------------------------------------------------*
@@ -668,9 +668,9 @@ Vector2i get_dialog_tile_pos(color_t color);
 /**
  * Handles mouse commands passed to the dialog window
  * @param mouse Pointer to mouse event if one happened; NULL otherwise
- * @return INPUT_MENU_CHANGED if dialog/menu changed | INPUT_COLORS_CHANGED if color
- *         rules changed; INPUT_NO_CHANGE otherwise
+ * @return STATE_MENU_CHANGED if dialog/menu changed | STATE_COLORS_CHANGED if color
+ *         rules changed; STATE_NO_CHANGE otherwise
  */
-input_t dialog_mouse_command(MEVENT *mouse);
+state_t dialog_mouse_command(MEVENT *mouse);
 
 #endif

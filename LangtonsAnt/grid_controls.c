@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-input_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse)
+state_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse)
 {
 	Vector2i center = { grid->size/2, grid->size/2 };
 	Vector2i pos = abs2rel(ant->pos, center);
@@ -109,10 +109,10 @@ input_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse)
 		return grid_mouse_command(grid, ant, mouse);
 
 	default:
-		return INPUT_NO_CHANGE;
+		return STATE_NO_CHANGE;
 	}
 
-	return INPUT_GRID_CHANGED;
+	return STATE_GRID_CHANGED;
 }
 
 typedef enum { SB_VERTICAL, SB_HORIZONTAL } ScrollbarType;
@@ -140,18 +140,18 @@ static void scrollbar_clicked(Grid *grid, MEVENT *mevent, ScrollbarType sbtype)
 	}
 }
 
-input_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse)
+state_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse)
 {
 	Vector2i center = { grid->size / 2, grid->size / 2 };
 	Vector2i mouse_pos, pos;
 	int step;
 
 	if (!mouse) {
-		return INPUT_NO_CHANGE;
+		return STATE_NO_CHANGE;
 	}
 	mouse_pos.y = mouse->y, mouse_pos.x = mouse->x;
 	if (!area_contains(grid_pos, GRID_WINDOW_SIZE, GRID_WINDOW_SIZE, mouse_pos)) {
-		return INPUT_NO_CHANGE;
+		return STATE_NO_CHANGE;
 	}
 
 	step = (mouse->bstate & MOUSE_LB_EVENT) ? SCROLL_STEP_SMALL
@@ -167,7 +167,7 @@ input_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse)
 		} else {
 			scrollbar_clicked(grid, mouse, SB_VERTICAL);
 		}
-		return INPUT_GRID_CHANGED;
+		return STATE_GRID_CHANGED;
 	}
 
 	/* Horizontal scrollbar */
@@ -179,11 +179,11 @@ input_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse)
 		} else {
 			scrollbar_clicked(grid, mouse, SB_HORIZONTAL);
 		}
-		return INPUT_GRID_CHANGED;
+		return STATE_GRID_CHANGED;
 	}
 
 	/* Grid proper - jump to ant */
 	pos = abs2rel(ant->pos, center);
 	set_scroll(grid, pos.y, pos.x);
-	return INPUT_GRID_CHANGED;
+	return STATE_GRID_CHANGED;
 }
