@@ -184,7 +184,7 @@ static void draw_color_arrow(Vector2i pos1, Vector2i pos2)
 		}
 	} else if (pos1.y == pos2.y) {
 		dx = abs(pos1.x - pos2.x);
-		dy = MENU_TILE_V_PADDING;
+		dy = MENU_TILE_V_PAD;
 		if (pos1.x > pos2.x) {
 			mvwvline(menuw, pos1.y+ts,    pos1.x+o, ACS_VLINE, dy);
 			mvwhline(menuw, pos1.y+ts+dy, pos2.x+o, ACS_HLINE, dx);
