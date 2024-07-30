@@ -9,6 +9,12 @@
 
 #include "io.h"
 
+#ifndef SERIAL_SCRIPT
+#	define SERIAL_SCRIPT "./write_serial.py"
+#endif
+
+#ifdef SERIAL_COLORS
+
 /* Message format: {BBGGRR,T} */
 #define COLOR_RULE_FMT       "{%02hhx%02hhx%02hhx,%c}"
 #define COLOR_RULE_LEN       (BYTES_PER_PIXEL*2 + 1 + 3)
@@ -32,10 +38,8 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg);
 // TODO
 //bool deserialize_color_rules(ColorRulesMsg msg, ColorRules rules);
 
-#ifdef __linux__
-#	define SERIAL_SCRIPT "./write_serial.py"
-
 bool serial_send_colors(Colors *colors);
-#endif
+
+#endif // SERIAL_COLORS
 
 #endif // __SERIAL_H__
