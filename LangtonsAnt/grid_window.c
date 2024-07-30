@@ -25,7 +25,7 @@ static Vector2i pos2yx(Vector2i pos, int line_width, int cell_size, int offset)
 {
 	return (Vector2i) {
 		.y = offset + line_width*(pos.y+1) + cell_size*pos.y,
-		.x = offset + line_width*(pos.x+1) + cell_size*pos.x
+		.x = offset + line_width*(pos.x+1) + cell_size*pos.x,
 	};
 }
 

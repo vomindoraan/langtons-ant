@@ -1,5 +1,4 @@
 // Adapted from: https://stackoverflow.com/a/47785639
-
 #include "io.h"
 
 #include <stdio.h>

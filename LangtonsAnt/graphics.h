@@ -19,8 +19,8 @@
 ///@}
 
 /** Fill character used for drawing */
-//#define FILL_CHAR ACS_BLOCK
 #define FILL_CHAR (' ' | A_REVERSE)
+//#define FILL_CHAR ACS_BLOCK
 
 
 /*--------------------------- Display color macros ---------------------------*/
@@ -228,8 +228,8 @@ typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE, STATUS_PENDING } IOS
 #define DIALOG_WINDOW_HEIGHT (DIALOG_TILE_ROWS*DIALOG_TILE_SIZE + DIALOG_BUTTON_HEIGHT*2 + 4)
 ///@}
 
-///@{
 /** Designates which colors are to be set in the dialog */
+///@{
 #define CIDX_NEWCOLOR -1
 #define CIDX_DEFAULT  -2
 ///@}
@@ -426,7 +426,7 @@ void draw_frame(WINDOW *w, Vector2i top_left, size_t width, size_t height);
  * @param top_left Sprite origin
  * @param overwrite Should existing content be overwritten?
  */
-void draw_sprite(WINDOW *w, SpriteInfo sprite_info, Vector2i top_left, bool overwrite);
+void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left, bool overwrite);
 
 /**
  * Converts a direction into its char representation

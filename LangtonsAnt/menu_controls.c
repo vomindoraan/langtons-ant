@@ -138,11 +138,14 @@ static state_t load_button_clicked(void)
 }
 
 #if MENU_SAVE_ENABLE
-#	define INPUT_WINDOW_WIDTH  (MENU_WINDOW_WIDTH-4)
+#	define INPUT_WINDOW_WIDTH  (MENU_WINDOW_WIDTH - 4)
 #	define INPUT_WINDOW_HEIGHT 3
 
 static WINDOW *inputw;
-static const Vector2i input_pos = { MENU_CONTROLS_Y-22, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH-INPUT_WINDOW_WIDTH-2 };
+static const Vector2i input_pos = {
+	.y = MENU_CONTROLS_Y - 13,
+	.x = GRID_WINDOW_SIZE + MENU_WINDOW_WIDTH - INPUT_WINDOW_WIDTH - 2,
+};
 
 static bool read_filename(char *filename)
 {
@@ -150,7 +153,7 @@ static bool read_filename(char *filename)
 	inputw = newwin(3, INPUT_WINDOW_WIDTH, input_pos.y, input_pos.x); // TODO move to window drawing file
 	wbkgd(inputw, GET_PAIR_FOR(COLOR_GRAY) | A_REVERSE);
 	wattron(inputw, fg_pair);
-	waddstr(inputw, " Path: ");
+	waddstr(inputw, " Filename: ");
 	wattroff(inputw, fg_pair);
 	echo();
 	ret = mvwgetnstr(inputw, 1, 1, filename, FILENAME_SIZE-5); // Leave room for ".bmp"

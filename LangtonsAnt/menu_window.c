@@ -133,7 +133,7 @@ Vector2i get_menu_cdef_pos(void)
 {
 	return (Vector2i) {
 		.y = get_menu_tile_pos(MIN(stgs.colors->n, MENU_TILES_PER_COL)).y + MENU_TILE_SIZE + MENU_TILE_VSEP + 1,
-		.x = rules_pos.x - MENU_TILE_SIZE - MENU_TILE_HSEP + 1
+		.x = rules_pos.x - MENU_TILE_SIZE - MENU_TILE_HSEP + 1,
 	};
 }
 
@@ -402,21 +402,21 @@ static void draw_control_buttons(void)
 
 static void draw_io_button(Vector2i pos, const char *label[MENU_BUTTON_HEIGHT-4], IOStatus status, bool draw_status)
 {
-	Vector2i inner  = { pos.y+1, pos.x+1 };
-	Vector2i text   = { pos.y+2, pos.x+2 };
-	Vector2i sprite = { pos.y+1, pos.x+3 };
+	Vector2i inner_pos  = { pos.y+1, pos.x+1 };
+	Vector2i text_pos   = { pos.y+2, pos.x+2 };
+	Vector2i sprite_pos = { pos.y+1, pos.x+3 };
 
 	wattrset(menuw, ui_pair);
 	draw_rect(menuw, pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
 	wattrset(menuw, bg_pair);
-	draw_rect(menuw, inner, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
+	draw_rect(menuw, inner_pos, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
 
 	wattrset(menuw, fg_pair);
 	if (status == STATUS_PENDING) {
-		draw_sprite(menuw, (SpriteInfo) { button_sprites[4], 5, 5 }, sprite, FALSE);
+		draw_sprite(menuw, (SpriteInfo) { button_sprites[4], 5, 5 }, sprite_pos, FALSE);
 	} else {
 		for (int i = 0; i < MENU_BUTTON_HEIGHT-4; i++) {
-			mvwaddnstr(menuw, text.y+i, text.x, label[i], MENU_BUTTON_WIDTH-4);
+			mvwaddnstr(menuw, text_pos.y+i, text_pos.x, label[i], MENU_BUTTON_WIDTH-4);
 		}
 	}
 
@@ -450,7 +450,7 @@ static void draw_io_buttons(void)
 	draw_io_button(menu_load_pos, load_label, load_status, FALSE);
 }
 
-static void draw_grid_size(void)
+static void draw_size(void)
 {
 	Simulation *sim = stgs.linked_sim;
 	size_t size = sim ? sim->grid->size : 0;
@@ -520,7 +520,7 @@ void draw_menu_full(void)
 	draw_state_func();
 	draw_control_buttons();
 	draw_io_buttons();
-	draw_grid_size();
+	draw_size();
 	draw_steps();
 	draw_labels();
 	wnoutrefresh(menuw);

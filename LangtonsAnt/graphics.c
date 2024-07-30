@@ -103,7 +103,7 @@ Vector2i rel2abs(Vector2i rel, Vector2i origin)
 {
 	return (Vector2i) {
 		.y = origin.y + rel.y,
-		.x = origin.x + rel.x
+		.x = origin.x + rel.x,
 	};
 }
 
@@ -111,7 +111,7 @@ Vector2i abs2rel(Vector2i abs, Vector2i origin)
 {
 	return (Vector2i) {
 		.y = abs.y - origin.y,
-		.x = abs.x - origin.x
+		.x = abs.x - origin.x,
 	};
 }
 

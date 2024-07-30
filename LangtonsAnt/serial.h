@@ -30,7 +30,6 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg);
 #	define SERIAL_SCRIPT "./write_serial.py"
 
 bool serial_send_colors(Colors *colors);
-
 #endif
 
 #endif
