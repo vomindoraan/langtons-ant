@@ -82,7 +82,7 @@ static void ant_move_s(Ant *ant, Grid *grid, Colors *colors)
 			grid->colored++;
 			update_bounding_box(grid, ant->pos);
 		}
-		new_cell(t, x, (byte)colors->first);
+		sparse_new_cell(t, x, (byte)colors->first);
 	}
 
 	/* In-place color changing */

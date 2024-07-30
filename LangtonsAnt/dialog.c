@@ -191,7 +191,7 @@ button_clicked:
 	case CIDX_NEWCOLOR:
 		ret = STATE_MENU_CHANGED;
 		if (picked_color != COLOR_NONE && picked_turn != TURN_NONE) {
-			add_color(stgs.colors, picked_color, picked_turn);
+			colors_push(stgs.colors, picked_color, picked_turn);
 			close_dialog();
 			ret |= STATE_COLORS_CHANGED;
 		}
@@ -211,14 +211,14 @@ button_clicked:
 		ret = STATE_MENU_CHANGED;
 		if (picked_turn != TURN_NONE) {
 			if (picked_color != COLOR_NONE) {
-				set_color(stgs.colors, cidx, picked_color, picked_turn);
+				colors_update(stgs.colors, cidx, picked_color, picked_turn);
 			} else {
-				set_turn(stgs.colors, cidx, picked_turn);
+				colors_set_turn(stgs.colors, cidx, picked_turn);
 			}
 			close_dialog();
 			ret |= STATE_COLORS_CHANGED;
 		} else if (del) {
-			remove_color(stgs.colors, get_color_at(stgs.colors, cidx));
+			colors_pop(stgs.colors, colors_at(stgs.colors, cidx));
 			if (!has_enough_colors(stgs.colors)) {
 				simulation_halt(stgs.linked_sim);
 			}

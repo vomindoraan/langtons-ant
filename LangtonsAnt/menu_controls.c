@@ -47,7 +47,7 @@ state_t reset_simulation(void)
 
 state_t clear_simulation(void)
 {
-	remove_all_colors(stgs.colors);
+	colors_clear(stgs.colors);
 	return reset_simulation();
 }
 
