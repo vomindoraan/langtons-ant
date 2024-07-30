@@ -1,3 +1,8 @@
+/**
+ * @file curses.h
+ * Proxy header for pdcurses.h on Windows, ncurses.h on Linux
+ * @author vomindoraan
+ */
 #ifndef __CURSES_H__
 #define __CURSES_H__
 
@@ -22,4 +27,4 @@
 
 #endif
 
-#endif
+#endif // __CURSES_H__

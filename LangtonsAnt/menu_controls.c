@@ -186,7 +186,7 @@ static state_t save_button_clicked(void)
 	}
 	return STATE_MENU_CHANGED;
 }
-#endif
+#endif // MENU_SAVE_ENABLE
 
 state_t menu_key_command(int key, MEVENT *mouse)
 {

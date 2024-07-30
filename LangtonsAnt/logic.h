@@ -212,4 +212,4 @@ bool simulation_step(Simulation *sim);
 bool is_simulation_running(Simulation *sim);
 bool has_simulation_started(Simulation *sim);
 
-#endif
+#endif // __LOGIC_H__

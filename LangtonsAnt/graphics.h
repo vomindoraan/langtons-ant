@@ -695,4 +695,4 @@ Vector2i get_dialog_tile_pos(color_t color);
  */
 state_t dialog_mouse_command(MEVENT *mouse);
 
-#endif
+#endif // __GRAPHICS_H__

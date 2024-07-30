@@ -94,4 +94,4 @@ int save_grid_bitmap(const char *filename, Grid *grid);
  */
 int create_bitmap_file(const char *filename, pixel_t *image, size_t height, size_t width);
 
-#endif
+#endif // __IO_H__

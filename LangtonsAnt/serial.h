@@ -1,5 +1,11 @@
-#ifndef __SERIAL__
-#define __SERIAL__
+/**
+ * @file serial.h
+ * Extension for data input/output via serial
+ * Requires external script [-DSERIAL_SCRIPT] and -DSERIAL_COLORS/-D...
+ * @author vomindoraan
+ */
+#ifndef __SERIAL_H__
+#define __SERIAL_H__
 
 #include "io.h"
 
@@ -32,4 +38,4 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg);
 bool serial_send_colors(Colors *colors);
 #endif
 
-#endif
+#endif // __SERIAL_H__
