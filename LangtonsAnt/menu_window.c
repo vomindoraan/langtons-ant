@@ -23,7 +23,9 @@ const Vector2i menu_stepup_pos  = { MENU_SPEED_Y+20,    MENU_RIGHT_COL_X+1 };
 const Vector2i menu_play_pos    = { MENU_CONTROLS_Y,    MENU_PLAY_X };
 const Vector2i menu_stop_pos    = { MENU_CONTROLS_Y,    MENU_STOP_X };
 const Vector2i menu_load_pos    = { MENU_CONTROLS_Y,    MENU_LOAD_X };
-//const Vector2i menu_save_pos    = { MENU_CONTROLS_Y,    MENU_SAVE_X };
+#if MENU_SAVE_ENABLE
+const Vector2i menu_save_pos    = { MENU_CONTROLS_Y-MENU_BUTTON_PHEIGHT, MENU_SAVE_X };
+#endif
 
 static const char *logo_msg   = " 14-COLOR 2D TURING MACHINE SIMULATOR ";
 static const char *rules_msg  = "COLOR RULES:";
@@ -398,40 +400,54 @@ static void draw_control_buttons(void)
 	}
 }
 
-static void draw_io_buttons(void)
+static void draw_io_button(Vector2i pos, const char *label[MENU_BUTTON_HEIGHT-4], IOStatus status, bool draw_status)
 {
-	Vector2i inner1 = { menu_load_pos.y+1, menu_load_pos.x+1 };
-	Vector2i pos1 = { menu_load_pos.y+1, menu_load_pos.x+3 };
-	//Vector2i inner2 = { menu_save_pos.y+1, menu_save_pos.x+1 };
+	Vector2i inner  = { pos.y+1, pos.x+1 };
+	Vector2i text   = { pos.y+2, pos.x+2 };
+	Vector2i sprite = { pos.y+1, pos.x+3 };
 
 	wattrset(menuw, ui_pair);
-	draw_rect(menuw, menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
-	//draw_rect(menuw, menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
+	draw_rect(menuw, pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
 	wattrset(menuw, bg_pair);
-	draw_rect(menuw, inner1, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
-	//draw_rect(menuw, inner2, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
+	draw_rect(menuw, inner, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
 
 	wattrset(menuw, fg_pair);
-	if (load_status == STATUS_PENDING) {
-		draw_sprite(menuw, (SpriteInfo) { button_sprites[4], 5, 5 }, pos1, FALSE);
+	if (status == STATUS_PENDING) {
+		draw_sprite(menuw, (SpriteInfo) { button_sprites[4], 5, 5 }, sprite, FALSE);
 	} else {
-		mvwaddstr(menuw, inner1.y+1, inner1.x, "  LOAD   ");
-		mvwaddstr(menuw, inner1.y+2, inner1.x, "   AN    ");
-		mvwaddstr(menuw, inner1.y+3, inner1.x, " EXAMPLE ");
+		for (int i = 0; i < MENU_BUTTON_HEIGHT-4; i++) {
+			mvwaddnstr(menuw, text.y+i, text.x, label[i], MENU_BUTTON_WIDTH-4);
+		}
 	}
-	//mvwaddstr(menuw, inner2.y+1, inner2.x, " SAVE    ");
-	//mvwaddstr(menuw, inner2.y+2, inner2.x, "   TO    ");
-	//mvwaddstr(menuw, inner2.y+3, inner2.x, "    FILE ");
 
-	///* Draw status indicators */
-	//if (load_status != STATUS_NONE) {
-	//	wattrset(menuw, GET_PAIR_FOR((load_status == STATUS_SUCCESS) ? COLOR_LIME : COLOR_RED));
-	//	mvwvline(menuw, menu_load_pos.y, menu_load_pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
-	//}
-	//if (save_status != STATUS_NONE) {
-	//	wattrset(menuw, GET_PAIR_FOR((save_status == STATUS_SUCCESS) ? COLOR_LIME : COLOR_RED));
-	//	mvwvline(menuw, menu_save_pos.y, menu_save_pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
-	//}
+	if (draw_status) {
+		chtype pair = (status == STATUS_SUCCESS) ? GET_PAIR_FOR(COLOR_LIME)
+		            : (status == STATUS_FAILURE) ? GET_PAIR_FOR(COLOR_RED)
+		            : (status == STATUS_PENDING) ? bg_pair
+		            : 0;
+		if (pair) {
+			wattrset(menuw, pair);
+			mvwvline(menuw, pos.y, pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
+		}
+	}
+}
+
+static void draw_io_buttons(void)
+{
+	const char *load_label[] = {
+		"LOAD AN",
+		"       ",
+		"EXAMPLE",
+	};
+#if MENU_SAVE_ENABLE
+	const char *save_label[] = {
+		" SAVE  ",
+		"       ",
+		"TO FILE",
+	};
+	draw_io_button(menu_save_pos, save_label, save_status, TRUE);
+#endif
+	draw_io_button(menu_load_pos, load_label, load_status, FALSE);
 }
 
 static void draw_grid_size(void)

@@ -5,12 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-//#define INPUT_WINDOW_WIDTH  (MENU_WINDOW_WIDTH-4)
-//#define INPUT_WINDOW_HEIGHT 3
-
-static WINDOW *iow;
-//static const Vector2i io_pos = { MENU_CONTROLS_Y-22, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH-INPUT_WINDOW_WIDTH-2 };
-
 static const char* example_files[] = {
 	"examples/highway.lant",
 	"examples/spiral.lant",
@@ -115,6 +109,12 @@ static state_t stop_button_clicked(void)
 	return has_simulation_started(stgs.linked_sim) ? reset_simulation() : clear_simulation();
 }
 
+static inline void set_pending_action(pending_func_t func, const char *filename)
+{
+	pending_action.func = func;
+	pending_action.arg = (void *)filename;
+}
+
 static state_t load_sim_action(void *arg)
 {
 	const char *filename = arg;
@@ -131,40 +131,59 @@ static state_t load_sim_action(void *arg)
 static state_t load_button_clicked(void)
 {
 	static int index = 0;
-	pending_action.func = load_sim_action;
-	pending_action.arg = (void *)example_files[index];
+	set_pending_action(load_sim_action, example_files[index]);
 	index = (index + 1) % LEN(example_files);
 	load_status = STATUS_PENDING;
 	return STATE_MENU_CHANGED;
 }
 
-//static bool read_filename(const char *filename)
-//{
-//	iow = newwin(3, INPUT_WINDOW_WIDTH, io_pos.y, io_pos.x); // TODO move to window drawing file
-//	wbkgd(iow, GET_PAIR_FOR(COLOR_GRAY) | A_REVERSE);
-//	wattron(iow, fg_pair);
-//	waddstr(iow, " Path: ");
-//	wattroff(iow, fg_pair);
-//	echo();
-//	mvwgetnstr(iow, 1, 1, filename, FILENAME_SIZE-1);
-//	noecho();
-//	delwin(iow);
-//	return strlen(filename) > 0 && strlen(filename)+4 < FILENAME_SIZE;
-//}
+#if MENU_SAVE_ENABLE
+#	define INPUT_WINDOW_WIDTH  (MENU_WINDOW_WIDTH-4)
+#	define INPUT_WINDOW_HEIGHT 3
 
-//static state_t save_button_clicked(void)
-//{
-//	char filename[FILENAME_SIZE] = { 0 }, bmp_filename[FILENAME_SIZE] = { 0 };
-//	if (read_filename(filename) && save_simulation(filename, stgs.linked_sim) != EOF) {
-//		save_status = STATUS_SUCCESS;
-//		strcpy(bmp_filename, filename);
-//		strcat(bmp_filename, ".bmp");
-//		save_grid_bitmap(bmp_filename, stgs.linked_sim->grid);
-//	} else {
-//		save_status = STATUS_FAILURE;
-//	}
-//	return STATE_MENU_CHANGED;
-//}
+static WINDOW *inputw;
+static const Vector2i input_pos = { MENU_CONTROLS_Y-22, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH-INPUT_WINDOW_WIDTH-2 };
+
+static bool read_filename(char *filename)
+{
+	int ret;
+	inputw = newwin(3, INPUT_WINDOW_WIDTH, input_pos.y, input_pos.x); // TODO move to window drawing file
+	wbkgd(inputw, GET_PAIR_FOR(COLOR_GRAY) | A_REVERSE);
+	wattron(inputw, fg_pair);
+	waddstr(inputw, " Path: ");
+	wattroff(inputw, fg_pair);
+	echo();
+	ret = mvwgetnstr(inputw, 1, 1, filename, FILENAME_SIZE-5); // Leave room for ".bmp"
+	noecho();
+	delwin(inputw);
+	return ret != ERR && strlen(filename) > 0;
+}
+
+static state_t save_sim_action(void *arg)
+{
+	char *filename = arg;
+	if (save_simulation(filename, stgs.linked_sim) != EOF) {
+		save_status = STATUS_SUCCESS;
+		strcat(filename, ".bmp");
+		save_grid_bitmap(filename, stgs.linked_sim->grid);
+	} else {
+		save_status = STATUS_FAILURE;
+	}
+	return STATE_MENU_CHANGED;
+}
+
+static state_t save_button_clicked(void)
+{
+	static char filename[FILENAME_SIZE] = { 0 };
+	if (read_filename(filename)) {
+		set_pending_action(save_sim_action, filename);
+		save_status = STATUS_PENDING;
+	} else {
+		save_status = STATUS_FAILURE;
+	}
+	return STATE_MENU_CHANGED;
+}
+#endif
 
 state_t menu_key_command(int key, MEVENT *mouse)
 {
@@ -220,8 +239,10 @@ state_t menu_key_command(int key, MEVENT *mouse)
 		/* IO */
 	case KEY_F(1):
 		return load_button_clicked();
-	//case KEY_F(2):
-	//	return save_button_clicked();
+#if MENU_SAVE_ENABLE
+	case KEY_F(2):
+		return save_button_clicked();
+#endif
 
 		/* Quit */
 	case KEY_ESC:
@@ -326,9 +347,11 @@ state_t menu_mouse_command(MEVENT *mouse)
 	if (area_contains(menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
 		return load_button_clicked();
 	}
-	//if (area_contains(menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
-	//	return save_button_clicked();
-	//}
+#if MENU_SAVE_ENABLE
+	if (area_contains(menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
+		return save_button_clicked();
+	}
+#endif
 
 	return ret;
 }
