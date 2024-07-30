@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static const char* example_files[] = {
+static const char *example_files[] = {
 	"examples/highway.lant",
 	"examples/spiral.lant",
 	"examples/triangle.lant",
@@ -36,13 +36,13 @@ state_t reset_simulation(void)
 	}
 	stgs.linked_sim = simulation_new(stgs.colors, stgs.init_size);
 	reset_scroll();
-	return STATE_GRID_CHANGED | STATE_MENU_CHANGED | STATE_COLORS_CHANGED;
+	return STATE_GRID_CHANGED | STATE_MENU_CHANGED;
 }
 
 state_t clear_simulation(void)
 {
 	colors_clear(stgs.colors);
-	return reset_simulation();
+	return reset_simulation() | STATE_COLORS_CHANGED;
 }
 
 static state_t isize_button_clicked(int d)
