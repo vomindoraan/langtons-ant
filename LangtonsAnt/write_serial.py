@@ -50,7 +50,7 @@ if __name__ == '__main__':
     try:
         serial = connect()
     except SerialException as e:
-        logging.exception("Couldn't connect: %s", e)
+        logging.error("Couldn't connect: %s", e)
         sys.exit(-2)
 
     serial.write(msg.encode('utf-8') + b'\0')
