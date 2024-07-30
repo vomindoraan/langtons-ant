@@ -11,7 +11,7 @@ CONSOLE_FONT_INFOEX user_font;
 SMALL_RECT user_window;
 #endif
 
-chtype fg_pair, bg_pair, ui_pair, ui_pair_contrast;
+chtype fg_pair, bg_pair, ui_pair, ui_text_pair;
 
 void init_def_pairs(color_t fg_color, color_t bg_color)
 {
@@ -27,7 +27,7 @@ void init_def_pairs(color_t fg_color, color_t bg_color)
 		} else if (c == fg_color) {
 			fg_pair = COLOR_PAIR(p);
 		} else if (c == ui_color) {
-			ui_pair_contrast = COLOR_PAIR(p);
+			ui_text_pair = COLOR_PAIR(p) | A_REVERSE;
 		}
 	}
 

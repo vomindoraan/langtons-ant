@@ -83,7 +83,7 @@ static void draw_buttons(void)
 
 	/* Default color picker dialog - message instead of buttons */
 	if (cidx == CIDX_DEFAULT) {
-		wattrset(dialogw, ui_pair_contrast | A_REVERSE);
+		wattrset(dialogw, ui_text_pair);
 		mvwaddstr(dialogw, left_pos.y, left_pos.x, dialog_cdef_msg);
 		return;
 	}
