@@ -67,7 +67,7 @@ bool serial_send_colors(Colors *colors)
 	ColorRules rules;
 	ColorRulesMsg msg;
 
-	colors_to_color_rules(colors, &rules);
+	colors_to_color_rules(colors, rules);
 	serialize_color_rules(rules, msg);
 
 	if (!(pipe = popen(SERIAL_SCRIPT, "w"))) {
