@@ -27,7 +27,7 @@ typedef struct color_rule {
 } ColorRule;
 
 typedef ColorRule ColorRules[COLOR_COUNT];
-typedef byte ColorRulesMsg[COLOR_RULES_MSG_SIZE];
+typedef char ColorRulesMsg[COLOR_RULES_MSG_SIZE];
 
 bool colors_to_color_rules(Colors *colors, ColorRules rules);
 

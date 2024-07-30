@@ -113,7 +113,7 @@ Vector2i get_menu_tile_pos(size_t index)
 	Vector2i pos;
 	size_t index_x, index_y;
 
-	if (index < 0 || index >= MENU_TILES_COUNT) {
+	if (index >= MENU_TILES_COUNT) {
 		return VECTOR_INVALID;
 	}
 
@@ -355,7 +355,7 @@ static void draw_state_func(void)
 	color_t ant_color = GRID_ANT_COLOR(sim->grid, sim->ant);
 	color_t next_color = sim->colors->next[ant_color]; // Uses sim->colors instead of stgs.colors
 
-	sprintf(str, "f(q%-2hd, ", state_map[ant_color]);
+	sprintf(str, "f(q%-2zu, ", state_map[ant_color]);
 	wattrset(menuw, pair);
 	mvwaddstr(menuw, func_pos.y, func_pos.x, str);
 	wattrset(menuw, GET_PAIR_FOR(ant_color));
@@ -363,7 +363,7 @@ static void draw_state_func(void)
 	wattrset(menuw, pair);
 	waddstr(menuw, ") = ");
 
-	sprintf(str, "(q%-2hd, ", state_map[next_color]);
+	sprintf(str, "(q%-2zu, ", state_map[next_color]);
 	mvwaddstr(menuw, func_pos.y+1, func_pos.x+1, str);
 	wattrset(menuw, GET_PAIR_FOR(next_color));
 	waddch(menuw, ACS_CKBOARD);
@@ -454,7 +454,7 @@ static void draw_size(void)
 	Simulation *sim = stgs.linked_sim;
 	size_t size = sim ? sim->grid->size : 0;
 	char str[29];
-	sprintf(str, "%28d", size);
+	sprintf(str, "%28zu", size);
 	wattrset(menuw, fg_pair);
 	mvwaddstr(menuw, size_pos.y, size_pos.x, str);
 }
@@ -481,7 +481,7 @@ static void draw_steps(void)
 		return;
 	}
 
-	sprintf(digits, "%8d", steps);
+	sprintf(digits, "%8zu", steps);
 	for (d = digits; d < digits+8; d++) {
 		if (*d != ' ') {
 			int digit = *d - '0';
