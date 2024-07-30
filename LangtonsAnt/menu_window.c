@@ -40,7 +40,7 @@ static const char *steps_msg  = "STEPS:";
 
 static const Vector2i logo_pos       = { MENU_LOGO_Y,         MENU_LEFT_COL_X-1 }; // TODO remove white border from sprite
 static const Vector2i logo_msg_pos   = { MENU_LOGO_Y+9,       MENU_LEFT_COL_X };
-static const Vector2i rules_pos      = { MENU_RULES_Y+5,      MENU_LEFT_COL_X+MENU_TILE_SIZE+MENU_TILE_HSEP+1 };
+static const Vector2i rules_pos      = { MENU_RULES_Y+5,      MENU_LEFT_COL_X+MENU_TILE_PWIDTH+1 };
 static const Vector2i rules_msg_pos  = { MENU_RULES_Y,        MENU_LEFT_COL_X };
 static const Vector2i isize_pos      = { MENU_INIT_SIZE_Y+2,  MENU_RIGHT_COL_X+13 };
 static const Vector2i isize_msg_pos  = { MENU_INIT_SIZE_Y,    MENU_RIGHT_COL_X };
@@ -113,7 +113,7 @@ Vector2i get_menu_tile_pos(size_t index)
 	Vector2i pos;
 	size_t index_x, index_y;
 
-	if (index < 0 || index >= MENU_TILE_COUNT) {
+	if (index < 0 || index >= MENU_TILES_COUNT) {
 		return VECTOR_INVALID;
 	}
 
@@ -123,17 +123,16 @@ Vector2i get_menu_tile_pos(size_t index)
 		index_y = MENU_TILES_PER_COL - index_y - 1;
 	}
 
-	pos.y = rules_pos.y + index_y*(MENU_TILE_SIZE+MENU_TILE_VSEP);
-	pos.x = rules_pos.x - index_x*(MENU_TILE_SIZE+MENU_TILE_HSEP);
-
+	pos.y = rules_pos.y + index_y*MENU_TILE_PHEIGHT;
+	pos.x = rules_pos.x - index_x*MENU_TILE_PWIDTH;
 	return pos;
 }
 
 Vector2i get_menu_cdef_pos(void)
 {
 	return (Vector2i) {
-		.y = get_menu_tile_pos(MIN(stgs.colors->n, MENU_TILES_PER_COL)).y + MENU_TILE_SIZE + MENU_TILE_VSEP + 1,
-		.x = rules_pos.x - MENU_TILE_SIZE - MENU_TILE_HSEP + 1,
+		.y = get_menu_tile_pos(MIN(stgs.colors->n, MENU_TILES_PER_COL)).y + MENU_TILE_PHEIGHT + 1,
+		.x = rules_pos.x - MENU_TILE_PWIDTH + 1,
 	};
 }
 
@@ -185,7 +184,7 @@ static void draw_color_arrow(Vector2i pos1, Vector2i pos2)
 		}
 	} else if (pos1.y == pos2.y) {
 		dx = abs(pos1.x - pos2.x);
-		dy = MENU_TILE_VSEP;
+		dy = MENU_TILE_V_PADDING;
 		if (pos1.x > pos2.x) {
 			mvwvline(menuw, pos1.y+ts,    pos1.x+o, ACS_VLINE, dy);
 			mvwhline(menuw, pos1.y+ts+dy, pos2.x+o, ACS_HLINE, dx);
@@ -241,7 +240,7 @@ static void draw_color_list(void)
 	bool do_for = TRUE;
 	Vector2i pos1, pos2, cdef_pos;
 
-	pos1.y = rules_pos.y-MENU_TILE_VSEP-1, pos1.x = rules_pos.x-MENU_TILE_HSEP-MENU_TILE_SIZE;
+	pos1.y = rules_pos.y-1, pos1.x = rules_pos.x-MENU_TILE_PWIDTH;
 	wattrset(menuw, bg_pair);
 	draw_rect(menuw, pos1, MENU_TILES_WIDTH, MENU_TILES_HEIGHT);
 
@@ -255,7 +254,7 @@ static void draw_color_list(void)
 		if (c == COLOR_NONE) {
 			break;
 		}
-		if (i < MENU_TILE_COUNT) {
+		if (i < MENU_TILES_COUNT) {
 			pos2 = get_menu_tile_pos(i);
 			draw_color_arrow(pos1, pos2);
 		}
@@ -265,7 +264,7 @@ static void draw_color_list(void)
 	}
 
 	/* Draw placeholder tile */
-	if (i < MENU_TILE_COUNT) {
+	if (i < MENU_TILES_COUNT) {
 		draw_color_tile(pos2, stgs.colors->def);
 	}
 
@@ -273,7 +272,7 @@ static void draw_color_list(void)
 	if (i >= MENU_TILES_PER_COL) {
 		draw_color_arrow(pos2, get_menu_tile_pos(0));
 	} else {
-		pos1.y = pos2.y, pos1.x = pos2.x-MENU_TILE_SIZE-MENU_TILE_HSEP;
+		pos1.y = pos2.y, pos1.x = pos2.x-MENU_TILE_PWIDTH;
 		draw_color_arrow(pos2, pos1);
 		pos1.y += MENU_TILE_SIZE+1;
 		draw_color_arrow(pos1, get_menu_tile_pos(0));
