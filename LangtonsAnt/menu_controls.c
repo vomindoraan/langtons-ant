@@ -115,14 +115,10 @@ static state_t stop_button_clicked(void)
 	return has_simulation_started(stgs.linked_sim) ? reset_simulation() : clear_simulation();
 }
 
-static state_t load_button_clicked(void)
+static state_t load_sim_action(void *arg)
 {
-	static int index = 0;
+	const char *filename = arg;
 	Simulation *sim;
-	const char *filename = example_files[index];
-	index = (index + 1) % LEN(example_files);
-
-	// TODO add loading indicator
 	if (sim = load_simulation(filename)) {
 		load_status = STATUS_SUCCESS;
 		return set_simulation(sim);
@@ -130,6 +126,16 @@ static state_t load_button_clicked(void)
 		load_status = STATUS_FAILURE;
 		return STATE_MENU_CHANGED;
 	}
+}
+
+static state_t load_button_clicked(void)
+{
+	static int index = 0;
+	pending_action.func = load_sim_action;
+	pending_action.arg = (void *)example_files[index];
+	index = (index + 1) % LEN(example_files);
+	load_status = STATUS_PENDING;
+	return STATE_MENU_CHANGED;
 }
 
 //static bool read_filename(const char *filename)

@@ -202,7 +202,7 @@ typedef struct settings {
 } Settings;
 
 /** Status indicator type for IO operations in the menu */
-typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE } IOStatus;
+typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE, STATUS_PENDING } IOStatus;
 
 
 /*---------------------- Dialog window macros and types ----------------------*/
@@ -266,6 +266,15 @@ typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE } IOStatus;
 /** Window state change as a result of input events (bitwise OR of STATE_* fields) */
 typedef byte state_t;
 
+/** Pending action function pointer */
+typedef state_t (*pending_func_t)(void *);
+
+/** Structure for scheduling actions to be processed on the next frame */
+typedef struct pending_t {
+	pending_func_t func; /**< Function pointer to action */
+	void *arg;           /**< Generic pointer to argument (must be downcasted in func) */
+} PendingAction;
+
 
 /*------------------------- Loop performance macros --------------------------*/
 
@@ -305,6 +314,7 @@ extern const Vector2i grid_pos;
 extern WINDOW         *menuw;
 extern Settings       stgs;
 extern IOStatus       load_status, save_status;
+extern PendingAction  pending_action;
 extern const Vector2i menu_pos;
 extern const Vector2i menu_isize_u_pos, menu_isize_d_pos;
 extern const Vector2i menu_dir_u_pos, menu_dir_r_pos, menu_dir_d_pos, menu_dir_l_pos;

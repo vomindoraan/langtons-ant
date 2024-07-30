@@ -11,6 +11,14 @@ static state_t handle_input(Simulation *sim)
 	int key;
 	MEVENT m, *mouse = &m;
 
+	if (pending_action.func) {
+		ret = (*pending_action.func)(pending_action.arg); // Blocking
+
+		flushinp();
+		pending_action.func = NULL;
+		return ret;
+	}
+
 	// These functions must be called only once per loop
 	if ((key = getch()) == ERR) {
 		return STATE_NO_CHANGE;

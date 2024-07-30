@@ -8,6 +8,7 @@
 WINDOW *menuw;
 Settings stgs;
 IOStatus load_status, save_status;
+PendingAction pending_action;
 
 const Vector2i menu_pos         = { 0, GRID_WINDOW_SIZE };
 const Vector2i menu_isize_u_pos = { MENU_ISIZE_Y+2,     MENU_RIGHT_COL_X+9 };
@@ -82,6 +83,7 @@ static const byte inf_sprite[] = {
 static const byte button_sprites[][4] = {
 	{ 0x43, 0x1C, 0xC4, 0x00 }, { 0x02, 0x94, 0xA0, 0x00 },
 	{ 0x03, 0x9C, 0xE0, 0x00 }, { 0x47, 0x92, 0x17, 0x00 },
+	{ 0x00, 0x2A, 0x00, 0x00 },
 };
 
 static size_t state_map[COLOR_COUNT] = { 0 };
@@ -399,6 +401,7 @@ static void draw_control_buttons(void)
 static void draw_io_buttons(void)
 {
 	Vector2i inner1 = { menu_load_pos.y+1, menu_load_pos.x+1 };
+	Vector2i pos1 = { menu_load_pos.y+1, menu_load_pos.x+3 };
 	//Vector2i inner2 = { menu_save_pos.y+1, menu_save_pos.x+1 };
 
 	wattrset(menuw, ui_pair);
@@ -409,9 +412,13 @@ static void draw_io_buttons(void)
 	//draw_rect(menuw, inner2, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
 
 	wattrset(menuw, fg_pair);
-	mvwaddstr(menuw, inner1.y+1, inner1.x, "  LOAD   ");
-	mvwaddstr(menuw, inner1.y+2, inner1.x, "   AN    ");
-	mvwaddstr(menuw, inner1.y+3, inner1.x, " EXAMPLE ");
+	if (load_status == STATUS_PENDING) {
+		draw_sprite(menuw, (SpriteInfo) { button_sprites[4], 5, 5 }, pos1, FALSE);
+	} else {
+		mvwaddstr(menuw, inner1.y+1, inner1.x, "  LOAD   ");
+		mvwaddstr(menuw, inner1.y+2, inner1.x, "   AN    ");
+		mvwaddstr(menuw, inner1.y+3, inner1.x, " EXAMPLE ");
+	}
 	//mvwaddstr(menuw, inner2.y+1, inner2.x, " SAVE    ");
 	//mvwaddstr(menuw, inner2.y+2, inner2.x, "   TO    ");
 	//mvwaddstr(menuw, inner2.y+3, inner2.x, "    FILE ");
