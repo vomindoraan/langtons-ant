@@ -1,6 +1,7 @@
 #include "graphics.h"
 
 #include <assert.h>
+#include <locale.h>
 #include <math.h>
 
 #ifdef _WIN32
@@ -61,6 +62,7 @@ void init_graphics(color_t fg_color, color_t bg_color)
 	SetCurrentConsoleFontEx(console, FALSE, &font);
 #endif
 
+	setlocale(LC_ALL, ""); // Helps with proper wide char display
 	initscr();
 	resize_term(GRID_WINDOW_SIZE, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH);
 	curs_set(0);
