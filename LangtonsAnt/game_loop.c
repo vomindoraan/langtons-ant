@@ -3,6 +3,8 @@
 #	include "serial.h"
 #endif
 
+#include <stdlib.h>
+
 static bool run_loop = TRUE;
 
 static state_t handle_input(Simulation *sim)
@@ -46,7 +48,11 @@ static void sleep(void)
 {
 	int dd = LOOP_MAX_DELAY - LOOP_MIN_DELAY;
 	int ds = LOOP_MAX_SPEED - LOOP_MIN_SPEED;
-	int delay = dd * (LOOP_MAX_SPEED - stgs.speed) / ds + LOOP_MIN_DELAY;
+	int x  = LOOP_MAX_SPEED - stgs.speed;
+	// Linear delay: dd * x / ds + LOOP_MIN_DELAY
+	// Cubic delay:  ceil(dd * x^3 / ds^3) + LOOP_MIN_DELAY
+	div_t d = div(dd * (x*x*x), ds*ds*ds);
+	int delay = d.quot + (d.rem != 0) + LOOP_MIN_DELAY;
 	napms(delay);
 }
 
