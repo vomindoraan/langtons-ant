@@ -41,6 +41,15 @@ static state_t handle_input(Simulation *sim)
 	return ret;
 }
 
+// TODO fixed timestep loop
+static void sleep(void)
+{
+	int dd = LOOP_MAX_DELAY - LOOP_MIN_DELAY;
+	int ds = LOOP_MAX_SPEED - LOOP_MIN_SPEED;
+	int delay = dd * (LOOP_MAX_SPEED - stgs.speed) / ds + LOOP_MIN_DELAY;
+	napms(delay);
+}
+
 void game_loop(void)
 {
 	Simulation *sim = stgs.linked_sim;
@@ -59,10 +68,7 @@ void game_loop(void)
 		if (is_simulation_running(sim)) {
 			Vector2i prev_pos = sim->ant->pos;
 			if (simulation_step(sim)) {
-				int dd = LOOP_MAX_DELAY - LOOP_MIN_DELAY;
-				int ds = LOOP_MAX_SPEED - LOOP_MIN_SPEED;
-				int delay = dd * (LOOP_MAX_SPEED - stgs.speed) / ds + LOOP_MIN_DELAY;
-				napms(delay); // TODO fixed timestep loop
+				sleep();
 
 				draw_grid_iter(sim->grid, sim->ant, prev_pos);
 				draw_menu_iter();
