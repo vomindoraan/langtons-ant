@@ -534,9 +534,11 @@ void draw_menu_iter(void)
 	Simulation *sim = stgs.linked_sim;
 	static bool sparse = FALSE;
 #if LOOP_OPT_ENABLE
+	// TODO fixed timestep loop
 	static size_t prev_steps = 0;
+	size_t mult = MAX(stgs.speed - LOOP_OPT_SPEED + 1, 0);
 	size_t threshold = (stgs.speed == LOOP_MAX_SPEED) ? LOOP_MAX_OPT
-	                 : LOOP_DEF_OPT * (stgs.speed - LOOP_OPT_SPEED + 1);
+	                 : LOOP_DEF_OPT * mult;
 	bool do_draw = sim->steps-prev_steps >= threshold;
 #endif
 
