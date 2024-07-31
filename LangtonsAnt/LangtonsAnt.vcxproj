@@ -98,7 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ant_sprites.c" />
-    <ClCompile Include="bitmap.c" />
+    <ClCompile Include="bitmap_io.c" />
     <ClCompile Include="colors.c" />
     <ClCompile Include="dialog.c" />
     <ClCompile Include="game_loop.c" />
