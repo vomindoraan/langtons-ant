@@ -74,10 +74,9 @@ void game_loop(void)
 		if (is_simulation_running(sim)) {
 			Vector2i prev_pos = sim->ant->pos;
 			if (simulation_step(sim)) {
-				sleep();
-
 				draw_grid_iter(sim->grid, sim->ant, prev_pos);
 				draw_menu_iter();
+				sleep();
 			} else {
 				grid_changed = menu_changed = TRUE;
 			}
