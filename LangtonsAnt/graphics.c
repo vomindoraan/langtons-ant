@@ -2,7 +2,6 @@
 
 #include <assert.h>
 #include <locale.h>
-#include <math.h>
 
 #ifdef _WIN32
 #include <Windows.h>

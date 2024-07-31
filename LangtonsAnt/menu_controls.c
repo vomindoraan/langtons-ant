@@ -2,7 +2,6 @@
 #include "io.h"
 
 #include <assert.h>
-#include <stdlib.h>
 #include <string.h>
 
 static const char *example_files[] = {
