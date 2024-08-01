@@ -83,7 +83,7 @@ static void draw_buttons(void)
 
 	/* Default color picker dialog - message instead of buttons */
 	if (cidx == CIDX_DEFAULT) {
-		wattrset(dialogw, ui_pair_contrast | A_REVERSE);
+		wattrset(dialogw, ui_text_pair);
 		mvwaddstr(dialogw, left_pos.y, left_pos.x, dialog_cdef_msg);
 		return;
 	}
@@ -146,18 +146,18 @@ Vector2i get_dialog_tile_pos(color_t color)
 	return pos;
 }
 
-input_t dialog_mouse_command(MEVENT *pmouse)
+state_t dialog_mouse_command(MEVENT *mouse)
 {
-	input_t ret;
+	state_t ret;
 	Vector2i pos, tl;
 	bool del = FALSE;
 	color_t i;
 
-	if (!pmouse) {
-		return INPUT_NO_CHANGE;
+	if (!mouse) {
+		return STATE_NO_CHANGE;
 	}
 
-	pos = abs2rel((Vector2i) { pmouse->y, pmouse->x }, dialog_pos);
+	pos = abs2rel((Vector2i) { mouse->y, mouse->x }, dialog_pos);
 
 	if (cidx != CIDX_DEFAULT) {
 		if (area_contains(left_pos, DIALOG_BUTTON_WIDTH, DIALOG_BUTTON_HEIGHT, pos)) {
@@ -184,16 +184,16 @@ input_t dialog_mouse_command(MEVENT *pmouse)
 		}
 	}
 
-	return INPUT_NO_CHANGE;
+	return STATE_NO_CHANGE;
 
 button_clicked:
 	switch (cidx) {
 	case CIDX_NEWCOLOR:
-		ret = INPUT_MENU_CHANGED;
+		ret = STATE_MENU_CHANGED;
 		if (picked_color != COLOR_NONE && picked_turn != TURN_NONE) {
-			add_color(stgs.colors, picked_color, picked_turn);
+			colors_push(stgs.colors, picked_color, picked_turn);
 			close_dialog();
-			ret |= INPUT_COLORS_CHANGED;
+			ret |= STATE_COLORS_CHANGED;
 		}
 		return ret;
 
@@ -206,24 +206,24 @@ button_clicked:
 
 	default:
 		if (cidx < 0 || cidx >= COLOR_COUNT) {
-			return INPUT_NO_CHANGE;
+			return STATE_NO_CHANGE;
 		}
-		ret = INPUT_MENU_CHANGED;
+		ret = STATE_MENU_CHANGED;
 		if (picked_turn != TURN_NONE) {
 			if (picked_color != COLOR_NONE) {
-				set_color(stgs.colors, cidx, picked_color, picked_turn);
+				colors_update(stgs.colors, cidx, picked_color, picked_turn);
 			} else {
-				set_turn(stgs.colors, cidx, picked_turn);
+				colors_set_turn(stgs.colors, cidx, picked_turn);
 			}
 			close_dialog();
-			ret |= INPUT_COLORS_CHANGED;
+			ret |= STATE_COLORS_CHANGED;
 		} else if (del) {
-			remove_color(stgs.colors, get_color_at(stgs.colors, cidx));
+			colors_pop(stgs.colors, colors_at(stgs.colors, cidx));
 			if (!has_enough_colors(stgs.colors)) {
 				simulation_halt(stgs.linked_sim);
 			}
 			close_dialog();
-			ret |= INPUT_COLORS_CHANGED;
+			ret |= STATE_COLORS_CHANGED;
 		}
 		return ret;
 	}

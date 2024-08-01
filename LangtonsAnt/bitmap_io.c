@@ -1,5 +1,4 @@
 // Adapted from: https://stackoverflow.com/a/47785639
-
 #include "io.h"
 
 #include <stdio.h>
@@ -81,7 +80,7 @@ static byte *init_info_header(int height, int width)
 	return info_header;
 }
 
-int create_bitmap_file(char *filename, pixel_t *image, size_t height, size_t width)
+int create_bitmap_file(const char *filename, pixel_t *image, size_t height, size_t width)
 {
 	FILE *output;
 	size_t width_in_bytes = width * BYTES_PER_PIXEL;

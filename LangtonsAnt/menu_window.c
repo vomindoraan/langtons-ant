@@ -8,10 +8,11 @@
 WINDOW *menuw;
 Settings stgs;
 IOStatus load_status, save_status;
+PendingAction pending_action;
 
 const Vector2i menu_pos         = { 0, GRID_WINDOW_SIZE };
-const Vector2i menu_isize_u_pos = { MENU_ISIZE_Y+2,     MENU_RIGHT_COL_X+9 };
-const Vector2i menu_isize_d_pos = { MENU_ISIZE_Y+5,     MENU_RIGHT_COL_X+9 };
+const Vector2i menu_isize_u_pos = { MENU_INIT_SIZE_Y+2, MENU_RIGHT_COL_X+9 };
+const Vector2i menu_isize_d_pos = { MENU_INIT_SIZE_Y+5, MENU_RIGHT_COL_X+9 };
 const Vector2i menu_dir_u_pos   = { MENU_DIRECTION_Y+2, MENU_RIGHT_COL_X+10 };
 const Vector2i menu_dir_r_pos   = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL_X+14 };
 const Vector2i menu_dir_d_pos   = { MENU_DIRECTION_Y+7, MENU_RIGHT_COL_X+10 };
@@ -19,10 +20,12 @@ const Vector2i menu_dir_l_pos   = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL_X+7 };
 const Vector2i menu_speed_u_pos = { MENU_SPEED_Y+2,     MENU_RIGHT_COL_X+9 };
 const Vector2i menu_speed_d_pos = { MENU_SPEED_Y+MENU_SPEED_HEIGHT+4, MENU_RIGHT_COL_X+9 };
 const Vector2i menu_stepup_pos  = { MENU_SPEED_Y+20,    MENU_RIGHT_COL_X+1 };
-const Vector2i menu_play_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL_X };
-const Vector2i menu_stop_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL_X+MENU_BUTTON_PWIDTH };
-const Vector2i menu_load_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL_X+2*MENU_BUTTON_PWIDTH };
-//const Vector2i menu_save_pos    = { MENU_CONTROLS_Y,    MENU_LEFT_COL_X+2*MENU_BUTTON_PWIDTH };
+const Vector2i menu_play_pos    = { MENU_CONTROLS_Y,    MENU_PLAY_X };
+const Vector2i menu_stop_pos    = { MENU_CONTROLS_Y,    MENU_STOP_X };
+const Vector2i menu_load_pos    = { MENU_CONTROLS_Y,    MENU_LOAD_X };
+#if MENU_SAVE_ENABLE
+const Vector2i menu_save_pos    = { MENU_CONTROLS_Y-MENU_BUTTON_PHEIGHT, MENU_SAVE_X };
+#endif
 
 static const char *logo_msg   = " 14-COLOR 2D TURING MACHINE SIMULATOR ";
 static const char *rules_msg  = "COLOR RULES:";
@@ -35,53 +38,54 @@ static const char *size_msg   = "GRID SIZE:";
 static const char *sparse_msg = "SPARSE";
 static const char *steps_msg  = "STEPS:";
 
-static const Vector2i logo_pos       = { MENU_LOGO_Y,       MENU_LEFT_COL_X-1 }; // TODO remove white border from sprite
-static const Vector2i logo_msg_pos   = { MENU_LOGO_Y+9,     MENU_LEFT_COL_X };
-static const Vector2i rules_pos      = { MENU_RULES_Y+5,    MENU_LEFT_COL_X+MENU_TILE_SIZE+MENU_TILE_HSEP+1 };
-static const Vector2i rules_msg_pos  = { MENU_RULES_Y,      MENU_LEFT_COL_X };
-static const Vector2i isize_pos      = { MENU_ISIZE_Y+2,    MENU_RIGHT_COL_X+13 };
-static const Vector2i isize_msg_pos  = { MENU_ISIZE_Y,      MENU_RIGHT_COL_X };
-static const Vector2i dir_msg_pos    = { MENU_DIRECTION_Y,  MENU_RIGHT_COL_X };
-static const Vector2i speed_pos      = { MENU_SPEED_Y+2,    MENU_RIGHT_COL_X+13 };
-static const Vector2i speed_msg_pos  = { MENU_SPEED_Y,      MENU_RIGHT_COL_X };
-static const Vector2i stepup_msg_pos = { MENU_SPEED_Y+18,   MENU_RIGHT_COL_X };
-static const Vector2i func_pos       = { MENU_FUNCTION_Y+2, MENU_RIGHT_COL_X+4 };
-static const Vector2i func_msg_pos   = { MENU_FUNCTION_Y,   MENU_RIGHT_COL_X };
-static const Vector2i size_pos       = { MENU_STATUS_Y,     MENU_LEFT_COL_X+10 };
-static const Vector2i size_msg_pos   = { MENU_STATUS_Y,     MENU_LEFT_COL_X };
-static const Vector2i sparse_msg_pos = { MENU_STATUS_Y+3,   MENU_LEFT_COL_X };
-static const Vector2i steps_pos      = { MENU_STATUS_Y+2,   MENU_LEFT_COL_X+7 };
-static const Vector2i steps_msg_pos  = { MENU_STATUS_Y+6,   MENU_LEFT_COL_X };
+static const Vector2i logo_pos       = { MENU_LOGO_Y,         MENU_LEFT_COL_X-1 }; // TODO remove white border from sprite
+static const Vector2i logo_msg_pos   = { MENU_LOGO_Y+9,       MENU_LEFT_COL_X };
+static const Vector2i rules_pos      = { MENU_RULES_Y+5,      MENU_LEFT_COL_X+MENU_TILE_PWIDTH+1 };
+static const Vector2i rules_msg_pos  = { MENU_RULES_Y,        MENU_LEFT_COL_X };
+static const Vector2i isize_pos      = { MENU_INIT_SIZE_Y+2,  MENU_RIGHT_COL_X+13 };
+static const Vector2i isize_msg_pos  = { MENU_INIT_SIZE_Y,    MENU_RIGHT_COL_X };
+static const Vector2i dir_msg_pos    = { MENU_DIRECTION_Y,    MENU_RIGHT_COL_X };
+static const Vector2i speed_pos      = { MENU_SPEED_Y+2,      MENU_RIGHT_COL_X+13 };
+static const Vector2i speed_msg_pos  = { MENU_SPEED_Y,        MENU_RIGHT_COL_X };
+static const Vector2i stepup_msg_pos = { MENU_SPEED_Y+18,     MENU_RIGHT_COL_X };
+static const Vector2i func_pos       = { MENU_STATE_FUNC_Y+2, MENU_RIGHT_COL_X+4 };
+static const Vector2i func_msg_pos   = { MENU_STATE_FUNC_Y,   MENU_RIGHT_COL_X };
+static const Vector2i size_pos       = { MENU_STATUS_Y,       MENU_LEFT_COL_X+10 };
+static const Vector2i size_msg_pos   = { MENU_STATUS_Y,       MENU_LEFT_COL_X };
+static const Vector2i sparse_msg_pos = { MENU_STATUS_Y+3,     MENU_LEFT_COL_X };
+static const Vector2i steps_pos      = { MENU_STATUS_Y+2,     MENU_LEFT_COL_X+7 };
+static const Vector2i steps_msg_pos  = { MENU_STATUS_Y+6,     MENU_LEFT_COL_X };
 
 static const byte logo_sprite[] = {
 	0x70, 0x00, 0x02, 0x00, 0x10, 0x20, 0x00, 0x02,
 	0x00, 0x10, 0x20, 0xEE, 0x3B, 0x99, 0xC6, 0x21,
 	0x29, 0x4A, 0x25, 0x24, 0x25, 0x29, 0x4A, 0x25,
 	0x22, 0x7C, 0xE9, 0x39, 0x99, 0x26, 0x00, 0x00,
-	0x08, 0x00, 0x00, 0x00, 0x00, 0x30, 0x00, 0x00
+	0x08, 0x00, 0x00, 0x00, 0x00, 0x30, 0x00, 0x00,
 };
 static const byte logo_highlight_sprite[] = {
 	0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x02,
 	0x00, 0x00, 0x00, 0xEE, 0x03, 0x80, 0x00, 0x01,
 	0x29, 0x02, 0x00, 0x00, 0x01, 0x29, 0x02, 0x00,
 	0x00, 0x00, 0xE9, 0x01, 0x80, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 };
 static const byte arrow_sprites[][1] = {
-	{ 0x5C }, { 0xB8 }, { 0xE8 }, { 0x74 }
+	{ 0x5C }, { 0xB8 }, { 0xE8 }, { 0x74 },
 };
 static const byte stepup_sprite[] = { 0x5D, 0x00 }; // > 0xCF, + 0x5D
 static const byte digit_sprites[][2] = {
 	{ 0xF6, 0xDE }, { 0x24, 0x92 }, { 0xE7, 0xCE }, { 0xE7, 0x9E }, { 0xB7, 0x92 },
-	{ 0xF3, 0x9E }, { 0xF3, 0xDE }, { 0xE4, 0x92 }, { 0xF7, 0xDE }, { 0xF7, 0x9E }
+	{ 0xF3, 0x9E }, { 0xF3, 0xDE }, { 0xE4, 0x92 }, { 0xF7, 0xDE }, { 0xF7, 0x9E },
 };
 static const byte inf_sprite[] = {
 	0x00, 0x00, 0x07, 0x1C, 0x00, 0x00, 0x11, 0x44, 0x00, 0x00,
-	0x21, 0x08, 0x00, 0x00, 0x45, 0x10, 0x00, 0x00, 0x71, 0xC0
+	0x21, 0x08, 0x00, 0x00, 0x45, 0x10, 0x00, 0x00, 0x71, 0xC0,
 };
 static const byte button_sprites[][4] = {
 	{ 0x43, 0x1C, 0xC4, 0x00 }, { 0x02, 0x94, 0xA0, 0x00 },
-	{ 0x03, 0x9C, 0xE0, 0x00 }, { 0x47, 0x92, 0x17, 0x00 }
+	{ 0x03, 0x9C, 0xE0, 0x00 }, { 0x47, 0x92, 0x17, 0x00 },
+	{ 0x00, 0x2A, 0x00, 0x00 },
 };
 
 static size_t state_map[COLOR_COUNT] = { 0 };
@@ -109,7 +113,7 @@ Vector2i get_menu_tile_pos(size_t index)
 	Vector2i pos;
 	size_t index_x, index_y;
 
-	if (index < 0 || index >= MENU_TILE_COUNT) {
+	if (index >= MENU_TILES_COUNT) {
 		return VECTOR_INVALID;
 	}
 
@@ -119,17 +123,16 @@ Vector2i get_menu_tile_pos(size_t index)
 		index_y = MENU_TILES_PER_COL - index_y - 1;
 	}
 
-	pos.y = rules_pos.y + index_y*(MENU_TILE_SIZE+MENU_TILE_VSEP);
-	pos.x = rules_pos.x - index_x*(MENU_TILE_SIZE+MENU_TILE_HSEP);
-
+	pos.y = rules_pos.y + index_y*MENU_TILE_PHEIGHT;
+	pos.x = rules_pos.x - index_x*MENU_TILE_PWIDTH;
 	return pos;
 }
 
 Vector2i get_menu_cdef_pos(void)
 {
 	return (Vector2i) {
-		.y = get_menu_tile_pos(min(stgs.colors->n, MENU_TILES_PER_COL)).y + MENU_TILE_SIZE + MENU_TILE_VSEP + 1,
-		.x = rules_pos.x - MENU_TILE_SIZE - MENU_TILE_HSEP + 1
+		.y = get_menu_tile_pos(MIN(stgs.colors->n, MENU_TILES_PER_COL)).y + MENU_TILE_PHEIGHT + 1,
+		.x = rules_pos.x - MENU_TILE_PWIDTH + 1,
 	};
 }
 
@@ -173,7 +176,7 @@ static void draw_color_arrow(Vector2i pos1, Vector2i pos2)
 
 	if (pos1.x == pos2.x) {
 		dy = abs(pos1.y - pos2.y) - ts;
-		mvwvline(menuw, min(pos1.y, pos2.y)+ts, pos1.x+o, ACS_VLINE, dy);
+		mvwvline(menuw, MIN(pos1.y, pos2.y)+ts, pos1.x+o, ACS_VLINE, dy);
 		if (pos1.y < pos2.y) {
 			mvwaddch(menuw, pos2.y-1,  pos1.x+o, ACS_DARROW);
 		} else {
@@ -181,7 +184,7 @@ static void draw_color_arrow(Vector2i pos1, Vector2i pos2)
 		}
 	} else if (pos1.y == pos2.y) {
 		dx = abs(pos1.x - pos2.x);
-		dy = MENU_TILE_VSEP;
+		dy = MENU_TILE_V_PAD;
 		if (pos1.x > pos2.x) {
 			mvwvline(menuw, pos1.y+ts,    pos1.x+o, ACS_VLINE, dy);
 			mvwhline(menuw, pos1.y+ts+dy, pos2.x+o, ACS_HLINE, dx);
@@ -237,7 +240,7 @@ static void draw_color_list(void)
 	bool do_for = TRUE;
 	Vector2i pos1, pos2, cdef_pos;
 
-	pos1.y = rules_pos.y-MENU_TILE_VSEP-1, pos1.x = rules_pos.x-MENU_TILE_HSEP-MENU_TILE_SIZE;
+	pos1.y = rules_pos.y-1, pos1.x = rules_pos.x-MENU_TILE_PWIDTH;
 	wattrset(menuw, bg_pair);
 	draw_rect(menuw, pos1, MENU_TILES_WIDTH, MENU_TILES_HEIGHT);
 
@@ -251,7 +254,7 @@ static void draw_color_list(void)
 		if (c == COLOR_NONE) {
 			break;
 		}
-		if (i < MENU_TILE_COUNT) {
+		if (i < MENU_TILES_COUNT) {
 			pos2 = get_menu_tile_pos(i);
 			draw_color_arrow(pos1, pos2);
 		}
@@ -261,7 +264,7 @@ static void draw_color_list(void)
 	}
 
 	/* Draw placeholder tile */
-	if (i < MENU_TILE_COUNT) {
+	if (i < MENU_TILES_COUNT) {
 		draw_color_tile(pos2, stgs.colors->def);
 	}
 
@@ -269,7 +272,7 @@ static void draw_color_list(void)
 	if (i >= MENU_TILES_PER_COL) {
 		draw_color_arrow(pos2, get_menu_tile_pos(0));
 	} else {
-		pos1.y = pos2.y, pos1.x = pos2.x-MENU_TILE_SIZE-MENU_TILE_HSEP;
+		pos1.y = pos2.y, pos1.x = pos2.x-MENU_TILE_PWIDTH;
 		draw_color_arrow(pos2, pos1);
 		pos1.y += MENU_TILE_SIZE+1;
 		draw_color_arrow(pos1, get_menu_tile_pos(0));
@@ -352,7 +355,7 @@ static void draw_state_func(void)
 	color_t ant_color = GRID_ANT_COLOR(sim->grid, sim->ant);
 	color_t next_color = sim->colors->next[ant_color]; // Uses sim->colors instead of stgs.colors
 
-	sprintf(str, "f(q%-2hd, ", state_map[ant_color]);
+	sprintf(str, "f(q%-2zu, ", state_map[ant_color]);
 	wattrset(menuw, pair);
 	mvwaddstr(menuw, func_pos.y, func_pos.x, str);
 	wattrset(menuw, GET_PAIR_FOR(ant_color));
@@ -360,7 +363,7 @@ static void draw_state_func(void)
 	wattrset(menuw, pair);
 	waddstr(menuw, ") = ");
 
-	sprintf(str, "(q%-2hd, ", state_map[next_color]);
+	sprintf(str, "(q%-2zu, ", state_map[next_color]);
 	mvwaddstr(menuw, func_pos.y+1, func_pos.x+1, str);
 	wattrset(menuw, GET_PAIR_FOR(next_color));
 	waddch(menuw, ACS_CKBOARD);
@@ -396,43 +399,62 @@ static void draw_control_buttons(void)
 	}
 }
 
-static void draw_io_buttons(void)
+static void draw_io_button(Vector2i pos, const char *label[MENU_BUTTON_HEIGHT-4], IOStatus status, bool draw_status)
 {
-	Vector2i inner1 = { menu_load_pos.y+1, menu_load_pos.x+1 };
-	//Vector2i inner2 = { menu_save_pos.y+1, menu_save_pos.x+1 };
+	Vector2i inner_pos  = { pos.y+1, pos.x+1 };
+	Vector2i text_pos   = { pos.y+2, pos.x+2 };
+	Vector2i sprite_pos = { pos.y+1, pos.x+3 };
 
 	wattrset(menuw, ui_pair);
-	draw_rect(menuw, menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
-	//draw_rect(menuw, menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
+	draw_rect(menuw, pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
 	wattrset(menuw, bg_pair);
-	draw_rect(menuw, inner1, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
-	//draw_rect(menuw, inner2, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
+	draw_rect(menuw, inner_pos, MENU_BUTTON_WIDTH-2, MENU_BUTTON_HEIGHT-2);
 
 	wattrset(menuw, fg_pair);
-	mvwaddstr(menuw, inner1.y+1, inner1.x, "  LOAD   ");
-	mvwaddstr(menuw, inner1.y+2, inner1.x, "   AN    ");
-	mvwaddstr(menuw, inner1.y+3, inner1.x, " EXAMPLE ");
-	//mvwaddstr(menuw, inner2.y+1, inner2.x, " SAVE    ");
-	//mvwaddstr(menuw, inner2.y+2, inner2.x, "   TO    ");
-	//mvwaddstr(menuw, inner2.y+3, inner2.x, "    FILE ");
+	if (status == STATUS_PENDING) {
+		draw_sprite(menuw, (SpriteInfo) { button_sprites[4], 5, 5 }, sprite_pos, FALSE);
+	} else {
+		for (int i = 0; i < MENU_BUTTON_HEIGHT-4; i++) {
+			mvwaddnstr(menuw, text_pos.y+i, text_pos.x, label[i], MENU_BUTTON_WIDTH-4);
+		}
+	}
 
-	///* Draw status indicators */
-	//if (load_status != STATUS_NONE) {
-	//	wattrset(menuw, GET_PAIR_FOR((load_status == STATUS_SUCCESS) ? COLOR_LIME : COLOR_RED));
-	//	mvwvline(menuw, menu_load_pos.y, menu_load_pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
-	//}
-	//if (save_status != STATUS_NONE) {
-	//	wattrset(menuw, GET_PAIR_FOR((save_status == STATUS_SUCCESS) ? COLOR_LIME : COLOR_RED));
-	//	mvwvline(menuw, menu_save_pos.y, menu_save_pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
-	//}
+	if (draw_status) {
+		chtype pair = (status == STATUS_SUCCESS) ? GET_PAIR_FOR(COLOR_LIME)
+		            : (status == STATUS_FAILURE) ? GET_PAIR_FOR(COLOR_RED)
+		            : (status == STATUS_PENDING) ? bg_pair
+		            : 0;
+		if (pair) {
+			wattrset(menuw, pair);
+			mvwvline(menuw, pos.y, pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
+		}
+	}
 }
 
-static void draw_grid_size(void)
+static void draw_io_buttons(void)
+{
+	const char *load_label[] = {
+		"LOAD AN",
+		"       ",
+		"EXAMPLE",
+	};
+#if MENU_SAVE_ENABLE
+	const char *save_label[] = {
+		" SAVE  ",
+		"       ",
+		"TO FILE",
+	};
+	draw_io_button(menu_save_pos, save_label, save_status, TRUE);
+#endif
+	draw_io_button(menu_load_pos, load_label, load_status, FALSE);
+}
+
+static void draw_size(void)
 {
 	Simulation *sim = stgs.linked_sim;
 	size_t size = sim ? sim->grid->size : 0;
 	char str[29];
-	sprintf(str, "%28d", size);
+	sprintf(str, "%28zu", size);
 	wattrset(menuw, fg_pair);
 	mvwaddstr(menuw, size_pos.y, size_pos.x, str);
 }
@@ -459,7 +481,7 @@ static void draw_steps(void)
 		return;
 	}
 
-	sprintf(digits, "%8d", steps);
+	sprintf(digits, "%8zu", steps);
 	for (d = digits; d < digits+8; d++) {
 		if (*d != ' ') {
 			int digit = *d - '0';
@@ -497,7 +519,7 @@ void draw_menu_full(void)
 	draw_state_func();
 	draw_control_buttons();
 	draw_io_buttons();
-	draw_grid_size();
+	draw_size();
 	draw_steps();
 	draw_labels();
 	wnoutrefresh(menuw);
@@ -512,9 +534,11 @@ void draw_menu_iter(void)
 	Simulation *sim = stgs.linked_sim;
 	static bool sparse = FALSE;
 #if LOOP_OPT_ENABLE
+	// TODO fixed timestep loop
 	static size_t prev_steps = 0;
+	size_t mult = MAX(stgs.speed - LOOP_OPT_SPEED + 1, 0);
 	size_t threshold = (stgs.speed == LOOP_MAX_SPEED) ? LOOP_MAX_OPT
-	                 : LOOP_DEF_OPT * (stgs.speed - LOOP_OPT_SPEED + 1);
+	                 : LOOP_DEF_OPT * mult;
 	bool do_draw = sim->steps-prev_steps >= threshold;
 #endif
 

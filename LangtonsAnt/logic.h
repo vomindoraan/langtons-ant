@@ -14,15 +14,15 @@
 
 ///@{
 /** Standard max/min macro */
-#define max(a, b) (((a) > (b)) ? (a) : (b))
-#define min(a, b) (((a) < (b)) ? (a) : (b))
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))
 ///@}
 
 /** Standard sign macro */
-#define sgn(x)    ((x > 0) - (x < 0))
+#define SGN(x)    ((x > 0) - (x < 0))
 
-/** Standard array size macro */
-#define alen(a) (sizeof(a) / sizeof(a[0]))
+/** Static array length macro */
+#define LEN(a)    (sizeof(a) / sizeof(a[0]))
 
 ///@{
 /** Curses boolean literal */
@@ -47,7 +47,7 @@ typedef unsigned char byte;
 #define VECTOR_EQ(v1, v2) ((v1).y == (v2).y && (v1).x == (v2).x)
 
 /** Vector representing an out-of-bounds position */
-#define VECTOR_INVALID    (Vector2i) { INT_MIN, INT_MIN }
+#define VECTOR_INVALID    ((Vector2i) { INT_MIN, INT_MIN })
 
 /** Vector container */
 typedef struct vector2i {
@@ -117,7 +117,7 @@ typedef struct colors {
 #define GRID_SIZE_LARGE(g)      (GRID_SIZE_MEDIUM(g) * GRID_MULT)
 #define IS_GRID_LARGE(g)        ((g)->size >= GRID_SIZE_LARGE(g))
 #define GRID_EFFICIENCY(g)      ((g)->size*(g)->size / ((double)sizeof(SparseCell)*(g)->colored))
-#define GRID_COLOR_AT(g, p)     (is_grid_sparse(g) ? color_at_s(g, p) : (g)->c[(p).y][(p).x])
+#define GRID_COLOR_AT(g, p)     (is_grid_sparse(g) ? sparse_color_at(g, p) : (g)->c[(p).y][(p).x])
 #define GRID_ANT_COLOR(g, a)    GRID_COLOR_AT(g, (a)->pos)
 ///@}
 
@@ -173,12 +173,12 @@ bool is_ant_in_bounds(Ant *ant, Grid *grid);
 
 Colors *colors_new(color_t def);
 void colors_delete(Colors *colors);
-void add_color(Colors *colors, color_t c, turn_t turn);
-void remove_color(Colors *colors, color_t c);
-void remove_all_colors(Colors *colors);
-void set_color(Colors *colors, size_t index, color_t c, turn_t turn);
-void set_turn(Colors *colors, size_t index, turn_t turn);
-color_t get_color_at(Colors *colors, size_t index);
+void colors_push(Colors *colors, color_t c, turn_t turn);
+void colors_pop(Colors *colors, color_t c);
+void colors_clear(Colors *colors);
+color_t colors_at(Colors *colors, size_t index);
+void colors_update(Colors *colors, size_t index, color_t c, turn_t turn);
+void colors_set_turn(Colors *colors, size_t index, turn_t turn);
 bool color_exists(Colors *colors, color_t c);
 bool is_color_special(Colors *colors, color_t c);
 bool is_colors_empty(Colors *colors);
@@ -196,8 +196,8 @@ void grid_expand(Grid *grid, Ant *ant);
 void grid_make_sparse(Grid *grid);
 bool is_grid_sparse(Grid *grid);
 bool is_grid_usage_low(Grid *grid);
-void new_cell(SparseCell **curr, size_t column, byte c);
-byte color_at_s(Grid *grid, Vector2i p);
+void sparse_new_cell(SparseCell **curr, size_t column, byte c);
+byte sparse_color_at(Grid *grid, Vector2i p);
 
 
 /*----------------------------------------------------------------------------*
@@ -212,4 +212,4 @@ bool simulation_step(Simulation *sim);
 bool is_simulation_running(Simulation *sim);
 bool has_simulation_started(Simulation *sim);
 
-#endif
+#endif // __LOGIC_H__

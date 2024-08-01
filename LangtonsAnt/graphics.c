@@ -1,7 +1,7 @@
 #include "graphics.h"
 
 #include <assert.h>
-#include <math.h>
+#include <locale.h>
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -11,7 +11,7 @@ CONSOLE_FONT_INFOEX user_font;
 SMALL_RECT user_window;
 #endif
 
-chtype fg_pair, bg_pair, ui_pair, ui_pair_contrast;
+chtype fg_pair, bg_pair, ui_pair, ui_text_pair;
 
 void init_def_pairs(color_t fg_color, color_t bg_color)
 {
@@ -27,7 +27,7 @@ void init_def_pairs(color_t fg_color, color_t bg_color)
 		} else if (c == fg_color) {
 			fg_pair = COLOR_PAIR(p);
 		} else if (c == ui_color) {
-			ui_pair_contrast = COLOR_PAIR(p);
+			ui_text_pair = COLOR_PAIR(p) | A_REVERSE;
 		}
 	}
 
@@ -61,6 +61,7 @@ void init_graphics(color_t fg_color, color_t bg_color)
 	SetCurrentConsoleFontEx(console, FALSE, &font);
 #endif
 
+	setlocale(LC_ALL, ""); // Helps with proper wide char display
 	initscr();
 	resize_term(GRID_WINDOW_SIZE, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH);
 	curs_set(0);
@@ -103,7 +104,7 @@ Vector2i rel2abs(Vector2i rel, Vector2i origin)
 {
 	return (Vector2i) {
 		.y = origin.y + rel.y,
-		.x = origin.x + rel.x
+		.x = origin.x + rel.x,
 	};
 }
 
@@ -111,7 +112,7 @@ Vector2i abs2rel(Vector2i abs, Vector2i origin)
 {
 	return (Vector2i) {
 		.y = abs.y - origin.y,
-		.x = abs.x - origin.x
+		.x = abs.x - origin.x,
 	};
 }
 

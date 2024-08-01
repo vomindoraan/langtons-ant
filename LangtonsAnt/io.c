@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-Colors *load_colors(char *filename) // TODO format checks
+Colors *load_colors(const char *filename) // TODO format checks
 {
 	Colors *colors;
 	FILE *input;
@@ -43,7 +43,7 @@ Colors *load_colors(char *filename) // TODO format checks
 	return colors;
 }
 
-int save_colors(char *filename, Colors *colors)
+int save_colors(const char *filename, Colors *colors)
 {
 	FILE *output;
 	int e;
@@ -69,7 +69,7 @@ int save_colors(char *filename, Colors *colors)
 	return e;
 }
 
-Simulation *load_simulation(char *filename)
+Simulation *load_simulation(const char *filename)
 {
 	Simulation *sim;
 	Colors *colors;
@@ -172,7 +172,7 @@ error_end:
 	return NULL;
 }
 
-int save_simulation(char *filename, Simulation *sim)
+int save_simulation(const char *filename, Simulation *sim)
 {
 	FILE *output;
 	SparseCell *cell;
@@ -235,7 +235,7 @@ int save_simulation(char *filename, Simulation *sim)
 	return 0; // TODO return success bool
 }
 
-int save_grid_bitmap(char *filename, Grid *grid)
+int save_grid_bitmap(const char *filename, Grid *grid)
 {
 	pixel_t *image;
 	size_t height = grid->size, width = grid->size, i, j;

@@ -1,5 +1,6 @@
 #include "serial.h"
-#include "io.h"
+
+#ifdef SERIAL_COLORS
 
 #include <stdio.h>
 #include <string.h>
@@ -61,22 +62,31 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg)
 //	}
 //}
 
-#ifdef __linux__
 bool serial_send_colors(Colors *colors)
 {
 	FILE *pipe;
 	ColorRules rules;
 	ColorRulesMsg msg;
 
-	colors_to_color_rules(colors, &rules);
+	colors_to_color_rules(colors, rules);
 	serialize_color_rules(rules, msg);
 
-	if (!(pipe = popen(SERIAL_SCRIPT, "w"))) {
+#ifdef _WIN32
+	pipe = _popen(SERIAL_SCRIPT, "w");
+#else
+	pipe = popen(SERIAL_SCRIPT, "w");
+#endif
+	if (!pipe) {
 		return FALSE;
 	}
 
 	bool success = fputs(msg, pipe) != EOF;
+#ifdef _WIN32
+	_pclose(pipe);
+#else
 	pclose(pipe);
+#endif
 	return success;
 }
-#endif
+
+#endif // SERIAL_COLORS

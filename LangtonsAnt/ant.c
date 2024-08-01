@@ -38,10 +38,10 @@ static Direction change_dir(Ant *ant, turn_t turn)
 static void update_bounding_box(Grid *grid, Vector2i pos)
 {
 	Vector2i *tl = &grid->top_left, *br = &grid->bottom_right;
-	tl->y = min(tl->y, pos.y);
-	tl->x = min(tl->x, pos.x);
-	br->y = max(br->y, pos.y);
-	br->x = max(br->x, pos.x);
+	tl->y = MIN(tl->y, pos.y);
+	tl->x = MIN(tl->x, pos.x);
+	br->y = MAX(br->y, pos.y);
+	br->x = MAX(br->x, pos.x);
 }
 
 static void ant_move_n(Ant *ant, Grid *grid, Colors *colors)
@@ -82,7 +82,7 @@ static void ant_move_s(Ant *ant, Grid *grid, Colors *colors)
 			grid->colored++;
 			update_bounding_box(grid, ant->pos);
 		}
-		new_cell(t, x, (byte)colors->first);
+		sparse_new_cell(t, x, (byte)colors->first);
 	}
 
 	/* In-place color changing */

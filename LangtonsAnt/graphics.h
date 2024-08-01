@@ -19,8 +19,8 @@
 ///@}
 
 /** Fill character used for drawing */
-//#define FILL_CHAR ACS_BLOCK
 #define FILL_CHAR (' ' | A_REVERSE)
+//#define FILL_CHAR ACS_BLOCK
 
 
 /*--------------------------- Display color macros ---------------------------*/
@@ -111,7 +111,7 @@
 /** @name Scroll utility macros */
 ///@{
 #define ORIGIN_COORD(gs, vs, sc)     ((gs)/2-(vs)/2+(sc))
-#define ORIGIN_POS(gs, vs, scy, scx) (Vector2i) { ORIGIN_COORD(gs, vs, scy), ORIGIN_COORD(gs, vs, scx) }
+#define ORIGIN_POS(gs, vs, scy, scx) ((Vector2i) { ORIGIN_COORD(gs, vs, scy), ORIGIN_COORD(gs, vs, scx) })
 ///@}
 
 /** Structure for managing scroll data */
@@ -131,35 +131,46 @@ typedef struct scroll_info {
 #define MENU_WINDOW_HEIGHT  GRID_WINDOW_SIZE
 #define MENU_H_MARGIN       3
 #define MENU_V_MARGIN       3
-#define MENU_H_PADDING      2
-#define MENU_V_PADDING      4
+#define MENU_H_PAD          2
+#define MENU_V_PAD          4
 #define MENU_LEFT_COL_X     MENU_H_MARGIN
-#define MENU_RIGHT_COL_X    (MENU_WINDOW_WIDTH-MENU_H_MARGIN-16)
-#define MENU_LEFT_COL_Y     (MENU_LOGO_Y+MENU_LOGO_HEIGHT+MENU_V_PADDING+1)
+#define MENU_RIGHT_COL_X    (MENU_WINDOW_WIDTH - MENU_H_MARGIN - 16)
+#define MENU_LEFT_COL_Y     (MENU_LOGO_Y + MENU_LOGO_HEIGHT + MENU_V_PAD + 1)
 #define MENU_RIGHT_COL_Y    MENU_LEFT_COL_Y
 #define MENU_LOGO_WIDTH     40
 #define MENU_LOGO_HEIGHT    8
 #define MENU_LOGO_Y         MENU_V_MARGIN
 #define MENU_RULES_Y        MENU_LEFT_COL_Y
-#define MENU_ISIZE_Y        MENU_RIGHT_COL_Y
-#define MENU_DIRECTION_Y    (MENU_ISIZE_Y+MENU_V_PADDING+7)
-#define MENU_SPEED_Y        (MENU_DIRECTION_Y+MENU_V_PADDING+9)
+#define MENU_INIT_SIZE_Y    MENU_RIGHT_COL_Y
+#define MENU_DIRECTION_Y    (MENU_INIT_SIZE_Y + MENU_V_PAD + 7)
+#define MENU_SPEED_Y        (MENU_DIRECTION_Y + MENU_V_PAD + 9)
 #define MENU_SPEED_HEIGHT   17
-#define MENU_FUNCTION_Y     (MENU_SPEED_Y+MENU_SPEED_HEIGHT+MENU_V_PADDING+6)
-#define MENU_CONTROLS_Y     (MENU_STATUS_Y-10)
-#define MENU_STATUS_Y       (MENU_WINDOW_HEIGHT-10)
+#define MENU_STATE_FUNC_Y   (MENU_SPEED_Y + MENU_SPEED_HEIGHT + MENU_V_PAD + 6)
+#define MENU_STATUS_Y       (MENU_WINDOW_HEIGHT - 10)
 #define MENU_BORDER_COLOR   COLOR_NAVY
 #define MENU_BORDER_COLOR_S COLOR_MAROON
 #define MENU_ACTIVE_COLOR   COLOR_BLUE
 #define MENU_INACTIVE_COLOR COLOR_GRAY
 ///@}
 
+#ifndef MENU_SAVE_ENABLE
+	/** Should save button in menu be drawn and active? */
+#	define MENU_SAVE_ENABLE FALSE
+#endif
+
 /** @name Menu button attributes */
 ///@{
+#define MENU_CONTROLS_Y     (MENU_STATUS_Y - 10)
 #define MENU_BUTTON_WIDTH   11
 #define MENU_BUTTON_HEIGHT  7
-#define MENU_BUTTON_PWIDTH  (MENU_BUTTON_WIDTH+MENU_H_PADDING)
-#define MENU_BUTTON_PHEIGHT (MENU_BUTTON_HEIGHT+MENU_H_PADDING)
+#define MENU_BUTTON_PWIDTH  (MENU_BUTTON_WIDTH + MENU_H_PAD)
+#define MENU_BUTTON_PHEIGHT (MENU_BUTTON_HEIGHT + MENU_H_PAD)
+#define MENU_PLAY_X         MENU_LEFT_COL_X
+#define MENU_STOP_X         (MENU_LEFT_COL_X + MENU_BUTTON_PWIDTH)
+#define MENU_LOAD_X         (MENU_STOP_X + MENU_BUTTON_PWIDTH)
+#if MENU_SAVE_ENABLE
+#	define MENU_SAVE_X      MENU_LOAD_X
+#endif
 #define MENU_PLAY_COLOR     COLOR_GREEN
 #define MENU_PAUSE_COLOR    COLOR_YELLOW
 #define MENU_STOP_COLOR     COLOR_RED
@@ -180,13 +191,15 @@ typedef struct scroll_info {
 /** @name Menu color tiles attributes */
 ///@{
 #define MENU_TILE_SIZE      7
-#define MENU_TILE_HSEP      3
-#define MENU_TILE_VSEP      2
-#define MENU_TILE_COLUMNS   2
+#define MENU_TILE_H_PAD     3
+#define MENU_TILE_V_PAD     2
+#define MENU_TILE_PWIDTH    (MENU_TILE_SIZE + MENU_TILE_H_PAD)
+#define MENU_TILE_PHEIGHT   (MENU_TILE_SIZE + MENU_TILE_V_PAD)
+#define MENU_TILES_COLS     2
 #define MENU_TILES_PER_COL  7
-#define MENU_TILE_COUNT     (MENU_TILE_COLUMNS * MENU_TILES_PER_COL)
-#define MENU_TILES_WIDTH    (MENU_TILE_COLUMNS*MENU_TILE_SIZE + (MENU_TILE_COLUMNS-1)*MENU_TILE_HSEP)
-#define MENU_TILES_HEIGHT   (MENU_TILES_PER_COL*MENU_TILE_SIZE + (MENU_TILES_PER_COL+1)*MENU_TILE_VSEP + 3)
+#define MENU_TILES_COUNT    (MENU_TILES_COLS * MENU_TILES_PER_COL)
+#define MENU_TILES_WIDTH    ((MENU_TILES_COLS-1)*MENU_TILE_PWIDTH + MENU_TILE_SIZE)
+#define MENU_TILES_HEIGHT   (MENU_TILES_PER_COL*MENU_TILE_PHEIGHT + MENU_TILE_V_PAD + 3)
 ///@}
 
 /** Structure containing all relevant menu settings */
@@ -198,7 +211,7 @@ typedef struct settings {
 } Settings;
 
 /** Status indicator type for IO operations in the menu */
-typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE } IOStatus;
+typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE, STATUS_PENDING } IOStatus;
 
 
 /*---------------------- Dialog window macros and types ----------------------*/
@@ -217,8 +230,8 @@ typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE } IOStatus;
 #define DIALOG_WINDOW_HEIGHT (DIALOG_TILE_ROWS*DIALOG_TILE_SIZE + DIALOG_BUTTON_HEIGHT*2 + 4)
 ///@}
 
-///@{
 /** Designates which colors are to be set in the dialog */
+///@{
 #define CIDX_NEWCOLOR -1
 #define CIDX_DEFAULT  -2
 ///@}
@@ -253,14 +266,23 @@ typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE } IOStatus;
 
 /** @name Window state change flags */
 ///@{
-#define INPUT_NO_CHANGE      0
-#define INPUT_GRID_CHANGED   1
-#define INPUT_MENU_CHANGED   2
-#define INPUT_COLORS_CHANGED 4
+#define STATE_NO_CHANGE      0
+#define STATE_GRID_CHANGED   1
+#define STATE_MENU_CHANGED   2
+#define STATE_COLORS_CHANGED 4
 ///@}
 
-/** Window state change as a result of input events (bitwise OR of INPUT_* fields) */
-typedef byte input_t;
+/** Window state change as a result of input events (bitwise OR of STATE_* fields) */
+typedef byte state_t;
+
+/** Pending action function pointer */
+typedef state_t (*pending_func_t)(void *);
+
+/** Structure for scheduling actions to be processed on the next frame */
+typedef struct pending_t {
+	pending_func_t func; /**< Function pointer to action */
+	void *arg;           /**< Generic pointer to argument (must be downcasted in func) */
+} PendingAction;
 
 
 /*------------------------- Loop performance macros --------------------------*/
@@ -292,7 +314,7 @@ typedef struct sprite_info {
 
 /** @name Globals */
 ///@{
-extern chtype         fg_pair, bg_pair, ui_pair, ui_pair_contrast;
+extern chtype         fg_pair, bg_pair, ui_pair, ui_text_pair;
 
 extern WINDOW         *gridw;
 extern ScrollInfo     gridscrl;
@@ -301,12 +323,16 @@ extern const Vector2i grid_pos;
 extern WINDOW         *menuw;
 extern Settings       stgs;
 extern IOStatus       load_status, save_status;
+extern PendingAction  pending_action;
 extern const Vector2i menu_pos;
 extern const Vector2i menu_isize_u_pos, menu_isize_d_pos;
 extern const Vector2i menu_dir_u_pos, menu_dir_r_pos, menu_dir_d_pos, menu_dir_l_pos;
 extern const Vector2i menu_speed_u_pos, menu_speed_d_pos, menu_stepup_pos;
 extern const Vector2i menu_play_pos, menu_stop_pos;
-extern const Vector2i menu_load_pos/*, menu_save_pos*/;
+extern const Vector2i menu_load_pos;
+#if MENU_SAVE_ENABLE
+extern const Vector2i menu_save_pos;
+#endif
 
 extern WINDOW         *dialogw;
 extern Vector2i       dialog_pos;
@@ -402,7 +428,7 @@ void draw_frame(WINDOW *w, Vector2i top_left, size_t width, size_t height);
  * @param top_left Sprite origin
  * @param overwrite Should existing content be overwritten?
  */
-void draw_sprite(WINDOW *w, SpriteInfo sprite_info, Vector2i top_left, bool overwrite);
+void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left, bool overwrite);
 
 /**
  * Converts a direction into its char representation
@@ -450,6 +476,7 @@ void game_loop(void);
  * @see game_loop(void)
  */
 void stop_game_loop(void);
+
 
 /*----------------------------------------------------------------------------*
  *                               grid_window.c                                *
@@ -521,21 +548,21 @@ void reset_scroll(void);
  * @param grid Grid to be acted upon
  * @param ant Ant to be acted upon
  * @param key Key that was pressed
- * @param pmouse Pointer to mouse event if one happened; NULL otherwise
- * @return INPUT_GRID_CHANGED if grid changed; INPUT_NO_CHANGE otherwise
+ * @param mouse Pointer to mouse event if one happened; NULL otherwise
+ * @return STATE_GRID_CHANGED if grid changed; STATE_NO_CHANGE otherwise
  * @see grid_mouse_command(Grid *)
  */
-input_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *pmouse);
+state_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse);
 
 /**
  * Handles mouse commands passed to the grid window
  * @param grid Grid to be acted upon
  * @param ant Ant to be acted upon
- * @param pmouse Pointer to mouse event if one happened; NULL otherwise
- * @return INPUT_GRID_CHANGED if grid changed; INPUT_NO_CHANGE otherwise
+ * @param mouse Pointer to mouse event if one happened; NULL otherwise
+ * @return STATE_GRID_CHANGED if grid changed; STATE_NO_CHANGE otherwise
  * @see grid_key_command(Grid *, Ant *, int)
  */
-input_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *pmouse);
+state_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse);
 
 
 /*----------------------------------------------------------------------------*
@@ -588,46 +615,46 @@ Vector2i get_menu_cdef_pos(void);
 /**
  * Deletes the old simulation and settings and sets them to the passed state
  * @param sim Simulation whose state to use
- * @return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED | INPUT_COLORS_CHANGED
+ * @return STATE_GRID_CHANGED | STATE_MENU_CHANGED | STATE_COLORS_CHANGED
  * @see reset_simulation(void)
  * @see clear_simulation(void)
  */
-input_t set_simulation(Simulation *sim);
+state_t set_simulation(Simulation *sim);
 
 /**
  * Resets and remakes the active simulation using the current settings
- * @return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED | INPUT_COLORS_CHANGED
+ * @return STATE_GRID_CHANGED | STATE_MENU_CHANGED | STATE_COLORS_CHANGED
  * @see clear_simulation(void)
  * @see set_simulation(Simulation *)
  */
-input_t reset_simulation(void);
+state_t reset_simulation(void);
 
 /**
  * Clears the current settings and resets the active simulation
- * @return INPUT_GRID_CHANGED | INPUT_MENU_CHANGED | INPUT_COLORS_CHANGED
+ * @return STATE_GRID_CHANGED | STATE_MENU_CHANGED | STATE_COLORS_CHANGED
  * @see reset_simulation(void)
  * @see set_simulation(Simulation *)
  */
-input_t clear_simulation(void);
+state_t clear_simulation(void);
 
 /**
  * Handles key commands passed to the menu window
  * @param key Key that was pressed
- * @param pmouse Pointer to mouse event if one happened; NULL otherwise
- * @return INPUT_GRID_CHANGED if grid changed | INPUT_MENU_CHANGED if menu changed;
- *         INPUT_NO_CHANGE otherwise
+ * @param mouse Pointer to mouse event if one happened; NULL otherwise
+ * @return STATE_GRID_CHANGED if grid changed | STATE_MENU_CHANGED if menu changed;
+ *         STATE_NO_CHANGE otherwise
  * @see menu_mouse_command(MEVENT *)
  */
-input_t menu_key_command(int key, MEVENT *pmouse);
+state_t menu_key_command(int key, MEVENT *mouse);
 
 /**
  * Handles mouse commands passed to the menu window
- * @param pmouse Pointer to mouse event if one happened; NULL otherwise
- * @return INPUT_GRID_CHANGED if grid changed | INPUT_MENU_CHANGED if menu changed
- *         | INPUT_COLORS_CHANGED if color rules changed; INPUT_NO_CHANGE otherwise
+ * @param mouse Pointer to mouse event if one happened; NULL otherwise
+ * @return STATE_GRID_CHANGED if grid changed | STATE_MENU_CHANGED if menu changed
+ *         | STATE_COLORS_CHANGED if color rules changed; STATE_NO_CHANGE otherwise
  * @see menu_key_command(int)
  */
-input_t menu_mouse_command(MEVENT *pmouse);
+state_t menu_mouse_command(MEVENT *mouse);
 
 
 /*----------------------------------------------------------------------------*
@@ -663,10 +690,10 @@ Vector2i get_dialog_tile_pos(color_t color);
 
 /**
  * Handles mouse commands passed to the dialog window
- * @param pevent Pointer to mouse event if one happened; NULL otherwise
- * @return INPUT_MENU_CHANGED if dialog/menu changed | INPUT_COLORS_CHANGED if color
- *         rules changed; INPUT_NO_CHANGE otherwise
+ * @param mouse Pointer to mouse event if one happened; NULL otherwise
+ * @return STATE_MENU_CHANGED if dialog/menu changed | STATE_COLORS_CHANGED if color
+ *         rules changed; STATE_NO_CHANGE otherwise
  */
-input_t dialog_mouse_command(MEVENT *pmouse);
+state_t dialog_mouse_command(MEVENT *mouse);
 
-#endif
+#endif // __GRAPHICS_H__

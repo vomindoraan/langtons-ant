@@ -1,7 +1,19 @@
-#ifndef __SERIAL__
-#define __SERIAL__
+/**
+ * @file serial.h
+ * Extension for data input/output via serial
+ * Requires external script [-DSERIAL_SCRIPT] and -DSERIAL_COLORS/-D...
+ * @author vomindoraan
+ */
+#ifndef __SERIAL_H__
+#define __SERIAL_H__
 
 #include "io.h"
+
+#ifndef SERIAL_SCRIPT
+#	define SERIAL_SCRIPT "./write_serial.py"
+#endif
+
+#ifdef SERIAL_COLORS
 
 /* Message format: {BBGGRR,T} */
 #define COLOR_RULE_FMT       "{%02hhx%02hhx%02hhx,%c}"
@@ -15,7 +27,7 @@ typedef struct color_rule {
 } ColorRule;
 
 typedef ColorRule ColorRules[COLOR_COUNT];
-typedef byte ColorRulesMsg[COLOR_RULES_MSG_SIZE];
+typedef char ColorRulesMsg[COLOR_RULES_MSG_SIZE];
 
 bool colors_to_color_rules(Colors *colors, ColorRules rules);
 
@@ -26,11 +38,8 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg);
 // TODO
 //bool deserialize_color_rules(ColorRulesMsg msg, ColorRules rules);
 
-#ifdef __linux__
-#	define SERIAL_SCRIPT "./write_serial.py"
-
 bool serial_send_colors(Colors *colors);
 
-#endif
+#endif // SERIAL_COLORS
 
-#endif
+#endif // __SERIAL_H__
