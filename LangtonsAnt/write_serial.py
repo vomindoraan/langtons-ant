@@ -37,20 +37,20 @@ def connect() -> Serial:
 
 
 if __name__ == '__main__':
-    # if sys.argc < 2:
-    #     logging.error("Missing message argument")
-    #     sys.exit(-1)
-    # msg = sys.argv[1].encode('utf-8')
     try:
-        msg = input()
+        msg = sys.argv[1] if len(sys.argv) == 2 else input()
+        msg_bytes = msg.encode('utf-8')
     except EOFError:
         msg = ""
-    logging.info("Sending message: \"%s\"", msg)
+        msg_bytes = b""
+    except UnicodeEncodeError as e:
+        logging.error("Invalid message: %s", e)
+        sys.exit(-1)
 
+    logging.info("Sending message: %r", msg)
     try:
         serial = connect()
+        serial.write(msg_bytes + b'\0')  # Send as C string
     except SerialException as e:
-        logging.error("Couldn't connect: %s", e)
+        logging.error("Couldn't send: %s", e)
         sys.exit(-2)
-
-    serial.write(msg.encode('utf-8') + b'\0')
