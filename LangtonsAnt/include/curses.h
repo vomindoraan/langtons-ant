@@ -14,7 +14,7 @@
 #		define PDCURSES
 #	endif
 
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 #	define CURSES_RGB
 #	define NCURSES_ENABLE_STDBOOL_H 0
 #	include <ncurses.h>

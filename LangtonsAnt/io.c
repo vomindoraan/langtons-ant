@@ -209,7 +209,7 @@ int save_simulation(const char *filename, Simulation *sim)
 		for (i = 0; i < sim->grid->size; i++) {
 			cell = sim->grid->csr[i];
 			while (cell) {
-				if (fprintf(output, " %zu", cell->packed) < 0) {
+				if (fprintf(output, " %u", cell->packed) < 0) {
 					return EOF;
 				}
 				cell = cell->next;

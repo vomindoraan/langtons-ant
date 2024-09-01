@@ -8,6 +8,7 @@
 
 #include <limits.h> // INT_MIN, INT_MAX
 #include <stddef.h> // size_t
+#include <stdint.h> // uint32_t
 
 
 /*--------------------- General purpose macros and types ---------------------*/
@@ -132,7 +133,7 @@ typedef struct colors {
 
 /** Sparse matrix cell container */
 typedef struct cell {
-	size_t packed;
+	uint32_t packed;
 	struct cell *next;
 } SparseCell;
 
