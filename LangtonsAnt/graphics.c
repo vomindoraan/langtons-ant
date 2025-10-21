@@ -57,7 +57,7 @@ void init_graphics(color_t fg_color, color_t bg_color)
 		.FontFamily = FF_DONTCARE,
 		.FontWeight = FW_NORMAL,
 	};
-	wcscpy(font.FaceName, CONSOLE_FONT_FACE);
+	wcscpy(font.FaceName, CONSOLE_FONT_NAME);
 	SetCurrentConsoleFontEx(console, FALSE, &font);
 #endif
 

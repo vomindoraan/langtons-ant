@@ -14,7 +14,7 @@
 
 /** @name Preferred console font settings */
 ///@{
-#define CONSOLE_FONT_FACE L"Px437 IBM EGA 8x8"
+#define CONSOLE_FONT_NAME L"Px437 IBM EGA 8x8"
 #define CONSOLE_FONT_SIZE 8
 ///@}
 
