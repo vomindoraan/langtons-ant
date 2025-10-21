@@ -34,8 +34,8 @@ static const char *dir_msg            = "ANT DIRECTION:";
 static const char *speed_msg          = "SIMULATION SPEED";
 static const char *stepup_msg         = "STEP+";
 static const char *func_msg           = "STATE FUNCTION:";
+static const char *sparse_msg         = "[SPARSE MATRIX]";
 static const char *size_msg           = "GRID SIZE:";
-static const char *sparse_msg         = "SPARSE";
 static const char *steps_msg          = "STEPS:";
 
 // TODO remove white border from sprite
@@ -51,9 +51,9 @@ static const Vector2i  speed_msg_pos  = { MENU_SPEED_Y,        MENU_RIGHT_COL_X 
 static const Vector2i  stepup_msg_pos = { MENU_SPEED_Y+18,     MENU_RIGHT_COL_X };
 static const Vector2i  func_pos       = { MENU_STATE_FUNC_Y+2, MENU_RIGHT_COL_X+4 };
 static const Vector2i  func_msg_pos   = { MENU_STATE_FUNC_Y,   MENU_RIGHT_COL_X };
+static const Vector2i  sparse_msg_pos = { MENU_STATE_FUNC_Y+8, MENU_RIGHT_COL_X };
 static const Vector2i  size_pos       = { MENU_STATUS_Y,       MENU_LEFT_COL_X+10 };
 static const Vector2i  size_msg_pos   = { MENU_STATUS_Y,       MENU_LEFT_COL_X };
-static const Vector2i  sparse_msg_pos = { MENU_STATUS_Y+3,     MENU_LEFT_COL_X };
 static const Vector2i  steps_pos      = { MENU_STATUS_Y+2,     MENU_LEFT_COL_X+7 };
 static const Vector2i  steps_msg_pos  = { MENU_STATUS_Y+6,     MENU_LEFT_COL_X };
 
