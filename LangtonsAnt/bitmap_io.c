@@ -32,10 +32,10 @@ static byte *init_file_header(int height, int stride)
 {
 	int file_size = FILE_HEADER_SIZE + INFO_HEADER_SIZE + (stride * height);
 	static byte file_header[] = {
-		0, 0,       // signature
-		0, 0, 0, 0, // image file size in bytes
-		0, 0, 0, 0, // reserved
-		0, 0, 0, 0, // start of pixel array
+		0, 0,        // signature
+		0, 0, 0, 0,  // image file size in bytes
+		0, 0, 0, 0,  // reserved
+		0, 0, 0, 0,  // start of pixel array
 	};
 
 	file_header[0]  = (byte)('B');
@@ -52,17 +52,17 @@ static byte *init_file_header(int height, int stride)
 static byte *init_info_header(int height, int width)
 {
 	static byte info_header[] = {
-		0, 0, 0, 0, // header size
-		0, 0, 0, 0, // image width
-		0, 0, 0, 0, // image height
-		0, 0,       // number of color planes
-		0, 0,       // bits per pixel
-		0, 0, 0, 0, // compression
-		0, 0, 0, 0, // image size
-		0, 0, 0, 0, // horizontal resolution
-		0, 0, 0, 0, // vertical resolution
-		0, 0, 0, 0, // colors in color table
-		0, 0, 0, 0, // important color count
+		0, 0, 0, 0,  // header size
+		0, 0, 0, 0,  // image width
+		0, 0, 0, 0,  // image height
+		0, 0,        // number of color planes
+		0, 0,        // bits per pixel
+		0, 0, 0, 0,  // compression
+		0, 0, 0, 0,  // image size
+		0, 0, 0, 0,  // horizontal resolution
+		0, 0, 0, 0,  // vertical resolution
+		0, 0, 0, 0,  // colors in color table
+		0, 0, 0, 0,  // important color count
 	};
 
 	info_header[0]  = (byte)(INFO_HEADER_SIZE);

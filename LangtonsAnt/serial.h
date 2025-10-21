@@ -40,6 +40,6 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg);
 
 bool serial_send_colors(Colors *colors);
 
-#endif // SERIAL_COLORS
+#endif  // SERIAL_COLORS
 
-#endif // __SERIAL_H__
+#endif  // __SERIAL_H__

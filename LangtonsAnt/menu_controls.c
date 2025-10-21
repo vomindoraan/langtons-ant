@@ -54,7 +54,7 @@ static state_t isize_button_clicked(int d)
 	} else {
 		return STATE_NO_CHANGE;
 	}
-	if (!is_simulation_running(sim) && !has_simulation_started(sim)) { // Sanity check
+	if (!is_simulation_running(sim) && !has_simulation_started(sim)) {  // Sanity check
 		return reset_simulation();
 	}
 	return STATE_MENU_CHANGED;
@@ -149,13 +149,13 @@ static const Vector2i input_pos = {
 static bool read_filename(char *filename)
 {
 	int ret;
-	inputw = newwin(3, INPUT_WINDOW_WIDTH, input_pos.y, input_pos.x); // TODO move to window drawing file
+	inputw = newwin(3, INPUT_WINDOW_WIDTH, input_pos.y, input_pos.x);  // TODO move to window drawing file
 	wbkgd(inputw, GET_PAIR_FOR(COLOR_GRAY) | A_REVERSE);
 	wattron(inputw, fg_pair);
 	waddstr(inputw, " Filename: ");
 	wattroff(inputw, fg_pair);
 	echo();
-	ret = mvwgetnstr(inputw, 1, 1, filename, FILENAME_SIZE-5); // Leave room for ".bmp"
+	ret = mvwgetnstr(inputw, 1, 1, filename, FILENAME_SIZE-5);  // Leave room for ".bmp"
 	noecho();
 	delwin(inputw);
 	return ret != ERR && strlen(filename) > 0;
@@ -185,7 +185,7 @@ static state_t save_button_clicked(void)
 	}
 	return STATE_MENU_CHANGED;
 }
-#endif // MENU_SAVE_ENABLE
+#endif  // MENU_SAVE_ENABLE
 
 state_t menu_key_command(int key, MEVENT *mouse)
 {

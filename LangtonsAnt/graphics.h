@@ -95,7 +95,7 @@
 /** @name Grid window attributes */
 ///@{
 #define GRID_WINDOW_SIZE    109
-#define GRID_VIEW_SIZE      (GRID_WINDOW_SIZE - 1) // TODO variable scrollbar size
+#define GRID_VIEW_SIZE      (GRID_WINDOW_SIZE - 1)  // TODO variable scrollbar size
 #define LINE_WIDTH_SMALL    2
 #define LINE_WIDTH_MEDIUM   1
 #define LINE_WIDTH_LARGE    0
@@ -119,10 +119,10 @@
 
 /** Structure for managing scroll data */
 typedef struct scroll_info {
-	bool    enabled;          /**< Scrolling is enabled */                    /**@{*/
-	int     y, x;             /**< Current view position relative to (0,0) */ /**@}*/ /**@{*/
-	int     hcenter, vcenter; /**< Scrollbar slider positions */              /**@}*/
-	double  scale;            /**< Scaling multiplier */
+	bool    enabled;           /**< Scrolling is enabled */                     /**@{*/
+	int     y, x;              /**< Current view position relative to (0,0) */  /**@}*/ /**@{*/
+	int     hcenter, vcenter;  /**< Scrollbar slider positions */               /**@}*/
+	double  scale;             /**< Scaling multiplier */
 } ScrollInfo;
 
 
@@ -205,12 +205,12 @@ typedef struct scroll_info {
 #define MENU_TILES_HEIGHT    (MENU_TILES_PER_COL*MENU_TILE_PHEIGHT + MENU_TILE_V_PAD + 3)
 ///@}
 
-/** Structure containing all relevant menu settings */
+/** Currently active menu settings */
 typedef struct settings {
-	Colors     *colors;     /**< Currently active color rules */
-	size_t      init_size;  /**< Initial grid size */
-	byte        speed;      /**< Speed multiplier */
-	Simulation *linked_sim; /**< Currently active simulation */
+	Colors     *colors;      /**< Color rules */
+	size_t      init_size;   /**< Initial grid size */
+	byte        speed;       /**< Speed multiplier */
+	Simulation *linked_sim;  /**< Active simulation */
 } Settings;
 
 /** Status indicator type for IO operations in the menu */
@@ -288,8 +288,8 @@ typedef state_t (*pending_func_t)(void *);
 
 /** Structure for scheduling actions to be processed on the next frame */
 typedef struct pending_t {
-	pending_func_t  func; /**< Function pointer to action */
-	void           *arg;  /**< Generic pointer to argument (must be downcasted in func) */
+	pending_func_t  func;  /**< Function pointer to action */
+	void           *arg;   /**< Generic pointer to argument (must be downcasted in func) */
 } PendingAction;
 
 
@@ -297,15 +297,15 @@ typedef struct pending_t {
 
 /** @name Performance settings */
 ///@{
-#define LOOP_DEF_SPEED   2    /**< Default speed multiplier */
-#define LOOP_MIN_SPEED   1    /**< Minimum allowed speed multiplier */
-#define LOOP_MAX_SPEED   9    /**< Maximum allowed speed multiplier */
-#define LOOP_MAX_DELAY   150  /**< Maximum delay in ms (at minimum speed) */
-#define LOOP_MIN_DELAY   0    /**< Minimum delay in ms (at maximum speed) */
-#define LOOP_OPT_ENABLE  TRUE /**< Should optimize drawing by skipping steps? */
-#define LOOP_OPT_SPEED   3    /**< Threshold speed at which to begin skipping */
-#define LOOP_DEF_OPT     3    /**< Default number of steps to skip */
-#define LOOP_MAX_OPT     1097 /**< Number of steps to skip at maximum speed */
+#define LOOP_DEF_SPEED   2     /**< Default speed multiplier */
+#define LOOP_MIN_SPEED   1     /**< Minimum allowed speed multiplier */
+#define LOOP_MAX_SPEED   9     /**< Maximum allowed speed multiplier */
+#define LOOP_MAX_DELAY   150   /**< Maximum delay in ms (at minimum speed) */
+#define LOOP_MIN_DELAY   0     /**< Minimum delay in ms (at maximum speed) */
+#define LOOP_OPT_ENABLE  TRUE  /**< Should optimize drawing by skipping steps? */
+#define LOOP_OPT_SPEED   3     /**< Threshold speed at which to begin skipping */
+#define LOOP_DEF_OPT     3     /**< Default number of steps to skip */
+#define LOOP_MAX_OPT     1097  /**< Number of steps to skip at maximum speed */
 ///@}
 
 
@@ -313,8 +313,8 @@ typedef struct pending_t {
 
 /** Structure containing sprite data and size */
 typedef struct sprite_info {
-	const byte *data;          /**< Byte array */  /**@{*/
-	size_t      width, height; /**< Sprite size */ /**@}*/
+	const byte *data;           /**< Byte array */   /**@{*/
+	size_t      width, height;  /**< Sprite size */  /**@}*/
 } SpriteInfo;
 
 
@@ -705,4 +705,4 @@ Vector2i get_dialog_tile_pos(color_t color);
  */
 state_t dialog_mouse_command(MEVENT *mouse);
 
-#endif // __GRAPHICS_H__
+#endif  // __GRAPHICS_H__

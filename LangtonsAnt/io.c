@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-Colors *load_colors(const char *filename) // TODO format checks
+Colors *load_colors(const char *filename)  // TODO format checks
 {
 	Colors *colors;
 	FILE *input;
@@ -96,7 +96,7 @@ Simulation *load_simulation(const char *filename)
 
 	if (fscanf(input, "%d %d %u\n", &sim->ant->pos.x, &sim->ant->pos.y,
 		       &sim->ant->dir) < 3) {
-		return sim; // Colors only
+		return sim;  // Colors only
 	}
 	if (fscanf(input, "%zu\n", &sim->steps) < 0) {
 		goto error_end;
@@ -232,7 +232,7 @@ int save_simulation(const char *filename, Simulation *sim)
 	if (fclose(output) == EOF) {
 		return EOF;
 	}
-	return 0; // TODO return success bool
+	return 0;  // TODO return success bool
 }
 
 int save_grid_bitmap(const char *filename, Grid *grid)
@@ -243,7 +243,7 @@ int save_grid_bitmap(const char *filename, Grid *grid)
 	image = malloc(height * width * sizeof(pixel_t));
 	for (i = 0; i < height; i++) {
 		for (j = 0; j < width; j++) {
-			Vector2i pos = (Vector2i) { j, i }; // Flip axes
+			Vector2i pos = (Vector2i) { j, i };  // Flip axes
 			color_t color = GRID_COLOR_AT(grid, pos);
 			memcpy(image[i*width + j], color_map[color], sizeof(pixel_t));
 		}

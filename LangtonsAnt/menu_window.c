@@ -38,7 +38,8 @@ static const char *size_msg           = "GRID SIZE:";
 static const char *sparse_msg         = "SPARSE";
 static const char *steps_msg          = "STEPS:";
 
-static const Vector2i  logo_pos       = { MENU_LOGO_Y,         MENU_LEFT_COL_X-1 }; // TODO remove white border from sprite
+// TODO remove white border from sprite
+static const Vector2i  logo_pos       = { MENU_LOGO_Y,         MENU_LEFT_COL_X-1 };
 static const Vector2i  logo_msg_pos   = { MENU_LOGO_Y+9,       MENU_LEFT_COL_X };
 static const Vector2i  rules_pos      = { MENU_RULES_Y+5,      MENU_LEFT_COL_X+MENU_TILE_PWIDTH+1 };
 static const Vector2i  rules_msg_pos  = { MENU_RULES_Y,        MENU_LEFT_COL_X };
@@ -73,7 +74,7 @@ static const byte logo_highlight_sprite[] = {
 static const byte arrow_sprites[][1] = {
 	{ 0x5C }, { 0xB8 }, { 0xE8 }, { 0x74 },
 };
-static const byte stepup_sprite[] = { 0x5D, 0x00 }; // > 0xCF, + 0x5D
+static const byte stepup_sprite[] = { 0x5D, 0x00 };  // > 0xCF, + 0x5D
 static const byte digit_sprites[][2] = {
 	{ 0xF6, 0xDE }, { 0x24, 0x92 }, { 0xE7, 0xCE }, { 0xE7, 0x9E }, { 0xB7, 0x92 },
 	{ 0xF3, 0x9E }, { 0xF3, 0xDE }, { 0xE4, 0x92 }, { 0xF7, 0xDE }, { 0xF7, 0x9E },
@@ -153,7 +154,7 @@ static void draw_logo(void)
 	            logo_pos, FALSE);
 	wattron(menuw, A_REVERSE);
 	mvwaddstr(menuw, logo_msg_pos.y, logo_msg_pos.x, logo_msg);
-	wattrset(menuw, GET_PAIR_FOR(MENU_ACTIVE_COLOR)); // TODO add copyright window
+	wattrset(menuw, GET_PAIR_FOR(MENU_ACTIVE_COLOR));  // TODO add copyright window
 	draw_sprite(menuw, (SpriteInfo) { logo_highlight_sprite, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT},
 	            logo_pos, FALSE);
 }
@@ -310,7 +311,7 @@ static void draw_speed(void)
 {
 	chtype pair = GET_PAIR_FOR(MENU_ACTIVE_COLOR);
 	int dy = menu_speed_d_pos.y - menu_speed_u_pos.y - 2;
-	Vector2i slider_pos = { speed_pos.y + dy+1 - 2*stgs.speed, speed_pos.x }; // TODO better way for speed slider pos
+	Vector2i slider_pos = { speed_pos.y + dy+1 - 2*stgs.speed, speed_pos.x };  // TODO better way for speed slider pos
 
 	/* Draw scrollbar */
 	wattrset(menuw, ui_pair);
@@ -344,7 +345,7 @@ static void draw_state_func(void)
 	chtype pair = GET_PAIR_FOR(MENU_ACTIVE_COLOR);
 	char str[8];
 	color_t ant_color = GRID_ANT_COLOR(sim->grid, sim->ant);
-	color_t next_color = sim->colors->next[ant_color]; // Uses sim->colors instead of stgs.colors
+	color_t next_color = sim->colors->next[ant_color];  // Uses sim->colors instead of stgs.colors
 
 	sprintf(str, "f(q%-2zu, ", state_map[ant_color]);
 	wattrset(menuw, pair);

@@ -6,8 +6,8 @@
 #ifndef __LOGIC_H__
 #define __LOGIC_H__
 
-#include <limits.h> // INT_MIN, INT_MAX
-#include <stddef.h> // size_t
+#include <limits.h>  // INT_MIN, INT_MAX
+#include <stddef.h>  // size_t
 
 
 /*--------------------- General purpose macros and types ---------------------*/
@@ -51,7 +51,7 @@ typedef unsigned char byte;
 
 /** Vector container */
 typedef struct vector2i {
-	int  y, x; /**< Coordinates */
+	int  y, x;  /**< Coordinates */
 } Vector2i;
 
 
@@ -67,8 +67,8 @@ typedef enum {
 
 /** Ant container */
 typedef struct ant {
-	Vector2i   pos; /**< Current position */ // TODO use unsigned vector
-	Direction  dir; /**< Direction the ant is facing */
+	Vector2i   pos;  /**< Current position */  // TODO use unsigned vector
+	Direction  dir;  /**< Direction the ant is facing */
 } Ant;
 
 
@@ -102,7 +102,7 @@ typedef struct colors {
 	color_t  first, last;
 	color_t  def;
 	size_t   n;
-} Colors; // TODO finish logic docs & add @see
+} Colors;  // TODO finish logic docs & add @see
 
 
 /*-------------------------- Grid macros and types ---------------------------*/
@@ -110,14 +110,14 @@ typedef struct colors {
 /** @name Grid struct constants */
 ///@{
 #define GRID_MULT                3
-#define GRID_SIZE_THRESHOLD      19682 // 3^9 - 1
+#define GRID_SIZE_THRESHOLD      19682  // 3^9 - 1
 #define GRID_USAGE_THRESHOLD     0.5
 #define GRID_DEF_INIT_SIZE       4
 #define GRID_MAX_INIT_SIZE       7
 #define GRID_MIN_INIT_SIZE       2
-#define GRID_MAX_SILENT_EXPAND   (GRID_SIZE_THRESHOLD + 1) // TODO add a dynamic silent expand step
+#define GRID_MAX_SILENT_EXPAND   (GRID_SIZE_THRESHOLD + 1)  // TODO add a dynamic silent expand step
 
-#define GRID_SIZE_SMALL(g)       (g)->init_size // 2, 3, 4, 5, 6, 7
+#define GRID_SIZE_SMALL(g)       (g)->init_size  // 2, 3, 4, 5, 6, 7
 #define GRID_SIZE_MEDIUM(g)      (GRID_SIZE_SMALL(g) * GRID_MULT)
 #define GRID_SIZE_LARGE(g)       (GRID_SIZE_MEDIUM(g) * GRID_MULT)
 #define IS_GRID_LARGE(g)         ((g)->size >= GRID_SIZE_LARGE(g))
@@ -219,4 +219,4 @@ bool simulation_step(Simulation *sim);
 bool is_simulation_running(Simulation *sim);
 bool has_simulation_started(Simulation *sim);
 
-#endif // __LOGIC_H__
+#endif  // __LOGIC_H__

@@ -41,7 +41,7 @@ void init_graphics(color_t fg_color, color_t bg_color)
 #ifdef _WIN32
 	/* Store current console font */
 	console = GetStdHandle(STD_OUTPUT_HANDLE);
-	user_font.cbSize = sizeof(CONSOLE_FONT_INFOEX); // Required for the below call
+	user_font.cbSize = sizeof(CONSOLE_FONT_INFOEX);  // Required for the below call
 	GetCurrentConsoleFontEx(console, FALSE, &user_font);
 
 	/* Store current window position & size */
@@ -61,7 +61,7 @@ void init_graphics(color_t fg_color, color_t bg_color)
 	SetCurrentConsoleFontEx(console, FALSE, &font);
 #endif
 
-	setlocale(LC_ALL, ""); // Helps with proper wide char display
+	setlocale(LC_ALL, "");  // Helps with proper wide char display
 	initscr();
 	resize_term(GRID_WINDOW_SIZE, GRID_WINDOW_SIZE+MENU_WINDOW_WIDTH);
 	curs_set(0);

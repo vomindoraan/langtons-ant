@@ -14,7 +14,7 @@ static state_t handle_input(Simulation *sim)
 	MEVENT m, *mouse = &m;
 
 	if (pending_action.func) {
-		ret = (*pending_action.func)(pending_action.arg); // Blocking
+		ret = (*pending_action.func)(pending_action.arg);  // Blocking
 
 		flushinp();
 		pending_action.func = NULL;
@@ -28,7 +28,7 @@ static state_t handle_input(Simulation *sim)
 	if (key == KEY_MOUSE && getmouse(mouse) != ERR) {
 #if defined(MOUSE_ACT_ON_PRESS) && defined(NCURSES)
 		if (mouse->bstate & (BUTTON1_RELEASED | BUTTON3_RELEASED)) {
-			return STATE_NO_CHANGE; // Prevent double press
+			return STATE_NO_CHANGE;  // Prevent double press
 		}
 #endif
 	} else {

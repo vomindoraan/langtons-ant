@@ -89,4 +89,4 @@ bool serial_send_colors(Colors *colors)
 	return success;
 }
 
-#endif // SERIAL_COLORS
+#endif  // SERIAL_COLORS

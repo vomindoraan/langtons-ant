@@ -19,7 +19,7 @@
 
 /** @name Bitmap file attributes */
 ///@{
-#define BYTES_PER_PIXEL   3 // BGR
+#define BYTES_PER_PIXEL   3  // BGR
 #define FILE_HEADER_SIZE  14
 #define INFO_HEADER_SIZE  40
 ///@}
@@ -27,7 +27,7 @@
 /*------------------------- Input/output color types -------------------------*/
 
 /** Bitmap pixel type (24-bit BGR) */
-typedef byte pixel_t[BYTES_PER_PIXEL]; // TODO make into a struct?
+typedef byte pixel_t[BYTES_PER_PIXEL];  // TODO make into a struct?
 
 /** Maps internal colors to bitmap-compatible pixel format */
 extern const pixel_t color_map[COLOR_COUNT];
@@ -94,4 +94,4 @@ int save_grid_bitmap(const char *filename, Grid *grid);
  */
 int create_bitmap_file(const char *filename, pixel_t *image, size_t height, size_t width);
 
-#endif // __IO_H__
+#endif  // __IO_H__
