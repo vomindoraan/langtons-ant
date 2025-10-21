@@ -97,8 +97,8 @@ void init_menu_window(void)
 	wbkgd(menuw, fg_pair);
 	keypad(menuw, TRUE);
 	nodelay(menuw, TRUE);
-	assert(!IS_COLOR_BRIGHT(MENU_LABEL_COLOR)
-	    && !IS_COLOR_BRIGHT(MENU_LABEL_COLOR_S)
+	assert(!IS_COLOR_BRIGHT(MENU_BORDER_COLOR)
+	    && !IS_COLOR_BRIGHT(MENU_BORDER_COLOR_S)
 	    && !IS_COLOR_BRIGHT(MENU_ACTIVE_COLOR)
 	    && !IS_COLOR_BRIGHT(MENU_INACTIVE_COLOR));
 }
@@ -139,8 +139,11 @@ Vector2i get_menu_cdef_pos(void)
 
 static void draw_border(void)
 {
+	Simulation *sim = stgs.linked_sim;
+	bool is_sparse = sim && is_grid_sparse(sim->grid);
 	size_t h = MENU_WINDOW_WIDTH, v = MENU_WINDOW_HEIGHT;
-	wattrset(menuw, GET_PAIR_FOR(MENU_LABEL_COLOR));
+
+	wattrset(menuw, GET_PAIR_FOR(is_sparse ? MENU_BORDER_COLOR_S : MENU_BORDER_COLOR));
 	mvwhline(menuw, 0,   0,   CHAR_FULL, h);
 	mvwvline(menuw, 0,   0,   CHAR_FULL, v);
 	mvwhline(menuw, v-1, 0,   CHAR_FULL, h);
@@ -149,7 +152,7 @@ static void draw_border(void)
 
 static void draw_logo(void)
 {
-	wattrset(menuw, GET_PAIR_FOR(MENU_LABEL_COLOR));
+	wattrset(menuw, GET_PAIR_FOR(MENU_BORDER_COLOR));
 	draw_sprite(menuw, (SpriteInfo) { logo_sprite, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT },
 	            logo_pos, FALSE);
 	wattron(menuw, A_REVERSE);
@@ -489,9 +492,9 @@ static void draw_steps(void)
 
 static void draw_labels(void)
 {
-	Simulation* sim = stgs.linked_sim;
+	Simulation *sim = stgs.linked_sim;
 
-	wattrset(menuw, GET_PAIR_FOR(MENU_LABEL_COLOR));
+	wattrset(menuw, GET_PAIR_FOR(MENU_BORDER_COLOR));
 	mvwaddstr(menuw, rules_msg_pos.y,  rules_msg_pos.x,  rules_msg);
 	mvwaddstr(menuw, isize_msg_pos.y,  isize_msg_pos.x,  isize_msg);
 	mvwaddstr(menuw, dir_msg_pos.y,    dir_msg_pos.x,    dir_msg);
@@ -502,12 +505,11 @@ static void draw_labels(void)
 	mvwaddstr(menuw, steps_msg_pos.y,  steps_msg_pos.x,  steps_msg);
 
 	if (sim && is_grid_sparse(sim->grid)) {
-		wattrset(menuw, GET_PAIR_FOR(MENU_LABEL_COLOR_S));
+		wattrset(menuw, GET_PAIR_FOR(MENU_BORDER_COLOR_S));
 		mvwaddstr(menuw, sparse_msg_pos.y, sparse_msg_pos.x, sparse_msg);
 	} else {
 		mvwhline(menuw, sparse_msg_pos.y, sparse_msg_pos.x, CHAR_EMPTY, strlen(sparse_msg));
 	}
-
 }
 
 void draw_menu_full(void)
