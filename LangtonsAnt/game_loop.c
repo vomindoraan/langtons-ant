@@ -1,5 +1,5 @@
 #include "graphics.h"
-#ifdef SERIAL_COLORS
+#if SERIAL_COLORS
 #	include "serial.h"
 #endif
 
@@ -66,7 +66,7 @@ void game_loop(void)
 		state_t input = handle_input(sim);
 		bool grid_changed = input & STATE_GRID_CHANGED;
 		bool menu_changed = input & STATE_MENU_CHANGED;
-#ifdef SERIAL_COLORS
+#if SERIAL_COLORS
 		bool colors_changed = input & STATE_COLORS_CHANGED;
 #endif
 		sim = stgs.simulation;
@@ -88,7 +88,7 @@ void game_loop(void)
 		if (menu_changed) {
 			draw_menu_full();
 		}
-#ifdef SERIAL_COLORS
+#if SERIAL_COLORS
 		if (colors_changed) {
 			serial_send_colors(sim->colors);
 		}

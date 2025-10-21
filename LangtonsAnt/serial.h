@@ -9,11 +9,14 @@
 
 #include "io.h"
 
+#ifndef SERIAL_COLORS
+#	define SERIAL_COLORS  0
+#endif
 #ifndef SERIAL_SCRIPT
 #	define SERIAL_SCRIPT  "./write_serial.py"
 #endif
 
-#ifdef SERIAL_COLORS
+#if SERIAL_COLORS
 
 /* Message format: {BBGGRR,T} */
 #define COLOR_RULE_FMT        "{%02hhx%02hhx%02hhx,%c}"

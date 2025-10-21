@@ -1,6 +1,6 @@
 #include "serial.h"
 
-#ifdef SERIAL_COLORS
+#if SERIAL_COLORS
 
 #include <stdio.h>
 #include <string.h>

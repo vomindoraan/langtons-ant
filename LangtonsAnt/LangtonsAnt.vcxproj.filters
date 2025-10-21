@@ -80,10 +80,10 @@
     <ClCompile Include="game_loop.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="bitmap.c">
+    <ClCompile Include="serial.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="serial.c">
+    <ClCompile Include="bitmap_io.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
