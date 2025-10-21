@@ -158,7 +158,7 @@ typedef struct scroll_info {
 
 #ifndef MENU_SAVE_ENABLE
 	/** Should save button in menu be drawn and active? */
-#	define MENU_SAVE_ENABLE  FALSE
+#	define MENU_SAVE_ENABLE  TRUE
 #endif
 
 /** @name Menu button attributes */

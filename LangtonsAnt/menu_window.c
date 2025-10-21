@@ -429,7 +429,7 @@ static void draw_io_button(Vector2i pos, const char *label[MENU_BUTTON_HEIGHT-4]
 static void draw_io_buttons(void)
 {
 	const char *load_label[] = {
-		"LOAD AN",
+		" LOAD  ",
 		"       ",
 		"EXAMPLE",
 	};
@@ -440,8 +440,10 @@ static void draw_io_buttons(void)
 		"TO FILE",
 	};
 	draw_io_button(menu_save_pos, save_label, save_status, TRUE);
-#endif
+	draw_io_button(menu_load_pos, load_label, load_status, TRUE);
+#else
 	draw_io_button(menu_load_pos, load_label, load_status, FALSE);
+#endif
 }
 
 static void draw_size(void)
