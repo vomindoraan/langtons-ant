@@ -64,10 +64,10 @@ void game_loop(void)
 
 	while (run_loop) {
 		state_t input = handle_input(sim);
-		state_t grid_changed = input & STATE_GRID_CHANGED;
-		state_t menu_changed = input & STATE_MENU_CHANGED;
+		bool grid_changed = input & STATE_GRID_CHANGED;
+		bool menu_changed = input & STATE_MENU_CHANGED;
 #ifdef SERIAL_COLORS
-		state_t colors_changed = input & STATE_COLORS_CHANGED;
+		bool colors_changed = input & STATE_COLORS_CHANGED;
 #endif
 		sim = stgs.linked_sim;
 
