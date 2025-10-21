@@ -140,10 +140,10 @@ static void draw_border(void)
 {
 	size_t h = MENU_WINDOW_WIDTH, v = MENU_WINDOW_HEIGHT;
 	wattrset(menuw, GET_PAIR_FOR(MENU_LABEL_COLOR));
-	mvwhline(menuw, 0,   0,   FILL_CHAR, h);
-	mvwvline(menuw, 0,   0,   FILL_CHAR, v);
-	mvwhline(menuw, v-1, 0,   FILL_CHAR, h);
-	mvwvline(menuw, 0,   h-1, FILL_CHAR, v);
+	mvwhline(menuw, 0,   0,   CHAR_FULL, h);
+	mvwvline(menuw, 0,   0,   CHAR_FULL, v);
+	mvwhline(menuw, v-1, 0,   CHAR_FULL, h);
+	mvwvline(menuw, 0,   h-1, CHAR_FULL, v);
 }
 
 static void draw_logo(void)
@@ -212,10 +212,10 @@ static void draw_color_tile(Vector2i top_left, color_t c)
 
 	/* Draw frame */
 	wattrset(menuw, is_def ? frame_pair : fg_pair);
-	mvwhline(menuw, y,     x,     FILL_CHAR, s);
-	mvwvline(menuw, y,     x,     FILL_CHAR, s);
-	mvwhline(menuw, y+s-1, x,     FILL_CHAR, s);
-	mvwvline(menuw, y,     x+s-1, FILL_CHAR, s);
+	mvwhline(menuw, y,     x,     CHAR_FULL, s);
+	mvwvline(menuw, y,     x,     CHAR_FULL, s);
+	mvwhline(menuw, y+s-1, x,     CHAR_FULL, s);
+	mvwvline(menuw, y,     x+s-1, CHAR_FULL, s);
 
 	/* Draw direction arrow */
 	if (!is_def) {
@@ -318,7 +318,7 @@ static void draw_speed(void)
 
 	/* Draw slider */
 	wattrset(menuw, fg_pair);
-	mvwvline(menuw, slider_pos.y+1, slider_pos.x-3, FILL_CHAR, 3);
+	mvwvline(menuw, slider_pos.y+1, slider_pos.x-3, CHAR_FULL, 3);
 
 	/* Draw arrow buttons */
 	wattrset(menuw, pair);
@@ -417,7 +417,7 @@ static void draw_io_button(Vector2i pos, const char *label[MENU_BUTTON_HEIGHT-4]
 		            : 0;
 		if (pair) {
 			wattrset(menuw, pair);
-			mvwvline(menuw, pos.y, pos.x+MENU_BUTTON_WIDTH, FILL_CHAR, MENU_BUTTON_HEIGHT);
+			mvwvline(menuw, pos.y, pos.x+MENU_BUTTON_WIDTH, CHAR_FULL, MENU_BUTTON_HEIGHT);
 		}
 	}
 }
@@ -504,7 +504,7 @@ static void draw_labels(void)
 		wattrset(menuw, GET_PAIR_FOR(MENU_LABEL_COLOR_S));
 		mvwaddstr(menuw, sparse_msg_pos.y, sparse_msg_pos.x, sparse_msg);
 	} else {
-		mvwhline(menuw, sparse_msg_pos.y, sparse_msg_pos.x, ' ', strlen(sparse_msg));
+		mvwhline(menuw, sparse_msg_pos.y, sparse_msg_pos.x, CHAR_EMPTY, strlen(sparse_msg));
 	}
 
 }

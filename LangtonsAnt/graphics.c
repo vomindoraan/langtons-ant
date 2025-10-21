@@ -126,11 +126,11 @@ void draw_square(WINDOW *w, Vector2i top_left, size_t size)
 {
 	size_t i;
 	if (size == 1) {
-		mvwaddch(w, top_left.y, top_left.x, FILL_CHAR);
+		mvwaddch(w, top_left.y, top_left.x, CHAR_FULL);
 		return;
 	}
 	for (i = 0; i < size; i++) {
-		mvwhline(w, top_left.y+i, top_left.x, FILL_CHAR, size);
+		mvwhline(w, top_left.y+i, top_left.x, CHAR_FULL, size);
 	}
 }
 
@@ -138,11 +138,11 @@ void draw_rect(WINDOW *w, Vector2i top_left, size_t width, size_t height)
 {
 	size_t i;
 	if (width == 1 && height == 1) {
-		mvwaddch(w, top_left.y, top_left.x, FILL_CHAR);
+		mvwaddch(w, top_left.y, top_left.x, CHAR_FULL);
 		return;
 	}
 	for (i = 0; i < height; i++) {
-		mvwhline(w, top_left.y+i, top_left.x, FILL_CHAR, width);
+		mvwhline(w, top_left.y+i, top_left.x, CHAR_FULL, width);
 	}
 }
 
@@ -179,9 +179,9 @@ void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left, bool overwrite
 		pixel = sprite.data[read/8] >> (7-read%8) & 0x1;
 		y = read / sprite.width, x = read % sprite.width;
 		if (overwrite) {
-			mvwaddch(w, top_left.y+y, top_left.x+x, pixel ? FILL_CHAR : ' ');
+			mvwaddch(w, top_left.y+y, top_left.x+x, pixel ? CHAR_FULL : CHAR_EMPTY);
 		} else if (pixel) {
-			mvwaddch(w, top_left.y+y, top_left.x+x, FILL_CHAR);
+			mvwaddch(w, top_left.y+y, top_left.x+x, CHAR_FULL);
 		}
 	}
 }
