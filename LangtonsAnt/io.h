@@ -12,16 +12,16 @@
 /*------------------------- Input/output attributes --------------------------*/
 
 /** Filename buffer size */
-#define FILENAME_SIZE 256
+#define FILENAME_SIZE  256
 
 /** Total number of fields in a Colors struct */
-#define COLORS_TOTAL_FIELDS (COLOR_COUNT*2 + 4)
+#define COLORS_TOTAL_FIELDS  (COLOR_COUNT*2 + 4)
 
 /** @name Bitmap file attributes */
 ///@{
-#define BYTES_PER_PIXEL  3 // BGR
-#define FILE_HEADER_SIZE 14
-#define INFO_HEADER_SIZE 40
+#define BYTES_PER_PIXEL   3 // BGR
+#define FILE_HEADER_SIZE  14
+#define INFO_HEADER_SIZE  40
 ///@}
 
 /*------------------------- Input/output color types -------------------------*/

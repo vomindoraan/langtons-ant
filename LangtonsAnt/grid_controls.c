@@ -115,7 +115,10 @@ state_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse)
 	return STATE_GRID_CHANGED;
 }
 
-typedef enum { SB_VERTICAL, SB_HORIZONTAL } ScrollbarType;
+typedef enum {
+	SB_VERTICAL,
+	SB_HORIZONTAL
+} ScrollbarType;
 
 static void scrollbar_clicked(Grid *grid, MEVENT *mevent, ScrollbarType sbtype)
 {

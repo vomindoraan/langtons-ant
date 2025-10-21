@@ -14,23 +14,23 @@
 
 ///@{
 /** Standard max/min macro */
-#define MAX(a, b) (((a) > (b)) ? (a) : (b))
-#define MIN(a, b) (((a) < (b)) ? (a) : (b))
+#define MAX(a, b)  (((a) > (b)) ? (a) : (b))
+#define MIN(a, b)  (((a) < (b)) ? (a) : (b))
 ///@}
 
 /** Standard sign macro */
-#define SGN(x)    ((x > 0) - (x < 0))
+#define SGN(x)     (((x) > 0) - ((x) < 0))
 
 /** Static array length macro */
-#define LEN(a)    (sizeof(a) / sizeof(a[0]))
+#define LEN(a)     (sizeof(a) / sizeof(*a))
 
 ///@{
 /** Curses boolean literal */
 #ifndef FALSE
-#define FALSE 0
+#	define FALSE  0
 #endif
 #ifndef TRUE
-#define TRUE  1
+#	define TRUE   1
 #endif
 ///@}
 
@@ -44,26 +44,31 @@ typedef unsigned char byte;
 /*------------------------- Vector macros and types --------------------------*/
 
 /** Equality comparison macro for two vectors */
-#define VECTOR_EQ(v1, v2) ((v1).y == (v2).y && (v1).x == (v2).x)
+#define VECTOR_EQ(v1, v2)  ((v1).y == (v2).y && (v1).x == (v2).x)
 
 /** Vector representing an out-of-bounds position */
-#define VECTOR_INVALID    ((Vector2i) { INT_MIN, INT_MIN })
+#define VECTOR_INVALID     ((Vector2i) { INT_MIN, INT_MIN })
 
 /** Vector container */
 typedef struct vector2i {
-	int y, x; /**< Coordinates */
+	int  y, x; /**< Coordinates */
 } Vector2i;
 
 
 /*--------------------------- Ant type definitions ---------------------------*/
 
 /** Ant directions enum */
-typedef enum { DIR_UP, DIR_RIGHT, DIR_DOWN, DIR_LEFT } Direction;
+typedef enum {
+	DIR_UP,
+	DIR_RIGHT,
+	DIR_DOWN,
+	DIR_LEFT
+} Direction;
 
 /** Ant container */
 typedef struct ant {
-	Vector2i  pos; /**< Current position */ // TODO use unsigned vector
-	Direction dir; /**< Direction the ant is facing */
+	Vector2i   pos; /**< Current position */ // TODO use unsigned vector
+	Direction  dir; /**< Direction the ant is facing */
 } Ant;
 
 
@@ -71,17 +76,17 @@ typedef struct ant {
 
 /** @name Colors struct constants */
 ///@{
-#define COLOR_COUNT 16
-#define COLOR_NONE  -1
-#define TURN_LEFT   -1
-#define TURN_NONE   0
-#define TURN_RIGHT  1
+#define COLOR_COUNT  16
+#define COLOR_NONE   -1
+#define TURN_LEFT    -1
+#define TURN_NONE    0
+#define TURN_RIGHT   1
 ///@}
 
 /** @name Colors utility macros */
 ///@{
-#define COLOR_NEXT(cs, c) (cs)->next[c]
-#define COLOR_TURN(cs, c) (cs)->turn[c]
+#define COLOR_NEXT(cs, c)  (cs)->next[c]
+#define COLOR_TURN(cs, c)  (cs)->turn[c]
 ///@}
 
 /** Curses color type */
@@ -92,11 +97,11 @@ typedef signed char turn_t;
 
 /** Color rules container */
 typedef struct colors {
-	color_t next[COLOR_COUNT];
-	turn_t turn[COLOR_COUNT];
-	color_t first, last;
-	color_t def;
-	size_t n;
+	color_t  next[COLOR_COUNT];
+	turn_t   turn[COLOR_COUNT];
+	color_t  first, last;
+	color_t  def;
+	size_t   n;
 } Colors; // TODO finish logic docs & add @see
 
 
@@ -104,44 +109,46 @@ typedef struct colors {
 
 /** @name Grid struct constants */
 ///@{
-#define GRID_MULT               3
-#define GRID_SIZE_THRESHOLD     19682 // 3^9 - 1
-#define GRID_USAGE_THRESHOLD    0.5
-#define GRID_DEF_INIT_SIZE      4
-#define GRID_MAX_INIT_SIZE      7
-#define GRID_MIN_INIT_SIZE      2
-#define GRID_MAX_SILENT_EXPAND  (GRID_SIZE_THRESHOLD + 1) // TODO add a dynamic silent expand step
+#define GRID_MULT                3
+#define GRID_SIZE_THRESHOLD      19682 // 3^9 - 1
+#define GRID_USAGE_THRESHOLD     0.5
+#define GRID_DEF_INIT_SIZE       4
+#define GRID_MAX_INIT_SIZE       7
+#define GRID_MIN_INIT_SIZE       2
+#define GRID_MAX_SILENT_EXPAND   (GRID_SIZE_THRESHOLD + 1) // TODO add a dynamic silent expand step
 
-#define GRID_SIZE_SMALL(g)      (g)->init_size // 2, 3, 4, 5, 6, 7
-#define GRID_SIZE_MEDIUM(g)     (GRID_SIZE_SMALL(g) * GRID_MULT)
-#define GRID_SIZE_LARGE(g)      (GRID_SIZE_MEDIUM(g) * GRID_MULT)
-#define IS_GRID_LARGE(g)        ((g)->size >= GRID_SIZE_LARGE(g))
-#define GRID_EFFICIENCY(g)      ((g)->size*(g)->size / ((double)sizeof(SparseCell)*(g)->colored))
-#define GRID_COLOR_AT(g, p)     (is_grid_sparse(g) ? sparse_color_at(g, p) : (g)->c[(p).y][(p).x])
-#define GRID_ANT_COLOR(g, a)    GRID_COLOR_AT(g, (a)->pos)
+#define GRID_SIZE_SMALL(g)       (g)->init_size // 2, 3, 4, 5, 6, 7
+#define GRID_SIZE_MEDIUM(g)      (GRID_SIZE_SMALL(g) * GRID_MULT)
+#define GRID_SIZE_LARGE(g)       (GRID_SIZE_MEDIUM(g) * GRID_MULT)
+#define IS_GRID_LARGE(g)         ((g)->size >= GRID_SIZE_LARGE(g))
+#define GRID_EFFICIENCY(g)       ((g)->size*(g)->size / ((double)sizeof(SparseCell)*(g)->colored))
+#define GRID_COLOR_AT(g, p)      (is_grid_sparse(g) ? sparse_color_at(g, p) : (g)->c[(p).y][(p).x])
+#define GRID_ANT_COLOR(g, a)     GRID_COLOR_AT(g, (a)->pos)
 ///@}
 
 /** @name Sparse matrix bit packing macros */
 ///@{
-#define CSR_COLOR_MASK          (0xF << 28)
-#define CSR_GET_COLOR(sc)       (((sc)->packed & CSR_COLOR_MASK) >> 28)
-#define CSR_SET_COLOR(sc, col)  ((sc)->packed = (sc)->packed & ~CSR_COLOR_MASK | ((col)<<28))
-#define CSR_GET_COLUMN(sc)      ((sc)->packed & ~CSR_COLOR_MASK)
-#define CSR_SET_COLUMN(sc, col) ((sc)->packed = (sc)->packed & CSR_COLOR_MASK | (col) & ~CSR_COLOR_MASK)
+#define CSR_COLOR_MASK           (0xF << 28)
+#define CSR_GET_COLOR(sc)        (((sc)->packed & CSR_COLOR_MASK) >> 28)
+#define CSR_SET_COLOR(sc, col)   ((sc)->packed = (sc)->packed & ~CSR_COLOR_MASK | ((col)<<28))
+#define CSR_GET_COLUMN(sc)       ((sc)->packed & ~CSR_COLOR_MASK)
+#define CSR_SET_COLUMN(sc, col)  ((sc)->packed = (sc)->packed & CSR_COLOR_MASK | (col) & ~CSR_COLOR_MASK)
 ///@}
 
 /** Sparse matrix cell container */
 typedef struct cell {
-	size_t packed;
+	size_t       packed;
 	struct cell *next;
 } SparseCell;
 
 /** Grid container */
 typedef struct grid {
-	byte **c, **tmp, def_color;
+	byte       **c, **tmp;
+	byte         def_color;
 	SparseCell **csr;
-	size_t init_size, size, tmp_size, colored;
-	Vector2i top_left, bottom_right;
+	size_t       init_size, size, tmp_size;
+	size_t       colored;
+	Vector2i     top_left, bottom_right;
 } Grid;
 
 
@@ -150,10 +157,10 @@ typedef struct grid {
 /** Simulation container */
 typedef struct simulation {
 	Colors *colors;
-	Grid *grid;
-	Ant *ant;
-	size_t steps;
-	bool is_running;
+	Grid   *grid;
+	Ant    *ant;
+	size_t  steps;
+	bool    is_running;
 } Simulation;
 
 

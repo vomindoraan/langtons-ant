@@ -5,56 +5,56 @@
 #include <stdlib.h>
 #include <string.h>
 
-WINDOW *menuw;
-Settings stgs;
-IOStatus load_status, save_status;
-PendingAction pending_action;
+WINDOW        *menuw;
+Settings       stgs;
+IOStatus       load_status, save_status;
+PendingAction  pending_action;
 
-const Vector2i menu_pos         = { 0, GRID_WINDOW_SIZE };
-const Vector2i menu_isize_u_pos = { MENU_INIT_SIZE_Y+2, MENU_RIGHT_COL_X+9 };
-const Vector2i menu_isize_d_pos = { MENU_INIT_SIZE_Y+5, MENU_RIGHT_COL_X+9 };
-const Vector2i menu_dir_u_pos   = { MENU_DIRECTION_Y+2, MENU_RIGHT_COL_X+10 };
-const Vector2i menu_dir_r_pos   = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL_X+14 };
-const Vector2i menu_dir_d_pos   = { MENU_DIRECTION_Y+7, MENU_RIGHT_COL_X+10 };
-const Vector2i menu_dir_l_pos   = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL_X+7 };
-const Vector2i menu_speed_u_pos = { MENU_SPEED_Y+2,     MENU_RIGHT_COL_X+9 };
-const Vector2i menu_speed_d_pos = { MENU_SPEED_Y+MENU_SPEED_HEIGHT+4, MENU_RIGHT_COL_X+9 };
-const Vector2i menu_stepup_pos  = { MENU_SPEED_Y+20,    MENU_RIGHT_COL_X+1 };
-const Vector2i menu_play_pos    = { MENU_CONTROLS_Y,    MENU_PLAY_X };
-const Vector2i menu_stop_pos    = { MENU_CONTROLS_Y,    MENU_STOP_X };
-const Vector2i menu_load_pos    = { MENU_CONTROLS_Y,    MENU_LOAD_X };
+const Vector2i  menu_pos              = { 0,                  GRID_WINDOW_SIZE };
+const Vector2i  menu_isize_u_pos      = { MENU_INIT_SIZE_Y+2, MENU_RIGHT_COL_X+9 };
+const Vector2i  menu_isize_d_pos      = { MENU_INIT_SIZE_Y+5, MENU_RIGHT_COL_X+9 };
+const Vector2i  menu_dir_u_pos        = { MENU_DIRECTION_Y+2, MENU_RIGHT_COL_X+10 };
+const Vector2i  menu_dir_r_pos        = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL_X+14 };
+const Vector2i  menu_dir_d_pos        = { MENU_DIRECTION_Y+7, MENU_RIGHT_COL_X+10 };
+const Vector2i  menu_dir_l_pos        = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL_X+7 };
+const Vector2i  menu_speed_u_pos      = { MENU_SPEED_Y+2,     MENU_RIGHT_COL_X+9 };
+const Vector2i  menu_speed_d_pos      = { MENU_SPEED_Y+MENU_SPEED_HEIGHT+4, MENU_RIGHT_COL_X+9 };
+const Vector2i  menu_stepup_pos       = { MENU_SPEED_Y+20,    MENU_RIGHT_COL_X+1 };
+const Vector2i  menu_play_pos         = { MENU_CONTROLS_Y,    MENU_PLAY_X };
+const Vector2i  menu_stop_pos         = { MENU_CONTROLS_Y,    MENU_STOP_X };
+const Vector2i  menu_load_pos         = { MENU_CONTROLS_Y,    MENU_LOAD_X };
 #if MENU_SAVE_ENABLE
-const Vector2i menu_save_pos    = { MENU_CONTROLS_Y-MENU_BUTTON_PHEIGHT, MENU_SAVE_X };
+const Vector2i  menu_save_pos         = { MENU_CONTROLS_Y-MENU_BUTTON_PHEIGHT, MENU_SAVE_X };
 #endif
 
-static const char *logo_msg   = " 14-COLOR 2D TURING MACHINE SIMULATOR ";
-static const char *rules_msg  = "COLOR RULES:";
-static const char *isize_msg  = "INIT GRID SIZE:";
-static const char *dir_msg    = "ANT DIRECTION:";
-static const char *speed_msg  = "SIMULATION SPEED";
-static const char *stepup_msg = "STEP+";
-static const char *func_msg   = "STATE FUNCTION:";
-static const char *size_msg   = "GRID SIZE:";
-static const char *sparse_msg = "SPARSE";
-static const char *steps_msg  = "STEPS:";
+static const char *logo_msg           = " 14-COLOR 2D TURING MACHINE SIMULATOR ";
+static const char *rules_msg          = "COLOR RULES:";
+static const char *isize_msg          = "INIT GRID SIZE:";
+static const char *dir_msg            = "ANT DIRECTION:";
+static const char *speed_msg          = "SIMULATION SPEED";
+static const char *stepup_msg         = "STEP+";
+static const char *func_msg           = "STATE FUNCTION:";
+static const char *size_msg           = "GRID SIZE:";
+static const char *sparse_msg         = "SPARSE";
+static const char *steps_msg          = "STEPS:";
 
-static const Vector2i logo_pos       = { MENU_LOGO_Y,         MENU_LEFT_COL_X-1 }; // TODO remove white border from sprite
-static const Vector2i logo_msg_pos   = { MENU_LOGO_Y+9,       MENU_LEFT_COL_X };
-static const Vector2i rules_pos      = { MENU_RULES_Y+5,      MENU_LEFT_COL_X+MENU_TILE_PWIDTH+1 };
-static const Vector2i rules_msg_pos  = { MENU_RULES_Y,        MENU_LEFT_COL_X };
-static const Vector2i isize_pos      = { MENU_INIT_SIZE_Y+2,  MENU_RIGHT_COL_X+13 };
-static const Vector2i isize_msg_pos  = { MENU_INIT_SIZE_Y,    MENU_RIGHT_COL_X };
-static const Vector2i dir_msg_pos    = { MENU_DIRECTION_Y,    MENU_RIGHT_COL_X };
-static const Vector2i speed_pos      = { MENU_SPEED_Y+2,      MENU_RIGHT_COL_X+13 };
-static const Vector2i speed_msg_pos  = { MENU_SPEED_Y,        MENU_RIGHT_COL_X };
-static const Vector2i stepup_msg_pos = { MENU_SPEED_Y+18,     MENU_RIGHT_COL_X };
-static const Vector2i func_pos       = { MENU_STATE_FUNC_Y+2, MENU_RIGHT_COL_X+4 };
-static const Vector2i func_msg_pos   = { MENU_STATE_FUNC_Y,   MENU_RIGHT_COL_X };
-static const Vector2i size_pos       = { MENU_STATUS_Y,       MENU_LEFT_COL_X+10 };
-static const Vector2i size_msg_pos   = { MENU_STATUS_Y,       MENU_LEFT_COL_X };
-static const Vector2i sparse_msg_pos = { MENU_STATUS_Y+3,     MENU_LEFT_COL_X };
-static const Vector2i steps_pos      = { MENU_STATUS_Y+2,     MENU_LEFT_COL_X+7 };
-static const Vector2i steps_msg_pos  = { MENU_STATUS_Y+6,     MENU_LEFT_COL_X };
+static const Vector2i  logo_pos       = { MENU_LOGO_Y,         MENU_LEFT_COL_X-1 }; // TODO remove white border from sprite
+static const Vector2i  logo_msg_pos   = { MENU_LOGO_Y+9,       MENU_LEFT_COL_X };
+static const Vector2i  rules_pos      = { MENU_RULES_Y+5,      MENU_LEFT_COL_X+MENU_TILE_PWIDTH+1 };
+static const Vector2i  rules_msg_pos  = { MENU_RULES_Y,        MENU_LEFT_COL_X };
+static const Vector2i  isize_pos      = { MENU_INIT_SIZE_Y+2,  MENU_RIGHT_COL_X+13 };
+static const Vector2i  isize_msg_pos  = { MENU_INIT_SIZE_Y,    MENU_RIGHT_COL_X };
+static const Vector2i  dir_msg_pos    = { MENU_DIRECTION_Y,    MENU_RIGHT_COL_X };
+static const Vector2i  speed_pos      = { MENU_SPEED_Y+2,      MENU_RIGHT_COL_X+13 };
+static const Vector2i  speed_msg_pos  = { MENU_SPEED_Y,        MENU_RIGHT_COL_X };
+static const Vector2i  stepup_msg_pos = { MENU_SPEED_Y+18,     MENU_RIGHT_COL_X };
+static const Vector2i  func_pos       = { MENU_STATE_FUNC_Y+2, MENU_RIGHT_COL_X+4 };
+static const Vector2i  func_msg_pos   = { MENU_STATE_FUNC_Y,   MENU_RIGHT_COL_X };
+static const Vector2i  size_pos       = { MENU_STATUS_Y,       MENU_LEFT_COL_X+10 };
+static const Vector2i  size_msg_pos   = { MENU_STATUS_Y,       MENU_LEFT_COL_X };
+static const Vector2i  sparse_msg_pos = { MENU_STATUS_Y+3,     MENU_LEFT_COL_X };
+static const Vector2i  steps_pos      = { MENU_STATUS_Y+2,     MENU_LEFT_COL_X+7 };
+static const Vector2i  steps_msg_pos  = { MENU_STATUS_Y+6,     MENU_LEFT_COL_X };
 
 static const byte logo_sprite[] = {
 	0x70, 0x00, 0x02, 0x00, 0x10, 0x20, 0x00, 0x02,

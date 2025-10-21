@@ -4,7 +4,7 @@
 #include <locale.h>
 
 #ifdef _WIN32
-#include <Windows.h>
+#	include <Windows.h>
 
 HANDLE console;
 CONSOLE_FONT_INFOEX user_font;

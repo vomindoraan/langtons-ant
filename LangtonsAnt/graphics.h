@@ -14,16 +14,16 @@
 
 /** @name Preferred console font settings */
 ///@{
-#define CONSOLE_FONT_NAME L"Px437 IBM EGA 8x8"
-#define CONSOLE_FONT_SIZE 8
+#define CONSOLE_FONT_NAME  L"Px437 IBM EGA 8x8"
+#define CONSOLE_FONT_SIZE  8
 ///@}
 
 /** Empty character used for drawing */
-#define CHAR_EMPTY ' '
+#define CHAR_EMPTY  ' '
 
 /** Full character used for drawing */
-#define CHAR_FULL (' ' | A_REVERSE)
-//#define CHAR_FULL ACS_BLOCK
+#define CHAR_FULL  (' ' | A_REVERSE)
+//#define CHAR_FULL  ACS_BLOCK
 
 
 /*--------------------------- Display color macros ---------------------------*/
@@ -79,14 +79,14 @@
 #endif
 ///@}
 
-/** @name Utility color macros */
+/** @name Utility macros for colors */
 ///@{
-#define GET_PAIRNO_FOR(c)           ((c) + 1)
-#define GET_PAIR_FOR(c)             COLOR_PAIR(GET_PAIRNO_FOR(c))
-#define GET_COLOR_FOR(p)            (PAIR_NUMBER(p) - 1)
-#define AVAILABLE_COLOR(def, c, bk) (((def) == (c)) ? (bk) : (c))
-#define AVAILABLE_PAIR(def, c, bk)  GET_PAIR_FOR(AVAILABLE_COLOR(def, c, bk))
-#define IS_COLOR_BRIGHT(c)          ((c) == COLOR_SILVER || (c) > 8 && (c) != COLOR_BLUE)
+#define GET_PAIRNO_FOR(c)            ((c) + 1)
+#define GET_PAIR_FOR(c)              COLOR_PAIR(GET_PAIRNO_FOR(c))
+#define GET_COLOR_FOR(p)             (PAIR_NUMBER(p) - 1)
+#define AVAILABLE_COLOR(def, c, bk)  (((def) == (c)) ? (bk) : (c))
+#define AVAILABLE_PAIR(def, c, bk)   GET_PAIR_FOR(AVAILABLE_COLOR(def, c, bk))
+#define IS_COLOR_BRIGHT(c)           ((c) == COLOR_SILVER || (c) > 8 && (c) != COLOR_BLUE)
 ///@}
 
 
@@ -106,23 +106,23 @@
 
 /** @name Generic size calculations for grid functions */
 ///@{
-#define CELL_SIZE(gs, lw)      ((GRID_WINDOW_SIZE-(lw))/(gs) - (lw))
-#define TOTAL_SIZE(gs, lw, cs) (((gs)+1)*(lw) + (gs)*(cs))
-#define OFFSET_SIZE(t)         ((GRID_WINDOW_SIZE-(t)) / 2)
+#define CELL_SIZE(gs, lw)       ((GRID_WINDOW_SIZE-(lw)) / (gs) - (lw))
+#define TOTAL_SIZE(gs, lw, cs)  (((gs)+1)*(lw) + (gs)*(cs))
+#define OFFSET_SIZE(t)          ((GRID_WINDOW_SIZE-(t)) / 2)
 ///@}
 
 /** @name Scroll utility macros */
 ///@{
-#define ORIGIN_COORD(gs, vs, sc)     ((gs)/2-(vs)/2+(sc))
-#define ORIGIN_POS(gs, vs, scy, scx) ((Vector2i) { ORIGIN_COORD(gs, vs, scy), ORIGIN_COORD(gs, vs, scx) })
+#define ORIGIN_COORD(gs, vs, sc)      ((gs)/2 - (vs)/2 + (sc))
+#define ORIGIN_POS(gs, vs, scy, scx)  ((Vector2i) { ORIGIN_COORD(gs, vs, scy), ORIGIN_COORD(gs, vs, scx) })
 ///@}
 
 /** Structure for managing scroll data */
 typedef struct scroll_info {
-	bool enabled;         /**< Scrolling is enabled */                    /**@{*/
-	int y, x;             /**< Current view position relative to (0,0) */ /**@}*/ /**@{*/
-	int hcenter, vcenter; /**< Scrollbar slider positions */              /**@}*/
-	double scale;         /**< Scaling multiplier */
+	bool    enabled;          /**< Scrolling is enabled */                    /**@{*/
+	int     y, x;             /**< Current view position relative to (0,0) */ /**@}*/ /**@{*/
+	int     hcenter, vcenter; /**< Scrollbar slider positions */              /**@}*/
+	double  scale;            /**< Scaling multiplier */
 } ScrollInfo;
 
 
@@ -130,149 +130,154 @@ typedef struct scroll_info {
 
 /** @name Menu window attributes */
 ///@{
-#define MENU_WINDOW_WIDTH   44
-#define MENU_WINDOW_HEIGHT  GRID_WINDOW_SIZE
-#define MENU_H_MARGIN       3
-#define MENU_V_MARGIN       3
-#define MENU_H_PAD          2
-#define MENU_V_PAD          4
-#define MENU_LEFT_COL_X     MENU_H_MARGIN
-#define MENU_RIGHT_COL_X    (MENU_WINDOW_WIDTH - MENU_H_MARGIN - 16)
-#define MENU_LEFT_COL_Y     (MENU_LOGO_Y + MENU_LOGO_HEIGHT + MENU_V_PAD + 1)
-#define MENU_RIGHT_COL_Y    MENU_LEFT_COL_Y
-#define MENU_LOGO_WIDTH     40
-#define MENU_LOGO_HEIGHT    8
-#define MENU_LOGO_Y         MENU_V_MARGIN
-#define MENU_RULES_Y        MENU_LEFT_COL_Y
-#define MENU_INIT_SIZE_Y    MENU_RIGHT_COL_Y
-#define MENU_DIRECTION_Y    (MENU_INIT_SIZE_Y + MENU_V_PAD + 7)
-#define MENU_SPEED_Y        (MENU_DIRECTION_Y + MENU_V_PAD + 9)
-#define MENU_SPEED_HEIGHT   17
-#define MENU_STATE_FUNC_Y   (MENU_SPEED_Y + MENU_SPEED_HEIGHT + MENU_V_PAD + 6)
-#define MENU_STATUS_Y       (MENU_WINDOW_HEIGHT - 10)
-#define MENU_LABEL_COLOR    COLOR_NAVY
-#define MENU_LABEL_COLOR_S  COLOR_MAROON
-#define MENU_ACTIVE_COLOR   COLOR_BLUE
-#define MENU_INACTIVE_COLOR COLOR_GRAY
+#define MENU_WINDOW_WIDTH    44
+#define MENU_WINDOW_HEIGHT   GRID_WINDOW_SIZE
+#define MENU_H_MARGIN        3
+#define MENU_V_MARGIN        3
+#define MENU_H_PAD           2
+#define MENU_V_PAD           4
+#define MENU_LEFT_COL_X      MENU_H_MARGIN
+#define MENU_RIGHT_COL_X     (MENU_WINDOW_WIDTH - MENU_H_MARGIN - 16)
+#define MENU_LEFT_COL_Y      (MENU_LOGO_Y + MENU_LOGO_HEIGHT + MENU_V_PAD + 1)
+#define MENU_RIGHT_COL_Y     MENU_LEFT_COL_Y
+#define MENU_LOGO_WIDTH      40
+#define MENU_LOGO_HEIGHT     8
+#define MENU_LOGO_Y          MENU_V_MARGIN
+#define MENU_RULES_Y         MENU_LEFT_COL_Y
+#define MENU_INIT_SIZE_Y     MENU_RIGHT_COL_Y
+#define MENU_DIRECTION_Y     (MENU_INIT_SIZE_Y + MENU_V_PAD + 7)
+#define MENU_SPEED_Y         (MENU_DIRECTION_Y + MENU_V_PAD + 9)
+#define MENU_SPEED_HEIGHT    17
+#define MENU_STATE_FUNC_Y    (MENU_SPEED_Y + MENU_SPEED_HEIGHT + MENU_V_PAD + 6)
+#define MENU_STATUS_Y        (MENU_WINDOW_HEIGHT - 10)
+#define MENU_LABEL_COLOR     COLOR_NAVY
+#define MENU_LABEL_COLOR_S   COLOR_MAROON
+#define MENU_ACTIVE_COLOR    COLOR_BLUE
+#define MENU_INACTIVE_COLOR  COLOR_GRAY
 ///@}
 
 #ifndef MENU_SAVE_ENABLE
 	/** Should save button in menu be drawn and active? */
-#	define MENU_SAVE_ENABLE FALSE
+#	define MENU_SAVE_ENABLE  FALSE
 #endif
 
 /** @name Menu button attributes */
 ///@{
-#define MENU_CONTROLS_Y     (MENU_STATUS_Y - 10)
-#define MENU_BUTTON_WIDTH   11
-#define MENU_BUTTON_HEIGHT  7
-#define MENU_BUTTON_PWIDTH  (MENU_BUTTON_WIDTH + MENU_H_PAD)
-#define MENU_BUTTON_PHEIGHT (MENU_BUTTON_HEIGHT + MENU_H_PAD)
-#define MENU_PLAY_X         MENU_LEFT_COL_X
-#define MENU_STOP_X         (MENU_LEFT_COL_X + MENU_BUTTON_PWIDTH)
-#define MENU_LOAD_X         (MENU_STOP_X + MENU_BUTTON_PWIDTH)
+#define MENU_CONTROLS_Y      (MENU_STATUS_Y - 10)
+#define MENU_BUTTON_WIDTH    11
+#define MENU_BUTTON_HEIGHT   7
+#define MENU_BUTTON_PWIDTH   (MENU_BUTTON_WIDTH + MENU_H_PAD)
+#define MENU_BUTTON_PHEIGHT  (MENU_BUTTON_HEIGHT + MENU_H_PAD)
+#define MENU_PLAY_X          MENU_LEFT_COL_X
+#define MENU_STOP_X          (MENU_LEFT_COL_X + MENU_BUTTON_PWIDTH)
+#define MENU_LOAD_X          (MENU_STOP_X + MENU_BUTTON_PWIDTH)
 #if MENU_SAVE_ENABLE
-#	define MENU_SAVE_X      MENU_LOAD_X
+#	define MENU_SAVE_X       MENU_LOAD_X
 #endif
-#define MENU_PLAY_COLOR     COLOR_GREEN
-#define MENU_PAUSE_COLOR    COLOR_YELLOW
-#define MENU_STOP_COLOR     COLOR_RED
-#define MENU_CLEAR_COLOR    COLOR_TEAL
+#define MENU_PLAY_COLOR      COLOR_GREEN
+#define MENU_PAUSE_COLOR     COLOR_YELLOW
+#define MENU_STOP_COLOR      COLOR_RED
+#define MENU_CLEAR_COLOR     COLOR_TEAL
 ///@}
 
 /** @name Menu sprite dimensions */
 ///@{
-#define MENU_UDARROW_WIDTH  3
-#define MENU_UDARROW_HEIGHT 2
-#define MENU_RLARROW_WIDTH  MENU_UDARROW_HEIGHT
-#define MENU_RLARROW_HEIGHT MENU_UDARROW_WIDTH
-#define MENU_DIGIT_WIDTH    3
-#define MENU_DIGIT_HEIGHT   5
-#define MENU_STEPUP_SIZE    3
+#define MENU_UDARROW_WIDTH   3
+#define MENU_UDARROW_HEIGHT  2
+#define MENU_RLARROW_WIDTH   MENU_UDARROW_HEIGHT
+#define MENU_RLARROW_HEIGHT  MENU_UDARROW_WIDTH
+#define MENU_DIGIT_WIDTH     3
+#define MENU_DIGIT_HEIGHT    5
+#define MENU_STEPUP_SIZE     3
 ///@}
 
 /** @name Menu color tiles attributes */
 ///@{
-#define MENU_TILE_SIZE      7
-#define MENU_TILE_H_PAD     3
-#define MENU_TILE_V_PAD     2
-#define MENU_TILE_PWIDTH    (MENU_TILE_SIZE + MENU_TILE_H_PAD)
-#define MENU_TILE_PHEIGHT   (MENU_TILE_SIZE + MENU_TILE_V_PAD)
-#define MENU_TILES_COLS     2
-#define MENU_TILES_PER_COL  7
-#define MENU_TILES_COUNT    (MENU_TILES_COLS * MENU_TILES_PER_COL)
-#define MENU_TILES_WIDTH    ((MENU_TILES_COLS-1)*MENU_TILE_PWIDTH + MENU_TILE_SIZE)
-#define MENU_TILES_HEIGHT   (MENU_TILES_PER_COL*MENU_TILE_PHEIGHT + MENU_TILE_V_PAD + 3)
+#define MENU_TILE_SIZE       7
+#define MENU_TILE_H_PAD      3
+#define MENU_TILE_V_PAD      2
+#define MENU_TILE_PWIDTH     (MENU_TILE_SIZE + MENU_TILE_H_PAD)
+#define MENU_TILE_PHEIGHT    (MENU_TILE_SIZE + MENU_TILE_V_PAD)
+#define MENU_TILES_COLS      2
+#define MENU_TILES_PER_COL   7
+#define MENU_TILES_COUNT     (MENU_TILES_COLS * MENU_TILES_PER_COL)
+#define MENU_TILES_WIDTH     ((MENU_TILES_COLS-1)*MENU_TILE_PWIDTH + MENU_TILE_SIZE)
+#define MENU_TILES_HEIGHT    (MENU_TILES_PER_COL*MENU_TILE_PHEIGHT + MENU_TILE_V_PAD + 3)
 ///@}
 
 /** Structure containing all relevant menu settings */
 typedef struct settings {
-	Colors *colors;         /**< Currently active color rules */
-	size_t init_size;       /**< Initial grid size */
-	byte speed;             /**< Speed multiplier */
+	Colors     *colors;     /**< Currently active color rules */
+	size_t      init_size;  /**< Initial grid size */
+	byte        speed;      /**< Speed multiplier */
 	Simulation *linked_sim; /**< Currently active simulation */
 } Settings;
 
 /** Status indicator type for IO operations in the menu */
-typedef enum { STATUS_NONE, STATUS_SUCCESS, STATUS_FAILURE, STATUS_PENDING } IOStatus;
+typedef enum {
+	STATUS_NONE,
+	STATUS_SUCCESS,
+	STATUS_FAILURE,
+	STATUS_PENDING
+} IOStatus;
 
 
 /*---------------------- Dialog window macros and types ----------------------*/
 
 /** @name Dialog window attributes */
 ///@{
-#define DIALOG_TILE_SIZE     3
-#define DIALOG_TILE_ROWS     3
-#define DIALOG_TILE_COLS     5
-#define DIALOG_BUTTON_WIDTH  7
-#define DIALOG_BUTTON_HEIGHT 3
-#define DIALOG_DELETE_WIDTH  5
-#define DIALOG_DELETE_HEIGHT DIALOG_BUTTON_HEIGHT
-#define DIALOG_DELETE_COLOR  COLOR_RED
-#define DIALOG_WINDOW_WIDTH  (DIALOG_TILE_COLS*DIALOG_TILE_SIZE + 2)
-#define DIALOG_WINDOW_HEIGHT (DIALOG_TILE_ROWS*DIALOG_TILE_SIZE + DIALOG_BUTTON_HEIGHT*2 + 4)
+#define DIALOG_TILE_SIZE      3
+#define DIALOG_TILE_ROWS      3
+#define DIALOG_TILE_COLS      5
+#define DIALOG_BUTTON_WIDTH   7
+#define DIALOG_BUTTON_HEIGHT  3
+#define DIALOG_DELETE_WIDTH   5
+#define DIALOG_DELETE_HEIGHT  DIALOG_BUTTON_HEIGHT
+#define DIALOG_DELETE_COLOR   COLOR_RED
+#define DIALOG_WINDOW_WIDTH   (DIALOG_TILE_COLS*DIALOG_TILE_SIZE + 2)
+#define DIALOG_WINDOW_HEIGHT  (DIALOG_TILE_ROWS*DIALOG_TILE_SIZE + DIALOG_BUTTON_HEIGHT*2 + 4)
 ///@}
 
 /** Designates which colors are to be set in the dialog */
 ///@{
-#define CIDX_NEWCOLOR -1
-#define CIDX_DEFAULT  -2
+#define CIDX_NEWCOLOR  -1
+#define CIDX_DEFAULT   -2
 ///@}
 
 
 /*--------------------- Input handling macros and types ----------------------*/
 
 /** Escape key literal for input handling */
-#define KEY_ESC 0x1B
+#define KEY_ESC  0x1B
 
 /** Should react on key press instead of release (click)? */
-#define MOUSE_ACT_ON_PRESS TRUE
+#define MOUSE_ACT_ON_PRESS  TRUE
 
 /** @name Mouse button event flags */
 ///@{
 #if MOUSE_ACT_ON_PRESS
-#	define MOUSE_LB_EVENT BUTTON1_PRESSED
-#	define MOUSE_RB_EVENT BUTTON3_PRESSED
+#	define MOUSE_LB_EVENT  BUTTON1_PRESSED
+#	define MOUSE_RB_EVENT  BUTTON3_PRESSED
 #	ifdef NCURSES
 		// WARN ncurses mouse handling breaks if mouseinterval(0) is called and
 		//      only *_PRESSED is selected without *_CLICKED or *_RELEASED
-#		define MOUSE_MASK (BUTTON1_PRESSED | BUTTON3_PRESSED | BUTTON1_CLICKED | BUTTON3_CLICKED)
+#		define MOUSE_MASK  (BUTTON1_PRESSED | BUTTON3_PRESSED | BUTTON1_CLICKED | BUTTON3_CLICKED)
 #	else
-#		define MOUSE_MASK (BUTTON1_PRESSED | BUTTON3_PRESSED)
+#		define MOUSE_MASK  (BUTTON1_PRESSED | BUTTON3_PRESSED)
 #	endif
 #else
-#	define MOUSE_LB_EVENT BUTTON1_CLICKED
-#	define MOUSE_RB_EVENT BUTTON3_CLICKED
-#	define MOUSE_MASK     (BUTTON1_CLICKED | BUTTON3_CLICKED)
+#	define MOUSE_LB_EVENT  BUTTON1_CLICKED
+#	define MOUSE_RB_EVENT  BUTTON3_CLICKED
+#	define MOUSE_MASK      (BUTTON1_CLICKED | BUTTON3_CLICKED)
 #endif
 ///@}
 
 /** @name Window state change flags */
 ///@{
-#define STATE_NO_CHANGE      0
-#define STATE_GRID_CHANGED   1
-#define STATE_MENU_CHANGED   2
-#define STATE_COLORS_CHANGED 4
+#define STATE_NO_CHANGE       0
+#define STATE_GRID_CHANGED    1
+#define STATE_MENU_CHANGED    2
+#define STATE_COLORS_CHANGED  4
 ///@}
 
 /** Window state change as a result of input events (bitwise OR of STATE_* fields) */
@@ -283,8 +288,8 @@ typedef state_t (*pending_func_t)(void *);
 
 /** Structure for scheduling actions to be processed on the next frame */
 typedef struct pending_t {
-	pending_func_t func; /**< Function pointer to action */
-	void *arg;           /**< Generic pointer to argument (must be downcasted in func) */
+	pending_func_t  func; /**< Function pointer to action */
+	void           *arg;  /**< Generic pointer to argument (must be downcasted in func) */
 } PendingAction;
 
 
@@ -292,15 +297,15 @@ typedef struct pending_t {
 
 /** @name Performance settings */
 ///@{
-#define LOOP_DEF_SPEED  2    /**< Default speed multiplier */
-#define LOOP_MIN_SPEED  1    /**< Minimum allowed speed multiplier */
-#define LOOP_MAX_SPEED  9    /**< Maximum allowed speed multiplier */
-#define LOOP_MAX_DELAY  150  /**< Maximum delay in ms (at minimum speed) */
-#define LOOP_MIN_DELAY  0    /**< Minimum delay in ms (at maximum speed) */
-#define LOOP_OPT_ENABLE TRUE /**< Should optimize drawing by skipping steps? */
-#define LOOP_OPT_SPEED  3    /**< Threshold speed at which to begin skipping */
-#define LOOP_DEF_OPT    3    /**< Default number of steps to skip */
-#define LOOP_MAX_OPT    1097 /**< Number of steps to skip at maximum speed */
+#define LOOP_DEF_SPEED   2    /**< Default speed multiplier */
+#define LOOP_MIN_SPEED   1    /**< Minimum allowed speed multiplier */
+#define LOOP_MAX_SPEED   9    /**< Maximum allowed speed multiplier */
+#define LOOP_MAX_DELAY   150  /**< Maximum delay in ms (at minimum speed) */
+#define LOOP_MIN_DELAY   0    /**< Minimum delay in ms (at maximum speed) */
+#define LOOP_OPT_ENABLE  TRUE /**< Should optimize drawing by skipping steps? */
+#define LOOP_OPT_SPEED   3    /**< Threshold speed at which to begin skipping */
+#define LOOP_DEF_OPT     3    /**< Default number of steps to skip */
+#define LOOP_MAX_OPT     1097 /**< Number of steps to skip at maximum speed */
 ///@}
 
 
@@ -308,8 +313,8 @@ typedef struct pending_t {
 
 /** Structure containing sprite data and size */
 typedef struct sprite_info {
-	const byte *data;     /**< Byte array */  /**@{*/
-	size_t width, height; /**< Sprite size */ /**@}*/
+	const byte *data;          /**< Byte array */  /**@{*/
+	size_t      width, height; /**< Sprite size */ /**@}*/
 } SpriteInfo;
 
 
@@ -317,28 +322,29 @@ typedef struct sprite_info {
 
 /** @name Globals */
 ///@{
-extern chtype         fg_pair, bg_pair, ui_pair, ui_text_pair;
+extern chtype          fg_pair, bg_pair;
+extern chtype          ui_pair, ui_text_pair;
 
 extern WINDOW         *gridw;
-extern ScrollInfo     gridscrl;
-extern const Vector2i grid_pos;
+extern ScrollInfo      gridscrl;
+extern const Vector2i  grid_pos;
 
 extern WINDOW         *menuw;
-extern Settings       stgs;
-extern IOStatus       load_status, save_status;
-extern PendingAction  pending_action;
-extern const Vector2i menu_pos;
-extern const Vector2i menu_isize_u_pos, menu_isize_d_pos;
-extern const Vector2i menu_dir_u_pos, menu_dir_r_pos, menu_dir_d_pos, menu_dir_l_pos;
-extern const Vector2i menu_speed_u_pos, menu_speed_d_pos, menu_stepup_pos;
-extern const Vector2i menu_play_pos, menu_stop_pos;
-extern const Vector2i menu_load_pos;
+extern Settings        stgs;
+extern IOStatus        load_status, save_status;
+extern PendingAction   pending_action;
+extern const Vector2i  menu_pos;
+extern const Vector2i  menu_isize_u_pos, menu_isize_d_pos;
+extern const Vector2i  menu_dir_u_pos, menu_dir_r_pos, menu_dir_d_pos, menu_dir_l_pos;
+extern const Vector2i  menu_speed_u_pos, menu_speed_d_pos, menu_stepup_pos;
+extern const Vector2i  menu_play_pos, menu_stop_pos;
+extern const Vector2i  menu_load_pos;
 #if MENU_SAVE_ENABLE
-extern const Vector2i menu_save_pos;
+extern const Vector2i  menu_save_pos;
 #endif
 
 extern WINDOW         *dialogw;
-extern Vector2i       dialog_pos;
+extern Vector2i        dialog_pos;
 extern const char     *dialog_cdef_msg;
 ///@}
 

@@ -3,9 +3,9 @@
 #include <assert.h>
 #include <stdlib.h>
 
-WINDOW *gridw;
-ScrollInfo gridscrl;
-const Vector2i grid_pos = { 0, 0 };
+WINDOW         *gridw;
+ScrollInfo      gridscrl;
+const Vector2i  grid_pos = { 0, 0 };
 
 void init_grid_window(void)
 {
