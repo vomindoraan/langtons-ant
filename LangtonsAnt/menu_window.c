@@ -139,7 +139,7 @@ Vector2i get_menu_cdef_pos(void)
 
 static void draw_border(void)
 {
-	Simulation *sim = stgs.linked_sim;
+	Simulation *sim = stgs.simulation;
 	bool is_sparse = sim && is_grid_sparse(sim->grid);
 	size_t h = MENU_WINDOW_WIDTH, v = MENU_WINDOW_HEIGHT;
 
@@ -293,7 +293,7 @@ static void draw_init_size(void)
 static void draw_dir_arrow(void)
 {
 	wattrset(menuw, fg_pair);
-	mvwaddch(menuw, menu_dir_u_pos.y+3, menu_dir_u_pos.x+1, dir2arrow(stgs.linked_sim->ant->dir));
+	mvwaddch(menuw, menu_dir_u_pos.y+3, menu_dir_u_pos.x+1, dir2arrow(stgs.simulation->ant->dir));
 }
 
 static void draw_direction(void)
@@ -344,7 +344,7 @@ static void draw_speed(void)
 
 static void draw_state_func(void)
 {
-	Simulation *sim = stgs.linked_sim;
+	Simulation *sim = stgs.simulation;
 	chtype pair = GET_PAIR_FOR(MENU_ACTIVE_COLOR);
 	char str[8];
 	color_t ant_color = GRID_ANT_COLOR(sim->grid, sim->ant);
@@ -377,7 +377,7 @@ static void draw_control_buttons(void)
 	draw_rect(menuw, menu_play_pos,  MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
 	draw_rect(menuw, menu_stop_pos,  MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
 
-	if (is_simulation_running(stgs.linked_sim)) {
+	if (is_simulation_running(stgs.simulation)) {
 		wattrset(menuw, GET_PAIR_FOR(MENU_PAUSE_COLOR));
 		draw_sprite(menuw, (SpriteInfo) { button_sprites[1], 5, 5 }, pos1, FALSE);
 	} else {
@@ -385,7 +385,7 @@ static void draw_control_buttons(void)
 		draw_sprite(menuw, (SpriteInfo) { button_sprites[0], 5, 5 }, pos1, FALSE);
 	}
 
-	if (has_simulation_started(stgs.linked_sim)) {
+	if (has_simulation_started(stgs.simulation)) {
 		wattrset(menuw, GET_PAIR_FOR(MENU_STOP_COLOR));
 		draw_sprite(menuw, (SpriteInfo) { button_sprites[2], 5, 5 }, pos2, FALSE);
 	} else {
@@ -446,7 +446,7 @@ static void draw_io_buttons(void)
 
 static void draw_size(void)
 {
-	Simulation *sim = stgs.linked_sim;
+	Simulation *sim = stgs.simulation;
 	size_t size = sim ? sim->grid->size : 0;
 	char str[29];
 	sprintf(str, "%28zu", size);
@@ -457,7 +457,7 @@ static void draw_size(void)
 static void draw_steps(void)
 {
 	static bool do_draw;
-	Simulation *sim = stgs.linked_sim;
+	Simulation *sim = stgs.simulation;
 	size_t steps = sim ? sim->steps : 0;
 	int len = (int)log10(steps) + 1;
 	Vector2i tl = steps_pos;
@@ -492,7 +492,7 @@ static void draw_steps(void)
 
 static void draw_labels(void)
 {
-	Simulation *sim = stgs.linked_sim;
+	Simulation *sim = stgs.simulation;
 
 	wattrset(menuw, GET_PAIR_FOR(MENU_BORDER_COLOR));
 	mvwaddstr(menuw, rules_msg_pos.y,  rules_msg_pos.x,  rules_msg);
@@ -535,7 +535,7 @@ void draw_menu_full(void)
 
 void draw_menu_iter(void)
 {
-	Simulation *sim = stgs.linked_sim;
+	Simulation *sim = stgs.simulation;
 	static bool sparse = FALSE;
 #if LOOP_OPT_ENABLE
 	// TODO fixed timestep loop

@@ -58,7 +58,7 @@ static void sleep(void)
 
 void game_loop(void)
 {
-	Simulation *sim = stgs.linked_sim;
+	Simulation *sim = stgs.simulation;
 	draw_grid_full(sim->grid, sim->ant);
 	draw_menu_full();
 
@@ -69,7 +69,7 @@ void game_loop(void)
 #ifdef SERIAL_COLORS
 		bool colors_changed = input & STATE_COLORS_CHANGED;
 #endif
-		sim = stgs.linked_sim;
+		sim = stgs.simulation;
 
 		if (is_simulation_running(sim)) {
 			Vector2i prev_pos = sim->ant->pos;

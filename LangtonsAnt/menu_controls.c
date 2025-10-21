@@ -17,9 +17,9 @@ static const char *example_files[] = {
 
 state_t set_simulation(Simulation *sim)
 {
-	assert(stgs.linked_sim);
-	simulation_delete(stgs.linked_sim);
-	stgs.linked_sim = sim;
+	assert(stgs.simulation);
+	simulation_delete(stgs.simulation);
+	stgs.simulation = sim;
 	colors_delete(stgs.colors);
 	stgs.colors = sim->colors;
 	stgs.init_size = sim->grid->init_size;
@@ -29,11 +29,11 @@ state_t set_simulation(Simulation *sim)
 
 state_t reset_simulation(void)
 {
-	Simulation *sim = stgs.linked_sim;
+	Simulation *sim = stgs.simulation;
 	if (sim) {
 		simulation_delete(sim);
 	}
-	stgs.linked_sim = simulation_new(stgs.colors, stgs.init_size);
+	stgs.simulation = simulation_new(stgs.colors, stgs.init_size);
 	reset_scroll();
 	return STATE_GRID_CHANGED | STATE_MENU_CHANGED;
 }
@@ -46,7 +46,7 @@ state_t clear_simulation(void)
 
 static state_t isize_button_clicked(int d)
 {
-	Simulation *sim = stgs.linked_sim;
+	Simulation *sim = stgs.simulation;
 	if (d > 0) {
 		stgs.init_size = MIN(stgs.init_size+d, GRID_MAX_INIT_SIZE);
 	} else if (d < 0) {
@@ -62,7 +62,7 @@ static state_t isize_button_clicked(int d)
 
 static state_t dir_button_clicked(Direction dir)
 {
-	stgs.linked_sim->ant->dir = dir;
+	stgs.simulation->ant->dir = dir;
 	return STATE_GRID_CHANGED | STATE_MENU_CHANGED;
 }
 
@@ -80,7 +80,7 @@ static state_t speed_button_clicked(int delta)
 
 static state_t stepup_button_clicked(void)
 {
-	Simulation *sim = stgs.linked_sim;
+	Simulation *sim = stgs.simulation;
 	if (sim && has_enough_colors(sim->colors)) {
 		simulation_halt(sim);
 		simulation_step(sim);
@@ -91,7 +91,7 @@ static state_t stepup_button_clicked(void)
 
 static state_t play_button_clicked(void)
 {
-	Simulation *sim = stgs.linked_sim;
+	Simulation *sim = stgs.simulation;
 	if (is_simulation_running(sim)) {
 		simulation_halt(sim);
 		return STATE_MENU_CHANGED;
@@ -105,7 +105,7 @@ static state_t play_button_clicked(void)
 
 static state_t stop_button_clicked(void)
 {
-	return has_simulation_started(stgs.linked_sim) ? reset_simulation() : clear_simulation();
+	return has_simulation_started(stgs.simulation) ? reset_simulation() : clear_simulation();
 }
 
 static inline void set_pending_action(pending_func_t func, const char *filename)
@@ -164,10 +164,10 @@ static bool read_filename(char *filename)
 static state_t save_sim_action(void *arg)
 {
 	char *filename = arg;
-	if (save_simulation(filename, stgs.linked_sim) != EOF) {
+	if (save_simulation(filename, stgs.simulation) != EOF) {
 		save_status = STATUS_SUCCESS;
 		strcat(filename, ".bmp");
-		save_grid_bitmap(filename, stgs.linked_sim->grid);
+		save_grid_bitmap(filename, stgs.simulation->grid);
 	} else {
 		save_status = STATUS_FAILURE;
 	}
@@ -189,7 +189,7 @@ static state_t save_button_clicked(void)
 
 state_t menu_key_command(int key, MEVENT *mouse)
 {
-	Simulation *sim = stgs.linked_sim;
+	Simulation *sim = stgs.simulation;
 
 	switch (key) {
 		/* Init size */

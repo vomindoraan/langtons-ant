@@ -198,7 +198,7 @@ button_clicked:
 		return ret;
 
 	case CIDX_DEFAULT:
-		assert(stgs.colors && stgs.linked_sim->colors);
+		assert(stgs.colors && stgs.simulation->colors);
 		colors_delete(stgs.colors);
 		stgs.colors = colors_new(picked_color);
 		close_dialog();
@@ -220,7 +220,7 @@ button_clicked:
 		} else if (del) {
 			colors_pop(stgs.colors, colors_at(stgs.colors, cidx));
 			if (!has_enough_colors(stgs.colors)) {
-				simulation_halt(stgs.linked_sim);
+				simulation_halt(stgs.simulation);
 			}
 			close_dialog();
 			ret |= STATE_COLORS_CHANGED;

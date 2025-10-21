@@ -210,7 +210,7 @@ typedef struct settings {
 	Colors     *colors;      /**< Color rules */
 	size_t      init_size;   /**< Initial grid size */
 	byte        speed;       /**< Speed multiplier */
-	Simulation *linked_sim;  /**< Active simulation */
+	Simulation *simulation;  /**< Active simulation */
 } Settings;
 
 /** Status indicator type for IO operations in the menu */
@@ -287,7 +287,7 @@ typedef byte state_t;
 typedef state_t (*pending_func_t)(void *);
 
 /** Structure for scheduling actions to be processed on the next frame */
-typedef struct pending_t {
+typedef struct pending_action {
 	pending_func_t  func;  /**< Function pointer to action */
 	void           *arg;   /**< Generic pointer to argument (must be downcasted in func) */
 } PendingAction;
