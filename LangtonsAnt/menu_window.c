@@ -241,7 +241,8 @@ static void draw_color_list(void)
 	bool do_for = TRUE;
 	Vector2i pos1, pos2, cdef_pos;
 
-	pos1.y = rules_pos.y-1, pos1.x = rules_pos.x-MENU_TILE_PWIDTH;
+	pos1.y = rules_pos.y - 1;
+	pos1.x = rules_pos.x - MENU_TILE_PWIDTH;
 	wattrset(menuw, bg_pair);
 	draw_rect(menuw, pos1, MENU_TILES_WIDTH, MENU_TILES_HEIGHT);
 
@@ -273,7 +274,8 @@ static void draw_color_list(void)
 	if (i >= MENU_TILES_PER_COL) {
 		draw_color_arrow(pos2, get_menu_tile_pos(0));
 	} else {
-		pos1.y = pos2.y, pos1.x = pos2.x-MENU_TILE_PWIDTH;
+		pos1.y = pos2.y;
+		pos1.x = pos2.x - MENU_TILE_PWIDTH;
 		draw_color_arrow(pos2, pos1);
 		pos1.y += MENU_TILE_SIZE+1;
 		draw_color_arrow(pos1, get_menu_tile_pos(0));
@@ -324,7 +326,7 @@ static void draw_speed(void)
 
 	/* Draw scrollbar */
 	wattrset(menuw, ui_pair);
-	mvwvline(menuw, menu_speed_u_pos.y + 2, menu_speed_u_pos.x + 1, ACS_VLINE, dy);
+	mvwvline(menuw, menu_speed_u_pos.y+2, menu_speed_u_pos.x+1, ACS_VLINE, dy);
 
 	/* Draw slider */
 	wattrset(menuw, fg_pair);
@@ -376,12 +378,12 @@ static void draw_state_func(void)
 static void draw_control_buttons(void)
 {
 	Vector2i o = { (MENU_BUTTON_HEIGHT-5)/2, (MENU_BUTTON_WIDTH-5)/2 };
-	Vector2i pos1 = { menu_play_pos.y  + o.y, menu_play_pos.x  + o.x };
-	Vector2i pos2 = { menu_stop_pos.y  + o.y, menu_stop_pos.x  + o.x };
+	Vector2i pos1 = { menu_play_pos.y + o.y, menu_play_pos.x + o.x };
+	Vector2i pos2 = { menu_stop_pos.y + o.y, menu_stop_pos.x + o.x };
 
 	wattrset(menuw, ui_pair);
-	draw_rect(menuw, menu_play_pos,  MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
-	draw_rect(menuw, menu_stop_pos,  MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
+	draw_rect(menuw, menu_play_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
+	draw_rect(menuw, menu_stop_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
 
 	if (is_simulation_running(stgs.simulation)) {
 		wattrset(menuw, GET_PAIR_FOR(MENU_PAUSE_COLOR));

@@ -135,10 +135,10 @@ static void scrollbar_clicked(Grid *grid, MEVENT *mevent, ScrollbarType sbtype)
 	} else if (mevent->bstate & MOUSE_RB_EVENT) {
 		if (sbtype == SB_VERTICAL) {
 			rel = abs2rel(pos, (Vector2i) { mid, GRID_VIEW_SIZE });
-			set_scroll(grid, (int)(rel.y/gridscrl.scale), gridscrl.x);
+			set_scroll(grid, (int)(rel.y / gridscrl.scale), gridscrl.x);
 		} else {
 			rel = abs2rel(pos, (Vector2i) { GRID_VIEW_SIZE, mid });
-			set_scroll(grid, gridscrl.y, (int)(rel.x/gridscrl.scale));
+			set_scroll(grid, gridscrl.y, (int)(rel.x / gridscrl.scale));
 		}
 	}
 }

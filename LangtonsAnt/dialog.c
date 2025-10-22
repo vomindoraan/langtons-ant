@@ -58,14 +58,16 @@ static void draw_colors(void)
 				draw_frame(dialogw, outer, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE);
 			}
 		} else {
-			inner.y = outer.y+1, inner.x = outer.x+1;
+			inner.y = outer.y + 1;
+			inner.x = outer.x + 1;
 			wattrset(dialogw, GET_PAIR_FOR(stgs.colors->def));
 			draw_square(dialogw, outer, DIALOG_TILE_SIZE);
 			wattrset(dialogw, GET_PAIR_FOR(i));
 			draw_square(dialogw, inner, DIALOG_TILE_SIZE - 2);
 		}
-		if (outer.x+DIALOG_TILE_SIZE+1 >= DIALOG_WINDOW_WIDTH) {
-			outer.y += DIALOG_TILE_SIZE, outer.x = colors_pos.x;
+		if (outer.x + DIALOG_TILE_SIZE + 1 >= DIALOG_WINDOW_WIDTH) {
+			outer.y += DIALOG_TILE_SIZE;
+			outer.x = colors_pos.x;
 		} else {
 			outer.x += DIALOG_TILE_SIZE;
 		}

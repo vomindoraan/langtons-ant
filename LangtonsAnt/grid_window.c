@@ -46,7 +46,7 @@ static void draw_buffer_zone(int total, int offset)
 static void draw_scrollbars(color_t def)
 {
 	int n = GRID_VIEW_SIZE, mid = n/2, step = n-2;
-	int size = (int)(MAX(step*gridscrl.scale, 1));
+	int size = (int)(MAX(step * gridscrl.scale, 1));
 	int h = mid + gridscrl.hcenter - size/2;
 	int v = mid + gridscrl.vcenter - size/2;
 	chtype sb_fg_pair = AVAILABLE_PAIR(def, COLOR_WHITE, COLOR_SILVER);
@@ -87,7 +87,8 @@ static bool draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
 		Vector2i center = { yx.y + cs/2, yx.x + cs/2 };
 		SpriteInfo sprite = get_ant_sprite(cs, ant->dir);
 		if (sprite.data) {
-			yx.y = center.y-sprite.height/2, yx.x = center.x-sprite.width/2;
+			yx.y = center.y - sprite.height/2;
+			yx.x = center.x - sprite.width/2;
 			wattrset(gridw, fg_pair);
 			draw_sprite(gridw, sprite, yx, FALSE);
 		} else {
@@ -220,7 +221,7 @@ void scroll_grid(Grid *grid, int dy, int dx)
 
 void set_scroll(Grid *grid, int y, int x)
 {
-	int gs = grid->size, n = GRID_VIEW_SIZE, clamp = MAX(gs/2-n/2, 0);
+	int gs = grid->size, n = GRID_VIEW_SIZE, clamp = MAX(gs/2 - n/2, 0);
 
 	if (!gridscrl.enabled) {
 		return;
