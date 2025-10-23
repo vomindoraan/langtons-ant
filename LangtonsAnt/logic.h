@@ -121,7 +121,7 @@ typedef struct colors {
 #define GRID_SIZE_MEDIUM(g)      (GRID_SIZE_SMALL(g) * GRID_MULT)
 #define GRID_SIZE_LARGE(g)       (GRID_SIZE_MEDIUM(g) * GRID_MULT)
 #define IS_GRID_LARGE(g)         ((g)->size >= GRID_SIZE_LARGE(g))
-#define GRID_EFFICIENCY(g)       ((g)->size*(g)->size / ((double)sizeof(SparseCell)*(g)->colored))
+#define GRID_EFFICIENCY(g)       ((g)->size*(g)->size / ((double)sizeof(SparseCell) * (g)->colored))
 #define GRID_COLOR_AT(g, p)      (is_grid_sparse(g) ? sparse_color_at(g, p) : (g)->c[(p).y][(p).x])
 #define GRID_ANT_COLOR(g, a)     GRID_COLOR_AT(g, (a)->pos)
 ///@}
@@ -130,9 +130,9 @@ typedef struct colors {
 ///@{
 #define CSR_COLOR_MASK           (0xF << 28)
 #define CSR_GET_COLOR(sc)        (((sc)->packed & CSR_COLOR_MASK) >> 28)
-#define CSR_SET_COLOR(sc, col)   ((sc)->packed = (sc)->packed & ~CSR_COLOR_MASK | ((col)<<28))
+#define CSR_SET_COLOR(sc, col)   ((sc)->packed = ((sc)->packed & ~CSR_COLOR_MASK) | ((col) << 28))
 #define CSR_GET_COLUMN(sc)       ((sc)->packed & ~CSR_COLOR_MASK)
-#define CSR_SET_COLUMN(sc, col)  ((sc)->packed = (sc)->packed & CSR_COLOR_MASK | (col) & ~CSR_COLOR_MASK)
+#define CSR_SET_COLUMN(sc, col)  ((sc)->packed = ((sc)->packed &  CSR_COLOR_MASK) | ((col) & ~CSR_COLOR_MASK))
 ///@}
 
 /** Sparse matrix cell container */

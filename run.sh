@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-cd LangtonsAnt
+pushd LangtonsAnt
 lxterminal --geometry=1024x768 -t KIOSK_APP -e ./LangtonsAnt
+popd
 
 # ~/.config/openbox/lxde-pi-rc.xml
 # <?xml version="1.0" encoding="UTF-8"?>

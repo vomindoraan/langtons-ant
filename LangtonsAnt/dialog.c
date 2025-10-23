@@ -47,7 +47,7 @@ static void draw_colors(void)
 	Vector2i outer = colors_pos, inner;
 
 	for (i = 0; i < COLOR_COUNT; i++) {
-		if (i == fg || cidx != CIDX_DEFAULT && i == stgs.colors->def) {
+		if (i == fg || (cidx != CIDX_DEFAULT && i == stgs.colors->def)) {
 			continue;
 		}
 		if (cidx == CIDX_DEFAULT || !color_exists(stgs.colors, i)) {
@@ -129,12 +129,12 @@ Vector2i get_dialog_tile_pos(color_t color)
 	Vector2i pos = { 1, 1 };
 	color_t fg = GET_COLOR_FOR(fg_pair), i;
 
-	if (color == fg || cidx != CIDX_DEFAULT && color == stgs.colors->def) {
+	if (color == fg || (cidx != CIDX_DEFAULT && color == stgs.colors->def)) {
 		return VECTOR_INVALID;
 	}
 
 	for (i = 0; i < color; i++) {
-		if (i == fg || cidx != CIDX_DEFAULT && i == stgs.colors->def) {
+		if (i == fg || (cidx != CIDX_DEFAULT && i == stgs.colors->def)) {
 			continue;
 		}
 		if (pos.x + DIALOG_TILE_SIZE + 1 < DIALOG_WINDOW_WIDTH) {

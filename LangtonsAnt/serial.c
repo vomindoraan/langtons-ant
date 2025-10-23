@@ -39,7 +39,7 @@ bool is_color_rule_valid(ColorRule rule)
 
 void serialize_color_rules(ColorRules rules, ColorRulesMsg msg)
 {
-	int i, j = 0;
+	int i;
 	msg[0] = '\0';
 	for (i = 0; i < COLOR_COUNT && is_color_rule_valid(rules[i]); i++) {
 		color_t c = rules[i].color;

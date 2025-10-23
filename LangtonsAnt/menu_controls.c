@@ -118,7 +118,7 @@ static state_t load_sim_action(void *arg)
 {
 	const char *filename = arg;
 	Simulation *sim;
-	if (sim = load_simulation(filename)) {
+	if ((sim = load_simulation(filename))) {
 		load_status = STATUS_SUCCESS;
 		return set_simulation(sim);
 	} else {
@@ -189,8 +189,6 @@ static state_t save_button_clicked(void)
 
 state_t menu_key_command(int key, MEVENT *mouse)
 {
-	Simulation *sim = stgs.simulation;
-
 	switch (key) {
 		/* Init size */
 	case ']':
