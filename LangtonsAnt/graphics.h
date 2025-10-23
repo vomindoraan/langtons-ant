@@ -209,7 +209,7 @@ typedef struct scroll_info {
 typedef struct settings {
 	Colors     *colors;      /**< Color rules */
 	unsigned    init_size;   /**< Initial grid size */
-	byte        speed;       /**< Speed multiplier */
+	unsigned    speed;       /**< Speed multiplier */
 	Simulation *simulation;  /**< Active simulation */
 } Settings;
 

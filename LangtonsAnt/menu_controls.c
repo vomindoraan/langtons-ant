@@ -69,9 +69,9 @@ static state_t dir_button_clicked(Direction dir)
 static state_t speed_button_clicked(int delta)
 {
 	if (delta > 0) {
-		stgs.speed = MIN(stgs.speed+delta, LOOP_MAX_SPEED);
+		stgs.speed = MIN((int)stgs.speed+delta, LOOP_MAX_SPEED);
 	} else if (delta < 0) {
-		stgs.speed = MAX(stgs.speed+delta, LOOP_MIN_SPEED);
+		stgs.speed = MAX((int)stgs.speed+delta, LOOP_MIN_SPEED);
 	} else {
 		return STATE_NO_CHANGE;
 	}
