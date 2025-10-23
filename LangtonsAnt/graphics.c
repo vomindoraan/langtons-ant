@@ -116,15 +116,15 @@ Vector2i abs2rel(Vector2i abs, Vector2i origin)
 	};
 }
 
-bool area_contains(Vector2i top_left, size_t width, size_t height, Vector2i v)
+bool area_contains(Vector2i top_left, unsigned width, unsigned height, Vector2i v)
 {
 	return (v.y >= top_left.y && v.y < top_left.y+(int)height
 	        && v.x >= top_left.x && v.x < top_left.x+(int)width);
 }
 
-void draw_square(WINDOW *w, Vector2i top_left, size_t size)
+void draw_square(WINDOW *w, Vector2i top_left, unsigned size)
 {
-	size_t i;
+	unsigned i;
 	if (size == 1) {
 		mvwaddch(w, top_left.y, top_left.x, CHAR_FULL);
 		return;
@@ -134,9 +134,9 @@ void draw_square(WINDOW *w, Vector2i top_left, size_t size)
 	}
 }
 
-void draw_rect(WINDOW *w, Vector2i top_left, size_t width, size_t height)
+void draw_rect(WINDOW *w, Vector2i top_left, unsigned width, unsigned height)
 {
-	size_t i;
+	unsigned i;
 	if (width == 1 && height == 1) {
 		mvwaddch(w, top_left.y, top_left.x, CHAR_FULL);
 		return;
@@ -146,9 +146,9 @@ void draw_rect(WINDOW *w, Vector2i top_left, size_t width, size_t height)
 	}
 }
 
-void draw_frame(WINDOW *w, Vector2i top_left, size_t width, size_t height)
+void draw_frame(WINDOW *w, Vector2i top_left, unsigned width, unsigned height)
 {
-	size_t y = height-1, x = width-1, i;
+	unsigned y = height-1, x = width-1, i;
 	if (width == 0 || height == 0) {
 		return;
 	}
@@ -173,7 +173,7 @@ void draw_frame(WINDOW *w, Vector2i top_left, size_t width, size_t height)
 
 void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left, bool overwrite)
 {
-	size_t read, y, x;
+	unsigned read, y, x;
 	byte pixel;
 	for (read = 0; read < sprite.width*sprite.height; read++) {
 		pixel = sprite.data[read/8] >> (7-read%8) & 0x1;

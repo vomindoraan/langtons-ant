@@ -18,9 +18,9 @@ static const Vector2i  delete_pos = { DIALOG_TILE_ROWS*DIALOG_TILE_SIZE+DIALOG_B
 
 void open_dialog(Vector2i pos, color_t color_index)
 {
-	size_t height = (color_index == CIDX_DEFAULT)  ? left_pos.y+2
-	              : (color_index == CIDX_NEWCOLOR) ? delete_pos.y
-	              : DIALOG_WINDOW_HEIGHT;
+	unsigned height = (color_index == CIDX_DEFAULT)  ? left_pos.y+2
+	                : (color_index == CIDX_NEWCOLOR) ? delete_pos.y
+	                : DIALOG_WINDOW_HEIGHT;
 	cidx = color_index;
 
 	if (pos.x + DIALOG_WINDOW_WIDTH >= MENU_WINDOW_WIDTH) {

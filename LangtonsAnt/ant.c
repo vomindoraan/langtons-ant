@@ -74,10 +74,10 @@ static void ant_move_s(Ant *ant, Grid *grid, Colors *colors)
 	int y = ant->pos.y, x = ant->pos.x, turn;
 	SparseCell **t = grid->csr + y;
 
-	while (*t && CSR_GET_COLUMN(*t) < (size_t)x) {
+	while (*t && CSR_GET_COLUMN(*t) < (unsigned)x) {
 		t = &(*t)->next;
 	}
-	if (!*t || CSR_GET_COLUMN(*t) != (size_t)x) {
+	if (!*t || CSR_GET_COLUMN(*t) != (unsigned)x) {
 		if (!*t) {
 			grid->colored++;
 			update_bounding_box(grid, ant->pos);
@@ -108,6 +108,6 @@ bool ant_move(Ant *ant, Grid *grid, Colors *colors)
 
 bool is_ant_in_bounds(Ant *ant, Grid *grid)
 {
-	return ant->pos.y >= 0 && (size_t)ant->pos.y < grid->size
-	    && ant->pos.x >= 0 && (size_t)ant->pos.x < grid->size;
+	return ant->pos.y >= 0 && (unsigned)ant->pos.y < grid->size
+	    && ant->pos.x >= 0 && (unsigned)ant->pos.x < grid->size;
 }

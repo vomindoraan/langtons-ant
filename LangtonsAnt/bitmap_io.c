@@ -28,9 +28,9 @@ const pixel_t color_map[COLOR_COUNT] = {
 	[COLOR_YELLOW]  = { 0x00, 0xFF, 0xFF },
 };
 
-static byte *init_file_header(int height, int stride)
+static byte *init_file_header(size_t height, size_t stride)
 {
-	int file_size = FILE_HEADER_SIZE + INFO_HEADER_SIZE + (stride * height);
+	size_t file_size = FILE_HEADER_SIZE + INFO_HEADER_SIZE + (stride * height);
 	static byte file_header[] = {
 		0, 0,        // signature
 		0, 0, 0, 0,  // image file size in bytes
@@ -49,7 +49,7 @@ static byte *init_file_header(int height, int stride)
 	return file_header;
 }
 
-static byte *init_info_header(int height, int width)
+static byte *init_info_header(size_t height, size_t width)
 {
 	static byte info_header[] = {
 		0, 0, 0, 0,  // header size

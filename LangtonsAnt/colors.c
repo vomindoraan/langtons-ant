@@ -88,7 +88,7 @@ void colors_clear(Colors *colors)
 	colors->n = 0;
 }
 
-void colors_update(Colors *colors, size_t index, color_t c, turn_t turn)
+void colors_update(Colors *colors, unsigned index, color_t c, turn_t turn)
 {
 	color_t prev = colors->last, i = colors->first, j;
 	assert(index < colors->n);
@@ -119,7 +119,7 @@ void colors_update(Colors *colors, size_t index, color_t c, turn_t turn)
 	update_def(colors);
 }
 
-void colors_set_turn(Colors *colors, size_t index, turn_t turn)
+void colors_set_turn(Colors *colors, unsigned index, turn_t turn)
 {
 	color_t i = colors->first;
 	assert(index < colors->n);
@@ -130,7 +130,7 @@ void colors_set_turn(Colors *colors, size_t index, turn_t turn)
 	update_def(colors);
 }
 
-color_t colors_at(Colors *colors, size_t index)
+color_t colors_at(Colors *colors, unsigned index)
 {
 	color_t i = colors->first;
 	assert(index < colors->n);

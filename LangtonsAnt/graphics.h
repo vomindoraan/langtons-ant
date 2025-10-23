@@ -208,7 +208,7 @@ typedef struct scroll_info {
 /** Currently active menu settings */
 typedef struct settings {
 	Colors     *colors;      /**< Color rules */
-	size_t      init_size;   /**< Initial grid size */
+	unsigned    init_size;   /**< Initial grid size */
 	byte        speed;       /**< Speed multiplier */
 	Simulation *simulation;  /**< Active simulation */
 } Settings;
@@ -314,7 +314,7 @@ typedef struct pending_action {
 /** Structure containing sprite data and size */
 typedef struct sprite_info {
 	const byte *data;           /**< Byte array */   /**@{*/
-	size_t      width, height;  /**< Sprite size */  /**@}*/
+	unsigned    width, height;  /**< Sprite size */  /**@}*/
 } SpriteInfo;
 
 
@@ -400,16 +400,16 @@ Vector2i abs2rel(Vector2i abs, Vector2i origin);
 * @param v Vector to be checked
 * @return Does area contain the vector?
 */
-bool area_contains(Vector2i top_left, size_t width, size_t height, Vector2i v);
+bool area_contains(Vector2i top_left, unsigned width, unsigned height, Vector2i v);
 
 /**
  * Utility function for drawing square boxes
  * @param w Window to draw to
  * @param top_left Box origin
  * @param size Box size
- * @see draw_rect(WINDOW *, Vector2i, size_t, size_t)
+ * @see draw_rect(WINDOW *, Vector2i, unsigned, unsigned)
  */
-void draw_square(WINDOW *w, Vector2i top_left, size_t size);
+void draw_square(WINDOW *w, Vector2i top_left, unsigned size);
 
 /**
  * Utility function for drawing rectangular boxes
@@ -417,9 +417,9 @@ void draw_square(WINDOW *w, Vector2i top_left, size_t size);
  * @param top_left Box origin
  * @param width Box width
  * @param height Box height
- * @see draw_square(WINDOW *, Vector2i, size_t)
+ * @see draw_square(WINDOW *, Vector2i, unsigned)
  */
-void draw_rect(WINDOW *w, Vector2i top_left, size_t width, size_t height);
+void draw_rect(WINDOW *w, Vector2i top_left, unsigned width, unsigned height);
 
 /**
  * Utility function for drawing thin rectangular frames
@@ -428,7 +428,7 @@ void draw_rect(WINDOW *w, Vector2i top_left, size_t width, size_t height);
  * @param width Box width
  * @param height Box height
  */
-void draw_frame(WINDOW *w, Vector2i top_left, size_t width, size_t height);
+void draw_frame(WINDOW *w, Vector2i top_left, unsigned width, unsigned height);
 
 /**
  * Utility function for drawing monochrome sprites
@@ -466,7 +466,7 @@ chtype turn2arrow(turn_t turn);
  * @param dir Current ant direction
  * @return Ant sprite with requested size and direction, if one exists; NULL otherwise
  */
-SpriteInfo get_ant_sprite(size_t size, Direction dir);
+SpriteInfo get_ant_sprite(unsigned size, Direction dir);
 
 
 /*----------------------------------------------------------------------------*
@@ -608,7 +608,7 @@ void draw_menu_iter(void);
  * @param index Index in the color list
  * @return Relative position of found tile; or VECTOR_INVALID if index is out of bounds
  */
-Vector2i get_menu_tile_pos(size_t index);
+Vector2i get_menu_tile_pos(unsigned index);
 
 /**
  * Finds the relative position of the default color picker button
@@ -693,7 +693,8 @@ void draw_dialog(void);
 /**
  * Finds the relative position of a color tile in the dialog
  * @param color Color of tile
- * @return Relative position of found tile
+ * @return Relative position of found tile; or VECTOR_INVALID if color matches default
+ *         or is invalid
  */
 Vector2i get_dialog_tile_pos(color_t color);
 

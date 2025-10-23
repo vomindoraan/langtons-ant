@@ -262,7 +262,7 @@ state_t menu_mouse_command(MEVENT *mouse)
 {
 	state_t ret = STATE_NO_CHANGE;
 	Vector2i mouse_pos, pos, tile;
-	size_t i;
+	unsigned i;
 
 	if (!mouse) {
 		return STATE_NO_CHANGE;

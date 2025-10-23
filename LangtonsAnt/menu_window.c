@@ -89,7 +89,7 @@ static const byte button_sprites[][4] = {
 	{ 0x00, 0x2A, 0x00, 0x00 },
 };
 
-static size_t state_map[COLOR_COUNT] = { 0 };
+static unsigned state_map[COLOR_COUNT] = { 0 };
 
 void init_menu_window(void)
 {
@@ -109,10 +109,10 @@ void end_menu_window(void)
 	menuw = NULL;
 }
 
-Vector2i get_menu_tile_pos(size_t index)
+Vector2i get_menu_tile_pos(unsigned index)
 {
 	Vector2i pos;
-	size_t index_x, index_y;
+	unsigned index_x, index_y;
 
 	if (index >= MENU_TILES_COUNT) {
 		return VECTOR_INVALID;
@@ -140,7 +140,7 @@ Vector2i get_menu_cdef_pos(void)
 static void draw_border(void)
 {
 	Simulation *sim = stgs.simulation;
-	size_t h = MENU_WINDOW_WIDTH, v = MENU_WINDOW_HEIGHT;
+	unsigned h = MENU_WINDOW_WIDTH, v = MENU_WINDOW_HEIGHT;
 
 	if (sim && is_grid_sparse(sim->grid)) {
 		wattrset(menuw, GET_PAIR_FOR(MENU_BORDER_COLOR_S));
@@ -237,7 +237,7 @@ static void draw_color_tile(Vector2i top_left, color_t c)
 static void draw_color_list(void)
 {
 	color_t c;
-	size_t i = 0;
+	unsigned i = 0;
 	bool do_for = TRUE;
 	Vector2i pos1, pos2, cdef_pos;
 
@@ -358,7 +358,7 @@ static void draw_state_func(void)
 	color_t ant_color = GRID_ANT_COLOR(sim->grid, sim->ant);
 	color_t next_color = sim->colors->next[ant_color];  // Uses sim->colors instead of stgs.colors
 
-	sprintf(str, "f(q%-2zu, ", state_map[ant_color]);
+	sprintf(str, "f(q%-2u, ", state_map[ant_color]);
 	wattrset(menuw, pair);
 	mvwaddstr(menuw, func_pos.y, func_pos.x, str);
 	wattrset(menuw, GET_PAIR_FOR(ant_color));
@@ -366,7 +366,7 @@ static void draw_state_func(void)
 	wattrset(menuw, pair);
 	waddstr(menuw, ") = ");
 
-	sprintf(str, "(q%-2zu, ", state_map[next_color]);
+	sprintf(str, "(q%-2u, ", state_map[next_color]);
 	mvwaddstr(menuw, func_pos.y+1, func_pos.x+1, str);
 	wattrset(menuw, GET_PAIR_FOR(next_color));
 	waddch(menuw, ACS_CKBOARD);
@@ -457,9 +457,9 @@ static void draw_io_buttons(void)
 static void draw_size(void)
 {
 	Simulation *sim = stgs.simulation;
-	size_t size = sim ? sim->grid->size : 0;
+	unsigned size = sim ? sim->grid->size : 0;
 	char str[29];
-	sprintf(str, "%28zu", size);
+	sprintf(str, "%28u", size);
 	wattrset(menuw, fg_pair);
 	mvwaddstr(menuw, size_pos.y, size_pos.x, str);
 }
@@ -468,7 +468,7 @@ static void draw_steps(void)
 {
 	static bool do_draw;
 	Simulation *sim = stgs.simulation;
-	size_t steps = sim ? sim->steps : 0;
+	unsigned steps = sim ? sim->steps : 0;
 	int len = (int)log10(steps) + 1;
 	Vector2i tl = steps_pos;
 	char digits[9], *d;
@@ -486,7 +486,7 @@ static void draw_steps(void)
 		return;
 	}
 
-	sprintf(digits, "%8zu", steps);
+	sprintf(digits, "%8u", steps);
 	for (d = digits; d < digits+8; d++) {
 		if (*d != ' ') {
 			int digit = *d - '0';
@@ -540,10 +540,10 @@ void draw_menu_iter(void)
 	static bool sparse = FALSE;
 #if LOOP_OPT_ENABLE
 	// TODO fixed timestep loop
-	static size_t prev_steps = 0;
-	size_t mult = MAX(stgs.speed - LOOP_OPT_SPEED + 1, 0);
-	size_t threshold = (stgs.speed == LOOP_MAX_SPEED) ? LOOP_MAX_OPT
-	                 : LOOP_DEF_OPT * mult;
+	static unsigned prev_steps = 0;
+	unsigned mult = MAX(stgs.speed - LOOP_OPT_SPEED + 1, 0);
+	unsigned threshold = (stgs.speed == LOOP_MAX_SPEED) ? LOOP_MAX_OPT
+	                   : LOOP_DEF_OPT * mult;
 	bool do_draw = sim->steps-prev_steps >= threshold;
 #endif
 

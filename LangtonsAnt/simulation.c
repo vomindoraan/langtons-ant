@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-Simulation *simulation_new(Colors *colors, size_t init_size)
+Simulation *simulation_new(Colors *colors, unsigned init_size)
 {
 	assert(colors);
 	Simulation *sim = malloc(sizeof(Simulation));

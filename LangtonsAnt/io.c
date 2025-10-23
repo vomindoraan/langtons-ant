@@ -29,7 +29,7 @@ Colors *load_colors(const char *filename)  // TODO format checks
 		e += fscanf(input, (c == COLOR_COUNT-1) ? "%c\n" : "%c ", colors->turn+c);
 	}
 	e += fscanf(input, "%hd %hd\n", &colors->first, &colors->last);
-	e += fscanf(input, "%zu\n", &colors->n);
+	e += fscanf(input, "%u\n", &colors->n);
 
 	if (fclose(input) == EOF) {
 		return NULL;
@@ -61,7 +61,7 @@ int save_colors(const char *filename, Colors *colors)
 		e += fprintf(output, (c == COLOR_COUNT-1) ? "%c\n" : "%c ", colors->turn[c]);
 	}
 	e += fprintf(output, "%hd %hd\n", colors->first, colors->last);
-	e += fprintf(output, "%zu\n", colors->n);
+	e += fprintf(output, "%u\n", colors->n);
 
 	if (fclose(output) == EOF || e < COLORS_TOTAL_FIELDS) {
 		return EOF;
@@ -74,7 +74,7 @@ Simulation *load_simulation(const char *filename)
 	Simulation *sim;
 	Colors *colors;
 	FILE *input;
-	size_t skip = 0, i, j;
+	unsigned skip = 0, i, j;
 	bool is_sparse;
 
 	if (!(colors = load_colors(filename))) {
@@ -98,7 +98,7 @@ Simulation *load_simulation(const char *filename)
 		       &sim->ant->dir) < 3) {
 		return sim;  // Colors only
 	}
-	if (fscanf(input, "%zu\n", &sim->steps) < 0) {
+	if (fscanf(input, "%u\n", &sim->steps) < 0) {
 		goto error_end;
 	}
 	if (fscanf(input, "%c\n", &is_sparse) < 0) {
@@ -112,7 +112,7 @@ Simulation *load_simulation(const char *filename)
 	sim->grid->tmp_size = 0;
 	sim->grid->csr = NULL;
 
-	if (fscanf(input, "%hhu %zu %zu %zu\n", &sim->grid->def_color,
+	if (fscanf(input, "%hhu %u %u %u\n", &sim->grid->def_color,
 		       &sim->grid->init_size, &sim->grid->size, &sim->grid->colored) < 0) {
 		goto error_end;
 	}
@@ -123,7 +123,7 @@ Simulation *load_simulation(const char *filename)
 
 	if (is_sparse) {
 		sim->grid->csr = malloc(sim->grid->size * sizeof(SparseCell *));
-		size_t colp;
+		unsigned colp;
 		SparseCell *cell;
 
 		for (i = 0; i < sim->grid->size; i++) {
@@ -131,7 +131,7 @@ Simulation *load_simulation(const char *filename)
 			cell = NULL;
 			sim->grid->csr[i] = NULL;
 			while (fscanf(input, "%c", &c) > 0 && c == ' ') {
-				if (fscanf(input, "%zu", &colp) < 0) {
+				if (fscanf(input, "%u", &colp) < 0) {
 					goto error_end;
 				}
 				if (!cell) {
@@ -176,7 +176,7 @@ int save_simulation(const char *filename, Simulation *sim)
 {
 	FILE *output;
 	SparseCell *cell;
-	size_t i, j;
+	unsigned i, j;
 
 	if (save_colors(filename, sim->colors) == EOF) {
 		return EOF;
@@ -190,13 +190,13 @@ int save_simulation(const char *filename, Simulation *sim)
 		        sim->ant->dir) < 0) {
 		return EOF;
 	}
-	if (fprintf(output, "%zu\n", sim->steps) < 0) {
+	if (fprintf(output, "%u\n", sim->steps) < 0) {
 		return EOF;
 	}
 	if (fprintf(output, "%c\n", is_grid_sparse(sim->grid)) < 0) {
 		return EOF;
 	}
-	if (fprintf(output, "%hhu %zu %zu %zu\n", sim->grid->def_color,
+	if (fprintf(output, "%hhu %u %u %u\n", sim->grid->def_color,
 		        sim->grid->init_size, sim->grid->size, sim->grid->colored) < 0) {
 		return EOF;
 	}
@@ -209,7 +209,7 @@ int save_simulation(const char *filename, Simulation *sim)
 		for (i = 0; i < sim->grid->size; i++) {
 			cell = sim->grid->csr[i];
 			while (cell) {
-				if (fprintf(output, " %zu", cell->packed) < 0) {
+				if (fprintf(output, " %u", cell->packed) < 0) {
 					return EOF;
 				}
 				cell = cell->next;
@@ -238,7 +238,7 @@ int save_simulation(const char *filename, Simulation *sim)
 int save_grid_bitmap(const char *filename, Grid *grid)
 {
 	pixel_t *image;
-	size_t height = grid->size, width = grid->size, i, j;
+	unsigned height = grid->size, width = grid->size, i, j;
 
 	image = malloc(height * width * sizeof(pixel_t));
 	for (i = 0; i < height; i++) {
