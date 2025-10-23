@@ -147,7 +147,7 @@ static void draw_border(void)
 		mvwaddstr(menuw, sparse_msg_pos.y, sparse_msg_pos.x, sparse_msg);
 	} else {
 		wattrset(menuw, PAIR_FOR(MENU_BORDER_COLOR));
-		mvwhline(menuw, sparse_msg_pos.y, sparse_msg_pos.x, CHAR_EMPTY, strlen(sparse_msg));
+		mvwhline(menuw, sparse_msg_pos.y, sparse_msg_pos.x, CHAR_EMPTY, (int)strlen(sparse_msg));
 	}
 
 	mvwhline(menuw, 0,   0,   CHAR_FULL, h);

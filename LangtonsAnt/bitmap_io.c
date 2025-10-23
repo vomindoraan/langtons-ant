@@ -109,5 +109,5 @@ int create_bitmap_file(const char *filename, pixel_t *image, size_t height, size
 	if (fclose(output) == EOF || e < total_size) {
 		return EOF;
 	}
-	return e;
+	return (int)e;
 }

@@ -295,7 +295,7 @@ state_t menu_mouse_command(MEVENT *mouse)
 			return STATE_MENU_CHANGED;
 		}
 	}
-	if (area_contains(get_menu_cdef_pos(), strlen(dialog_cdef_msg), 1, pos)) {
+	if (area_contains(get_menu_cdef_pos(), (unsigned)strlen(dialog_cdef_msg), 1, pos)) {
 		open_dialog(pos, CIDX_DEFAULT);
 		return STATE_MENU_CHANGED;
 	}

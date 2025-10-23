@@ -7,6 +7,7 @@
 #define __LOGIC_H__
 
 #include <limits.h>
+#include <stddef.h>
 
 
 /*--------------------- General purpose macros and types ---------------------*/
@@ -26,10 +27,10 @@
 ///@{
 /** Curses boolean literal */
 #ifndef FALSE
-#	define FALSE  0
+#	define FALSE   0
 #endif
 #ifndef TRUE
-#	define TRUE   1
+#	define TRUE    1
 #endif
 ///@}
 

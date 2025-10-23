@@ -45,9 +45,9 @@ void init_graphics(color_t fg_color, color_t bg_color)
 	GetCurrentConsoleFontEx(console, FALSE, &user_font);
 
 	/* Store current window position & size */
-	CONSOLE_SCREEN_BUFFER_INFO tmp;
-	GetConsoleScreenBufferInfo(console, &tmp);
-	user_window = tmp.srWindow;
+	CONSOLE_SCREEN_BUFFER_INFO sb;
+	GetConsoleScreenBufferInfo(console, &sb);
+	user_window = sb.srWindow;
 
 	/* Set console font to 8x8 raster */
 	CONSOLE_FONT_INFOEX font = {

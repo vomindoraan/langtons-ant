@@ -71,7 +71,8 @@ static void ant_move_n(Ant *ant, Grid *grid, Colors *colors)
 
 static void ant_move_s(Ant *ant, Grid *grid, Colors *colors)
 {
-	int y = ant->pos.y, x = ant->pos.x, turn;
+	int y = ant->pos.y, x = ant->pos.x;
+	turn_t turn;
 	SparseCell **t = grid->csr + y;
 
 	while (*t && CSR_GET_COLUMN(*t) < (unsigned)x) {

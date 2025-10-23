@@ -7,8 +7,9 @@
 
 Grid *grid_new(Colors *colors, unsigned init_size)
 {
-	Grid *grid = malloc(sizeof(Grid));
 	unsigned i;
+	Grid *grid = malloc(sizeof(Grid));
+
 	grid->c = malloc(init_size * sizeof(byte *));
 	for (i = 0; i < init_size; i++) {
 		grid->c[i] = malloc(init_size);
@@ -22,6 +23,7 @@ Grid *grid_new(Colors *colors, unsigned init_size)
 	grid->top_left.y = grid->top_left.x = init_size / 2;
 	grid->bottom_right = grid->top_left;
 	grid->colored = 0;
+
 	return grid;
 }
 
@@ -52,12 +54,12 @@ static void grid_delete_n(Grid *grid)
 static void grid_delete_s(Grid *grid)
 {
 	unsigned i;
-	SparseCell *cell;
+	SparseCell *curr;
 	for (i = 0; i < grid->size; i++) {
 		while (grid->csr[i]) {
-			cell = grid->csr[i];
+			curr = grid->csr[i];
 			grid->csr[i] = (grid->csr[i])->next;
-			free(cell);
+			free(curr);
 		}
 	}
 	free(grid->csr);
@@ -77,7 +79,7 @@ static void transfer_vector(Vector2i *v, unsigned old_size)
 
 static bool is_in_old_matrix_row(unsigned y, unsigned old_size)
 {
-	return y >= old_size && y < 2*old_size;
+	return y >= old_size && y < 2 * old_size;
 }
 
 void grid_silent_expand(Grid *grid)

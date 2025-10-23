@@ -189,8 +189,8 @@ void draw_grid_full(Grid *grid, Ant *ant)
 void draw_grid_iter(Grid *grid, Ant *ant, Vector2i prev_pos)
 {
 	int gs = grid->size, vgs = MIN(gs, GRID_VIEW_SIZE);
-	int lw = (gs == GRID_SIZE_SMALL(grid))  ? LINE_WIDTH_SMALL
-	       : (gs == GRID_SIZE_MEDIUM(grid)) ? LINE_WIDTH_MEDIUM
+	int lw = (gs == (int)GRID_SIZE_SMALL(grid))  ? LINE_WIDTH_SMALL
+	       : (gs == (int)GRID_SIZE_MEDIUM(grid)) ? LINE_WIDTH_MEDIUM
 	       : LINE_WIDTH_LARGE;
 	int cs = CELL_SIZE(vgs, lw);
 	int o = OFFSET_SIZE(TOTAL_SIZE(vgs, lw, cs));

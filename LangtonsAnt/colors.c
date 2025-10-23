@@ -5,16 +5,20 @@
 
 Colors *colors_new(color_t def)
 {
+	color_t i;
+	Colors* colors;
+
 	assert(def >= 0 && def < COLOR_COUNT);
-	Colors *colors = malloc(sizeof(Colors));
-	int i;
+	colors = malloc(sizeof(Colors));
+
 	for (i = 0; i < COLOR_COUNT; i++) {
 		colors->next[i] = def;
 		colors->turn[i] = TURN_NONE;
 	}
-	colors->n = 0;
 	colors->first = colors->last = COLOR_NONE;
 	colors->def = def;
+	colors->n = 0;
+
 	return colors;
 }
 
@@ -34,11 +38,10 @@ void colors_push(Colors *colors, color_t c, turn_t turn)
 	if (c < 0 || c >= COLOR_COUNT || c == colors->def) {
 		return;
 	}
-	
+
 	if (colors->first == COLOR_NONE) {
 		assert(colors->last == COLOR_NONE);
-		colors->first = c;
-		colors->last = c;
+		colors->first = colors->last = c;
 	}
 	colors->next[colors->last] = c;
 	colors->next[c] = colors->first;
