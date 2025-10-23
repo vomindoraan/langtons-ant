@@ -17,11 +17,12 @@
 /** Total number of fields in a Colors struct */
 #define COLORS_TOTAL_FIELDS  (COLOR_COUNT*2 + 4)
 
-/** @name Bitmap file attributes */
+/** @name Bitmap attributes */
 ///@{
-#define BYTES_PER_PIXEL   3  // BGR
-#define FILE_HEADER_SIZE  14
-#define INFO_HEADER_SIZE  40
+#define BYTES_PER_PIXEL       3  // BGR
+#define BMP_MAX_SIZE          (1U << 28)
+#define BMP_FILE_HEADER_SIZE  14
+#define BMP_INFO_HEADER_SIZE  40
 ///@}
 
 /*------------------------- Input/output color types -------------------------*/
@@ -76,7 +77,7 @@ int save_simulation(const char *filename, Simulation *sim);
  * @param filename Destination .bmp file path
  * @param grid Grid to be written
  * @return Bitmap size if successful; EOF otherwise
- * @see create_bitmap_file(const char*, pixel_t *, size_t, size_t)
+ * @see create_bitmap_file(const char *, pixel_t *, size_t, size_t)
  */
 int save_grid_bitmap(const char *filename, Grid *grid);
 

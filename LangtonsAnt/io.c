@@ -239,8 +239,12 @@ int save_grid_bitmap(const char *filename, Grid *grid)
 {
 	pixel_t *image;
 	unsigned height = grid->size, width = grid->size, i, j;
+	size_t size = width * height * sizeof(pixel_t);
 
-	image = malloc(height * width * sizeof(pixel_t));
+	if (size > BMP_MAX_SIZE || !(image = malloc(size))) {
+		return EOF;
+	}
+
 	for (i = 0; i < height; i++) {
 		for (j = 0; j < width; j++) {
 			Vector2i pos = (Vector2i) { j, i };  // Flip axes
