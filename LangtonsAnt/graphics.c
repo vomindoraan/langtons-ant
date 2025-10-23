@@ -20,7 +20,7 @@ void init_def_pairs(color_t fg_color, color_t bg_color)
 
 	for (c = 0; c < COLOR_COUNT; c++) {
 		color_t contrast = IS_COLOR_BRIGHT(c) ? fg_color : bg_color;
-		p = GET_PAIRNO_FOR(c);
+		p = PAIRNO_FOR(c);
 		init_pair(p, c, contrast);
 		if (c == bg_color) {
 			bg_pair = COLOR_PAIR(p);
@@ -31,7 +31,7 @@ void init_def_pairs(color_t fg_color, color_t bg_color)
 		}
 	}
 
-	p = GET_PAIRNO_FOR(c);
+	p = PAIRNO_FOR(c);
 	init_pair(p, ui_color, bg_color);
 	ui_pair = COLOR_PAIR(p);
 }

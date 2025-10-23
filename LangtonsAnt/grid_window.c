@@ -80,7 +80,7 @@ static bool draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
 		return FALSE;
 	}
 
-	wattrset(gridw, GET_PAIR_FOR(c));
+	wattrset(gridw, PAIR_FOR(c));
 	draw_square(gridw, yx, cs);
 
 	if (ant) {
@@ -140,7 +140,7 @@ static void borderless(Grid *grid, Ant *ant)
 	Vector2i rel, pos, yx, origin = grid_pos;
 
 	/* Draw background edge buffer zone */
-	wattrset(gridw, GET_PAIR_FOR(grid->def_color));
+	wattrset(gridw, PAIR_FOR(grid->def_color));
 	draw_buffer_zone(t, o);
 
 	/* Draw scrollbars in case of largest grid */

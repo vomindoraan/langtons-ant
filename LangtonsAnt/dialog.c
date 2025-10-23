@@ -43,7 +43,7 @@ void close_dialog(void)
 
 static void draw_colors(void)
 {
-	color_t i, fg = GET_COLOR_FOR(fg_pair);
+	color_t i, fg = COLOR_FOR(fg_pair);
 	Vector2i outer = colors_pos, inner;
 
 	for (i = 0; i < COLOR_COUNT; i++) {
@@ -51,7 +51,7 @@ static void draw_colors(void)
 			continue;
 		}
 		if (cidx == CIDX_DEFAULT || !color_exists(stgs.colors, i)) {
-			wattrset(dialogw, GET_PAIR_FOR(i));
+			wattrset(dialogw, PAIR_FOR(i));
 			draw_square(dialogw, outer, DIALOG_TILE_SIZE);
 			if (picked_color == i) {
 				wattron(dialogw, A_REVERSE);
@@ -60,9 +60,9 @@ static void draw_colors(void)
 		} else {
 			inner.y = outer.y + 1;
 			inner.x = outer.x + 1;
-			wattrset(dialogw, GET_PAIR_FOR(stgs.colors->def));
+			wattrset(dialogw, PAIR_FOR(stgs.colors->def));
 			draw_square(dialogw, outer, DIALOG_TILE_SIZE);
-			wattrset(dialogw, GET_PAIR_FOR(i));
+			wattrset(dialogw, PAIR_FOR(i));
 			draw_square(dialogw, inner, DIALOG_TILE_SIZE - 2);
 		}
 		if (outer.x + DIALOG_TILE_SIZE + 1 >= DIALOG_WINDOW_WIDTH) {
@@ -81,7 +81,7 @@ static void draw_buttons(void)
 	int ymid, xmid;
 
 	pair_content(PAIR_NUMBER(ui_pair), &fg, &bg);
-	pair = GET_PAIR_FOR((picked_color != COLOR_NONE) ? picked_color : bg);
+	pair = PAIR_FOR((picked_color != COLOR_NONE) ? picked_color : bg);
 
 	/* Default color picker dialog - message instead of buttons */
 	if (cidx == CIDX_DEFAULT) {
@@ -106,7 +106,7 @@ static void draw_buttons(void)
 	/* Additional X button in case of delete dialog */
 	if (cidx >= 0) {
 		ymid = DIALOG_DELETE_HEIGHT/2, xmid = DIALOG_DELETE_WIDTH/2;
-		wattrset(dialogw, GET_PAIR_FOR(DIALOG_DELETE_COLOR));
+		wattrset(dialogw, PAIR_FOR(DIALOG_DELETE_COLOR));
 		draw_rect(dialogw, delete_pos, DIALOG_DELETE_WIDTH, DIALOG_DELETE_HEIGHT);
 		wattron(dialogw, A_REVERSE);
 		mvwaddstr(dialogw, delete_pos.y+ymid, delete_pos.x+xmid, "X");
@@ -127,7 +127,7 @@ void draw_dialog(void)
 Vector2i get_dialog_tile_pos(color_t color)
 {
 	Vector2i pos = { 1, 1 };
-	color_t fg = GET_COLOR_FOR(fg_pair), i;
+	color_t fg = COLOR_FOR(fg_pair), i;
 
 	if (color == fg || (cidx != CIDX_DEFAULT && color == stgs.colors->def)) {
 		return VECTOR_INVALID;

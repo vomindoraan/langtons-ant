@@ -143,10 +143,10 @@ static void draw_border(void)
 	unsigned h = MENU_WINDOW_WIDTH, v = MENU_WINDOW_HEIGHT;
 
 	if (sim && is_grid_sparse(sim->grid)) {
-		wattrset(menuw, GET_PAIR_FOR(MENU_BORDER_COLOR_S));
+		wattrset(menuw, PAIR_FOR(MENU_BORDER_COLOR_S));
 		mvwaddstr(menuw, sparse_msg_pos.y, sparse_msg_pos.x, sparse_msg);
 	} else {
-		wattrset(menuw, GET_PAIR_FOR(MENU_BORDER_COLOR));
+		wattrset(menuw, PAIR_FOR(MENU_BORDER_COLOR));
 		mvwhline(menuw, sparse_msg_pos.y, sparse_msg_pos.x, CHAR_EMPTY, strlen(sparse_msg));
 	}
 
@@ -158,12 +158,12 @@ static void draw_border(void)
 
 static void draw_logo(void)
 {
-	wattrset(menuw, GET_PAIR_FOR(MENU_BORDER_COLOR));
+	wattrset(menuw, PAIR_FOR(MENU_BORDER_COLOR));
 	draw_sprite(menuw, (SpriteInfo) { logo_sprite, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT },
 	            logo_pos, FALSE);
 	wattron(menuw, A_REVERSE);
 	mvwaddstr(menuw, logo_msg_pos.y, logo_msg_pos.x, logo_msg);
-	wattrset(menuw, GET_PAIR_FOR(MENU_ACTIVE_COLOR));  // TODO add copyright window
+	wattrset(menuw, PAIR_FOR(MENU_ACTIVE_COLOR));  // TODO add copyright window
 	draw_sprite(menuw, (SpriteInfo) { logo_highlight_sprite, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT},
 	            logo_pos, FALSE);
 }
@@ -211,8 +211,8 @@ static void draw_color_arrow(Vector2i pos1, Vector2i pos2)
 
 static void draw_color_tile(Vector2i top_left, color_t c)
 {
-	chtype tile_pair = GET_PAIR_FOR(c);
-	chtype frame_pair = (c != GET_COLOR_FOR(bg_pair)) ? tile_pair : ui_pair;
+	chtype tile_pair = PAIR_FOR(c);
+	chtype frame_pair = (c != COLOR_FOR(bg_pair)) ? tile_pair : ui_pair;
 	bool is_def = c == stgs.colors->def;
 	int y = top_left.y, x = top_left.x, s = MENU_TILE_SIZE;
 
@@ -283,13 +283,13 @@ static void draw_color_list(void)
 
 	/* Draw default color picker message */
 	cdef_pos = get_menu_cdef_pos();
-	wattrset(menuw, GET_PAIR_FOR(MENU_ACTIVE_COLOR));
+	wattrset(menuw, PAIR_FOR(MENU_ACTIVE_COLOR));
 	mvwaddstr(menuw, cdef_pos.y, cdef_pos.x, dialog_cdef_msg);
 }
 
 static void draw_init_size(void)
 {
-	wattrset(menuw, GET_PAIR_FOR(MENU_ACTIVE_COLOR));
+	wattrset(menuw, PAIR_FOR(MENU_ACTIVE_COLOR));
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_UP],   MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
 	            menu_isize_u_pos, FALSE);
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_DOWN], MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
@@ -306,7 +306,7 @@ static void draw_dir_arrow(void)
 
 static void draw_direction(void)
 {
-	wattrset(menuw, GET_PAIR_FOR(MENU_ACTIVE_COLOR));
+	wattrset(menuw, PAIR_FOR(MENU_ACTIVE_COLOR));
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_UP],    MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
 	            menu_dir_u_pos, FALSE);
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_RIGHT], MENU_RLARROW_WIDTH, MENU_RLARROW_HEIGHT },
@@ -320,7 +320,7 @@ static void draw_direction(void)
 
 static void draw_speed(void)
 {
-	chtype pair = GET_PAIR_FOR(MENU_ACTIVE_COLOR);
+	chtype pair = PAIR_FOR(MENU_ACTIVE_COLOR);
 	int dy = menu_speed_d_pos.y - menu_speed_u_pos.y - 2;
 	Vector2i slider_pos = { speed_pos.y + dy+1 - 2*stgs.speed, speed_pos.x };  // TODO better way for speed slider pos
 
@@ -346,14 +346,14 @@ static void draw_speed(void)
 	draw_sprite(menuw, (SpriteInfo) { digit_sprites[stgs.speed], 3, 5 }, slider_pos, TRUE);
 
 	/* Draw Step+ sprite */
-	wattrset(menuw, GET_PAIR_FOR(has_enough_colors(stgs.colors) ? MENU_ACTIVE_COLOR : MENU_INACTIVE_COLOR));
+	wattrset(menuw, PAIR_FOR(has_enough_colors(stgs.colors) ? MENU_ACTIVE_COLOR : MENU_INACTIVE_COLOR));
 	draw_sprite(menuw, (SpriteInfo) { stepup_sprite, 3, 3 }, menu_stepup_pos, FALSE);
 }
 
 static void draw_state_func(void)
 {
 	Simulation *sim = stgs.simulation;
-	chtype pair = GET_PAIR_FOR(MENU_ACTIVE_COLOR);
+	chtype pair = PAIR_FOR(MENU_ACTIVE_COLOR);
 	char str[8];
 	color_t ant_color = GRID_ANT_COLOR(sim->grid, sim->ant);
 	color_t next_color = sim->colors->next[ant_color];  // Uses sim->colors instead of stgs.colors
@@ -361,14 +361,14 @@ static void draw_state_func(void)
 	sprintf(str, "f(q%-2u, ", state_map[ant_color]);
 	wattrset(menuw, pair);
 	mvwaddstr(menuw, func_pos.y, func_pos.x, str);
-	wattrset(menuw, GET_PAIR_FOR(ant_color));
+	wattrset(menuw, PAIR_FOR(ant_color));
 	waddch(menuw, ACS_CKBOARD);
 	wattrset(menuw, pair);
 	waddstr(menuw, ") = ");
 
 	sprintf(str, "(q%-2u, ", state_map[next_color]);
 	mvwaddstr(menuw, func_pos.y+1, func_pos.x+1, str);
-	wattrset(menuw, GET_PAIR_FOR(next_color));
+	wattrset(menuw, PAIR_FOR(next_color));
 	waddch(menuw, ACS_CKBOARD);
 	sprintf(str, ", %c) ", turn2arrow(sim->colors->turn[ant_color]));
 	wattrset(menuw, pair);
@@ -386,18 +386,18 @@ static void draw_control_buttons(void)
 	draw_rect(menuw, menu_stop_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT);
 
 	if (is_simulation_running(stgs.simulation)) {
-		wattrset(menuw, GET_PAIR_FOR(MENU_PAUSE_COLOR));
+		wattrset(menuw, PAIR_FOR(MENU_PAUSE_COLOR));
 		draw_sprite(menuw, (SpriteInfo) { button_sprites[1], 5, 5 }, pos1, FALSE);
 	} else {
-		wattrset(menuw, GET_PAIR_FOR(has_enough_colors(stgs.colors) ? MENU_PLAY_COLOR : MENU_INACTIVE_COLOR));
+		wattrset(menuw, PAIR_FOR(has_enough_colors(stgs.colors) ? MENU_PLAY_COLOR : MENU_INACTIVE_COLOR));
 		draw_sprite(menuw, (SpriteInfo) { button_sprites[0], 5, 5 }, pos1, FALSE);
 	}
 
 	if (has_simulation_started(stgs.simulation)) {
-		wattrset(menuw, GET_PAIR_FOR(MENU_STOP_COLOR));
+		wattrset(menuw, PAIR_FOR(MENU_STOP_COLOR));
 		draw_sprite(menuw, (SpriteInfo) { button_sprites[2], 5, 5 }, pos2, FALSE);
 	} else {
-		wattrset(menuw, GET_PAIR_FOR(!is_colors_empty(stgs.colors) ? MENU_CLEAR_COLOR : MENU_INACTIVE_COLOR));
+		wattrset(menuw, PAIR_FOR(!is_colors_empty(stgs.colors) ? MENU_CLEAR_COLOR : MENU_INACTIVE_COLOR));
 		draw_sprite(menuw, (SpriteInfo) { button_sprites[3], 5, 5 }, pos2, FALSE);
 	}
 }
@@ -423,8 +423,8 @@ static void draw_io_button(Vector2i pos, const char *label[MENU_BUTTON_HEIGHT-4]
 	}
 
 	if (draw_status) {
-		chtype pair = (status == STATUS_SUCCESS) ? GET_PAIR_FOR(COLOR_LIME)
-		            : (status == STATUS_FAILURE) ? GET_PAIR_FOR(COLOR_RED)
+		chtype pair = (status == STATUS_SUCCESS) ? PAIR_FOR(COLOR_LIME)
+		            : (status == STATUS_FAILURE) ? PAIR_FOR(COLOR_RED)
 		            : (status == STATUS_PENDING) ? bg_pair
 		            : 0;
 		if (pair) {

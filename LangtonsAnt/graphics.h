@@ -81,11 +81,11 @@
 
 /** @name Utility macros for colors */
 ///@{
-#define GET_PAIRNO_FOR(c)            ((c) + 1)
-#define GET_PAIR_FOR(c)              COLOR_PAIR(GET_PAIRNO_FOR(c))
-#define GET_COLOR_FOR(p)             (PAIR_NUMBER(p) - 1)
+#define PAIRNO_FOR(c)                ((c) + 1)
+#define PAIR_FOR(c)                  COLOR_PAIR(PAIRNO_FOR(c))
+#define COLOR_FOR(p)                 (PAIR_NUMBER(p) - 1)
 #define AVAILABLE_COLOR(def, c, bk)  (((def) == (c)) ? (bk) : (c))
-#define AVAILABLE_PAIR(def, c, bk)   GET_PAIR_FOR(AVAILABLE_COLOR(def, c, bk))
+#define AVAILABLE_PAIR(def, c, bk)   PAIR_FOR(AVAILABLE_COLOR(def, c, bk))
 #define IS_COLOR_BRIGHT(c)           ((c) == COLOR_SILVER || ((c) > 8 && (c) != COLOR_BLUE))
 ///@}
 
