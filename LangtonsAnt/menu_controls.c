@@ -4,7 +4,31 @@
 #include <assert.h>
 #include <string.h>
 
-static const char *example_files[] = {
+#define INPUT_WINDOW_WIDTH  (MENU_WINDOW_WIDTH - 4)
+#define INPUT_WINDOW_HEIGHT 3
+
+static WINDOW* inputw;
+static const Vector2i input_pos = {
+	.y = MENU_CONTROLS_Y - 13,
+	.x = GRID_WINDOW_SIZE + MENU_WINDOW_WIDTH - INPUT_WINDOW_WIDTH - 2,
+};
+
+static bool read_filename(char* filename)
+{
+	int ret;
+	inputw = newwin(3, INPUT_WINDOW_WIDTH, input_pos.y, input_pos.x);  // TODO move to window drawing file
+	wbkgd(inputw, PAIR_FOR(COLOR_GRAY) | A_REVERSE);
+	wattron(inputw, fg_pair);
+	waddstr(inputw, " Filename: ");
+	wattroff(inputw, fg_pair);
+	echo();
+	ret = mvwgetnstr(inputw, 1, 1, filename, FILENAME_SIZE - 5);  // Leave room for ".bmp"
+	noecho();
+	delwin(inputw);
+	return ret != ERR && strlen(filename) > 0;
+}
+
+static const char* example_files[] = {
 	"examples/highway.lant",
 	"examples/spiral.lant",
 	"examples/triangle.lant",
@@ -127,39 +151,26 @@ static state_t load_sim_action(void *arg)
 	}
 }
 
-static state_t load_button_clicked(void)
+static state_t load_button_clicked(bool input)
 {
+	static char filename[FILENAME_SIZE] = { 0 };
 	static int index = 0;
-	set_pending_action(load_sim_action, example_files[index]);
-	index = (index + 1) % LEN(example_files);
-	load_status = STATUS_PENDING;
+	if (input) {
+		if (read_filename(filename)) {
+			set_pending_action(load_sim_action, filename);
+			load_status = STATUS_PENDING;
+		} else {
+			load_status = STATUS_FAILURE;
+		}
+	} else {
+		set_pending_action(load_sim_action, example_files[index]);
+		index = (index + 1) % LEN(example_files);
+		load_status = STATUS_PENDING;
+	}
 	return STATE_MENU_CHANGED;
 }
 
 #if MENU_SAVE_ENABLE
-#	define INPUT_WINDOW_WIDTH  (MENU_WINDOW_WIDTH - 4)
-#	define INPUT_WINDOW_HEIGHT 3
-
-static WINDOW *inputw;
-static const Vector2i input_pos = {
-	.y = MENU_CONTROLS_Y - 13,
-	.x = GRID_WINDOW_SIZE + MENU_WINDOW_WIDTH - INPUT_WINDOW_WIDTH - 2,
-};
-
-static bool read_filename(char *filename)
-{
-	int ret;
-	inputw = newwin(3, INPUT_WINDOW_WIDTH, input_pos.y, input_pos.x);  // TODO move to window drawing file
-	wbkgd(inputw, PAIR_FOR(COLOR_GRAY) | A_REVERSE);
-	wattron(inputw, fg_pair);
-	waddstr(inputw, " Filename: ");
-	wattroff(inputw, fg_pair);
-	echo();
-	ret = mvwgetnstr(inputw, 1, 1, filename, FILENAME_SIZE-5);  // Leave room for ".bmp"
-	noecho();
-	delwin(inputw);
-	return ret != ERR && strlen(filename) > 0;
-}
 
 static state_t save_sim_action(void *arg)
 {
@@ -185,6 +196,7 @@ static state_t save_button_clicked(void)
 	}
 	return STATE_MENU_CHANGED;
 }
+
 #endif  // MENU_SAVE_ENABLE
 
 state_t menu_key_command(int key, MEVENT *mouse)
@@ -237,8 +249,8 @@ state_t menu_key_command(int key, MEVENT *mouse)
 		return clear_simulation();
 
 		/* IO */
-	case KEY_F(1):
-		return load_button_clicked();
+	case KEY_F(1): case KEY_F(3):
+		return load_button_clicked(key == KEY_F(3));
 #if MENU_SAVE_ENABLE
 	case KEY_F(2):
 		return save_button_clicked();
@@ -345,7 +357,7 @@ state_t menu_mouse_command(MEVENT *mouse)
 
 	/* IO buttons */
 	if (area_contains(menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
-		return load_button_clicked();
+		return load_button_clicked(!!(mouse->bstate & MOUSE_RB_EVENT));
 	}
 #if MENU_SAVE_ENABLE
 	if (area_contains(menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
