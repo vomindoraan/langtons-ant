@@ -53,7 +53,7 @@ typedef unsigned char byte;
 #define VECTOR_EQ(v1, v2)  ((v1).y == (v2).y && (v1).x == (v2).x)
 
 /** Vector representing an out-of-bounds position */
-#define VECTOR_INVALID     ((Vector2i) { INT_MIN, INT_MIN })
+#define VECTOR_INVALID     (Vector2i) { INT_MIN, INT_MIN }
 
 /** Vector container (int y, int x) */
 typedef struct vector2i {
@@ -134,7 +134,6 @@ typedef struct colors {
 
 /** @name Sparse matrix bit packing macros */
 ///@{
-#define CSR_INVALID              UINT_MAX
 #define CSR_COLOR_MASK           (0xF << 28)
 #define CSR_GET_COLOR(sc)        (((sc)->packed & CSR_COLOR_MASK) >> 28)
 #define CSR_SET_COLOR(sc, col)   ((sc)->packed = ((sc)->packed & ~CSR_COLOR_MASK) | ((col) << 28))

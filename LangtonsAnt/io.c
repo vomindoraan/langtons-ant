@@ -109,7 +109,7 @@ static int save_cells_n(Simulation *sim, FILE *output)
 }
 
 static int load_cells_s(Simulation *sim, FILE *input) {
-	SparseCell cell = { CSR_INVALID, NULL }, *sc = &cell;
+	SparseCell cell = { 0 }, *sc = &cell;
 	unsigned i;
 	sim->grid->csr = calloc(sim->grid->size, sizeof(SparseCell *));
 

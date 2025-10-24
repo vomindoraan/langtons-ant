@@ -16,7 +16,7 @@
 
 #elif defined(__linux__)
 #	define CURSES_RGB
-#	define NCURSES_ENABLE_STDBOOL_H 0
+#	define NCURSES_ENABLE_STDBOOL_H  0
 #	include <ncurses.h>
 #	ifndef NCURSES
 #		define NCURSES

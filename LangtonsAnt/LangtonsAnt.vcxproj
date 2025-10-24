@@ -98,6 +98,7 @@
     <ClInclude Include="logic.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="serial.h" />
+    <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ant_sprites.c" />

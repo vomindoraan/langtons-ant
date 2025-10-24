@@ -263,7 +263,6 @@ state_t menu_key_command(int key, MEVENT *mouse)
 		return STATE_NO_CHANGE;
 
 	case KEY_MOUSE:
-		//assert(mouse);
 		return menu_mouse_command(mouse);
 
 	default:
@@ -295,6 +294,12 @@ state_t menu_mouse_command(MEVENT *mouse)
 	}
 
 	pos = abs2rel(mouse_pos, menu_pos);
+
+	/* Logo area */
+	if (area_contains(menu_logo_pos, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT, pos)) {
+		cycle_logo();
+		return STATE_MENU_CHANGED;
+	}
 
 	/* Color tiles */
 	for (i = 0; i <= stgs.colors->n; i++) {

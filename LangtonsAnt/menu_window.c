@@ -1,4 +1,5 @@
 #include "graphics.h"
+#include "version.h"
 
 #include <assert.h>
 #include <math.h>
@@ -11,6 +12,7 @@ IOStatus       load_status, save_status;
 PendingAction  pending_action;
 
 const Vector2i  menu_pos              = { 0,                  GRID_WINDOW_SIZE };
+const Vector2i  menu_logo_pos         = { MENU_LOGO_Y,        MENU_LEFT_COL_X-1 };
 const Vector2i  menu_isize_u_pos      = { MENU_INIT_SIZE_Y+2, MENU_RIGHT_COL_X+9 };
 const Vector2i  menu_isize_d_pos      = { MENU_INIT_SIZE_Y+5, MENU_RIGHT_COL_X+9 };
 const Vector2i  menu_dir_u_pos        = { MENU_DIRECTION_Y+2, MENU_RIGHT_COL_X+9 };
@@ -27,20 +29,8 @@ const Vector2i  menu_load_pos         = { MENU_CONTROLS_Y,    MENU_LOAD_X };
 const Vector2i  menu_save_pos         = { MENU_CONTROLS_Y-MENU_BUTTON_PHEIGHT, MENU_SAVE_X };
 #endif
 
-static const char *logo_msg           = " 14-COLOR 2D TURING MACHINE SIMULATOR ";
-static const char *rules_msg          = "COLOR RULES:";
-static const char *isize_msg          = "INIT GRID SIZE:";
-static const char *dir_msg            = "ANT DIRECTION:";
-static const char *speed_msg          = "SIMULATION SPEED";
-static const char *stepup_msg         = "STEP BY STEP:";
-static const char *func_msg           = "STATE FUNCTION:";
-static const char *sparse_msg         = "[SPARSE MATRIX]";
-static const char *size_msg           = "GRID SIZE:";
-static const char *steps_msg          = "STEPS:";
-
-// TODO remove white border from sprite
-static const Vector2i  logo_pos       = { MENU_LOGO_Y,         MENU_LEFT_COL_X-1 };
 static const Vector2i  logo_msg_pos   = { MENU_LOGO_Y+9,       MENU_LEFT_COL_X };
+static const Vector2i  about_msgs_pos = { MENU_LOGO_Y,         MENU_LEFT_COL_X };
 static const Vector2i  rules_pos      = { MENU_RULES_Y+5,      MENU_LEFT_COL_X+MENU_TILE_PWIDTH+1 };
 static const Vector2i  rules_msg_pos  = { MENU_RULES_Y,        MENU_LEFT_COL_X };
 static const Vector2i  isize_pos      = { MENU_INIT_SIZE_Y+2,  MENU_RIGHT_COL_X+13 };
@@ -57,34 +47,75 @@ static const Vector2i  size_msg_pos   = { MENU_STATUS_Y,       MENU_LEFT_COL_X }
 static const Vector2i  steps_pos      = { MENU_STATUS_Y+2,     MENU_LEFT_COL_X+7 };
 static const Vector2i  steps_msg_pos  = { MENU_STATUS_Y+6,     MENU_LEFT_COL_X };
 
+static const char *logo_msg           = " 14-COLOR 2D TURING MACHINE SIMULATOR ";
+static const char *rules_msg          = "COLOR RULES:";
+static const char *isize_msg          = "INIT GRID SIZE:";
+static const char *dir_msg            = "ANT DIRECTION:";
+static const char *speed_msg          = "SIMULATION SPEED";
+static const char *stepup_msg         = "STEP BY STEP:";
+static const char *func_msg           = "STATE FUNCTION:";
+static const char *sparse_msg         = "[SPARSE MATRIX]";
+static const char *size_msg           = "GRID SIZE:";
+static const char *steps_msg          = "STEPS:";
+
+static const char *about_msgs[MENU_LOGO_WIDTH] = {
+	APP_NAME " v" APP_VERSION " on " APP_CURSES,
+	"",
+	" " APP_COPYRIGHT1,
+	" " APP_COPYRIGHT2,
+	" " APP_COPYRIGHT3,
+	"",
+	" " APP_URL,
+};
+
+#define LOGO_SPRITEINFO(d)  (SpriteInfo) { d, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT }
+
+typedef struct logo {
+	sprite_data_t  sprite;
+	sprite_data_t  highlight_sprite;
+	color_t        highlight_color;
+} Logo;
+
 static const byte logo1_sprite[] = {
-	0x70, 0x00, 0x02, 0x00, 0x10, 0x20, 0x00, 0x02,
-	0x00, 0x10, 0x20, 0xEE, 0x3B, 0x99, 0xC6, 0x21,
-	0x29, 0x4A, 0x25, 0x24, 0x25, 0x29, 0x4A, 0x25,
-	0x22, 0x7C, 0xE9, 0x39, 0x99, 0x26, 0x00, 0x00,
-	0x08, 0x00, 0x00, 0x00, 0x00, 0x30, 0x00, 0x00,
-};
-static const byte logo1_highlight_sprite[] = {
-	0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x02,
-	0x00, 0x00, 0x00, 0xEE, 0x03, 0x80, 0x00, 0x01,
-	0x29, 0x02, 0x00, 0x00, 0x01, 0x29, 0x02, 0x00,
-	0x00, 0x00, 0xE9, 0x01, 0x80, 0x00, 0x00, 0x00,
-	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-};
-static const byte logo2_sprite[] = {
 	0x60, 0x00, 0x80, 0x20, 0x00, 0x20, 0x00, 0x80,
 	0x20, 0x00, 0x26, 0xC6, 0xC9, 0x8C, 0x00, 0x2A,
 	0xAA, 0x95, 0x48, 0x00, 0x2A, 0xAA, 0x95, 0x44,
 	0x00, 0x26, 0xA6, 0x49, 0x4C, 0x00, 0x00, 0x02,
 	0x00, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x00, 0x00
 };
-static const byte logo2_highlight_sprite[] = {
+static const byte logo1_hl_sprite[] = {
 	0x00, 0x00, 0x00, 0x00, 0x24, 0x00, 0x00, 0x00,
 	0x00, 0x18, 0x00, 0x00, 0x00, 0x00, 0x5A, 0x00,
 	0x00, 0x00, 0x00, 0x3C, 0x00, 0x00, 0x00, 0x00,
 	0x18, 0x00, 0x00, 0x00, 0x00, 0x3C, 0x00, 0x00,
 	0x00, 0x00, 0x5A, 0x00, 0x00, 0x00, 0x00, 0x00
 };
+static const byte logo2_sprite[] = {
+	0x70, 0x00, 0x02, 0x00, 0x10, 0x20, 0x00, 0x02,
+	0x00, 0x10, 0x20, 0xEE, 0x3B, 0x99, 0xC6, 0x21,
+	0x29, 0x4A, 0x25, 0x24, 0x25, 0x29, 0x4A, 0x25,
+	0x22, 0x7C, 0xE9, 0x39, 0x99, 0x26, 0x00, 0x00,
+	0x08, 0x00, 0x00, 0x00, 0x00, 0x30, 0x00, 0x00,
+};
+static const byte logo2_hl_sprite[] = {
+	0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x02,
+	0x00, 0x00, 0x00, 0xEE, 0x03, 0x80, 0x00, 0x01,
+	0x29, 0x02, 0x00, 0x00, 0x01, 0x29, 0x02, 0x00,
+	0x00, 0x00, 0xE9, 0x01, 0x80, 0x00, 0x00, 0x00,
+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+static const Logo logos[] = {
+	{ logo1_sprite, logo1_hl_sprite, MENU_INACTIVE_COLOR },
+	{ logo2_sprite, logo2_hl_sprite, MENU_ACTIVE_COLOR },
+	{ NULL,         NULL,            MENU_INACTIVE_COLOR },
+};
+static unsigned logo_index;
+
+void cycle_logo(void)
+{
+	logo_index = (logo_index+1) % LEN(logos);
+}
+
 static const byte arrow_sprites[][1] = {
 	{ 0x5C }, { 0xB8 }, { 0xE8 }, { 0x74 },
 };
@@ -172,14 +203,28 @@ static void draw_border(void)
 
 static void draw_logo(void)
 {
-	wattrset(menuw, PAIR_FOR(MENU_BORDER_COLOR));
-	draw_sprite(menuw, (SpriteInfo) { logo2_sprite, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT },
-	            logo_pos, FALSE);
-	wattron(menuw, A_REVERSE);
-	mvwaddstr(menuw, logo_msg_pos.y, logo_msg_pos.x, logo_msg);
-	wattrset(menuw, PAIR_FOR(MENU_INACTIVE_COLOR));  // TODO add copyright window
-	draw_sprite(menuw, (SpriteInfo) { logo2_highlight_sprite, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT},
-	            logo_pos, FALSE);
+	const Logo *logo = &logos[logo_index];
+	unsigned i;
+
+	wattrset(menuw, bg_pair);
+	draw_rect(menuw, menu_logo_pos, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT);
+
+	if (logo->sprite) {
+		wattrset(menuw, PAIR_FOR(MENU_BORDER_COLOR));
+		draw_sprite(menuw, LOGO_SPRITEINFO(logo->sprite), menu_logo_pos, FALSE);
+		wattron(menuw, A_REVERSE);
+
+		mvwaddstr(menuw, logo_msg_pos.y, logo_msg_pos.x, logo_msg);
+		wattrset(menuw, PAIR_FOR(logo->highlight_color));
+		draw_sprite(menuw, LOGO_SPRITEINFO(logo->highlight_sprite), menu_logo_pos, FALSE);
+	} else {
+		wattrset(menuw, PAIR_FOR(MENU_BORDER_COLOR));
+		for (i = 0; i < LEN(about_msgs); i++) {
+			mvwaddstr(menuw, about_msgs_pos.y+i, about_msgs_pos.x, about_msgs[i]);
+
+			wattrset(menuw, PAIR_FOR(logo->highlight_color));
+		}
+	}
 }
 
 static void draw_color_arrow(Vector2i pos1, Vector2i pos2)

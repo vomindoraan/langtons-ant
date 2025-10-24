@@ -120,7 +120,7 @@
 /** @name Scroll utility macros */
 ///@{
 #define ORIGIN_COORD(gs, vs, sc)      ((gs)/2 - (vs)/2 + (sc))
-#define ORIGIN_POS(gs, vs, scy, scx)  ((Vector2i) { ORIGIN_COORD(gs, vs, scy), ORIGIN_COORD(gs, vs, scx) })
+#define ORIGIN_POS(gs, vs, scy, scx)  (Vector2i) { ORIGIN_COORD(gs, vs, scy), ORIGIN_COORD(gs, vs, scx) }
 ///@}
 
 /** Structure for managing scroll data */
@@ -320,10 +320,13 @@ typedef struct pending_action {
 
 /*------------------------------- Sprite type --------------------------------*/
 
+/** Raw sprite bytearray */
+typedef const byte *sprite_data_t;
+
 /** Structure containing sprite data and size */
 typedef struct sprite_info {
-	const byte *data;           /**< Byte array */   /**@{*/
-	unsigned    width, height;  /**< Sprite size */  /**@}*/
+	sprite_data_t data;           /**< Sprite data */  /**@{*/
+	unsigned      width, height;  /**< Sprite size */  /**@}*/
 } SpriteInfo;
 
 
@@ -343,6 +346,7 @@ extern Settings        stgs;
 extern IOStatus        load_status, save_status;
 extern PendingAction   pending_action;
 extern const Vector2i  menu_pos;
+extern const Vector2i  menu_logo_pos;
 extern const Vector2i  menu_isize_u_pos, menu_isize_d_pos;
 extern const Vector2i  menu_dir_u_pos, menu_dir_r_pos, menu_dir_d_pos, menu_dir_l_pos;
 extern const Vector2i  menu_speed_u_pos, menu_speed_d_pos, menu_stepup_pos;
@@ -624,6 +628,11 @@ Vector2i get_menu_tile_pos(unsigned index);
  * @return Relative position of found button
  */
 Vector2i get_menu_cdef_pos(void);
+
+/**
+ * Cycle through preset logo sprites / about page
+ */
+void cycle_logo(void);
 
 
 /*----------------------------------------------------------------------------*
