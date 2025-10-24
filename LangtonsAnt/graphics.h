@@ -10,6 +10,20 @@
 
 #include "include/curses.h"
 
+/** @name Compile flags */
+///@{
+#ifndef SAVE_ENABLE
+	/** Should save button in menu be drawn and active? */
+#	define SAVE_ENABLE   1
+#endif
+
+#ifndef GALLERY_MODE
+	/** Should load/save be limited to a single file? (e.g. no keyboard) */
+#	define GALLERY_MODE  0
+#endif
+///@}
+
+
 /*------------------------ Character graphics macros -------------------------*/
 
 /** @name Preferred console font settings */
@@ -165,11 +179,6 @@ typedef struct scroll_info {
 #define MENU_INACTIVE_COLOR  COLOR_GRAY
 ///@}
 
-#ifndef MENU_SAVE_ENABLE
-	/** Should save button in menu be drawn and active? */
-#	define MENU_SAVE_ENABLE  TRUE
-#endif
-
 /** @name Menu button attributes */
 ///@{
 #define MENU_CONTROLS_Y      (MENU_STATUS_Y - MENU_V_PAD - MENU_BUTTON_HEIGHT + 1)
@@ -180,7 +189,7 @@ typedef struct scroll_info {
 #define MENU_PLAY_X          MENU_LEFT_COL_X
 #define MENU_STOP_X          (MENU_LEFT_COL_X + MENU_BUTTON_PWIDTH)
 #define MENU_LOAD_X          (MENU_STOP_X + MENU_BUTTON_PWIDTH)
-#if MENU_SAVE_ENABLE
+#if SAVE_ENABLE
 #	define MENU_SAVE_X       MENU_LOAD_X
 #endif
 #define MENU_PLAY_COLOR      COLOR_GREEN
@@ -352,7 +361,7 @@ extern const Vector2i  menu_dir_u_pos, menu_dir_r_pos, menu_dir_d_pos, menu_dir_
 extern const Vector2i  menu_speed_u_pos, menu_speed_d_pos, menu_stepup_pos;
 extern const Vector2i  menu_play_pos, menu_stop_pos;
 extern const Vector2i  menu_load_pos;
-#if MENU_SAVE_ENABLE
+#if SAVE_ENABLE
 extern const Vector2i  menu_save_pos;
 #endif
 

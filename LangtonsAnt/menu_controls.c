@@ -28,7 +28,7 @@ static bool read_filename(char* filename)
 	return ret != ERR && strlen(filename) > 0;
 }
 
-static const char* example_files[] = {
+static const char *example_files[] = {
 	"examples/highway.lant",
 	"examples/spiral.lant",
 	"examples/triangle.lant",
@@ -37,8 +37,12 @@ static const char* example_files[] = {
 	"examples/zigzag.lant",
 	"examples/cauliflower.lant",
 	"examples/square3.lant",
-	"examples/test.lant",
+	"examples/test.lant"
 };
+
+#if GALLERY_MODE
+#	define USER_FILE  example_files[LEN(example_files) - 1]
+#endif
 
 state_t set_simulation(Simulation *sim)
 {
@@ -141,7 +145,7 @@ static inline void set_pending_action(pending_func_t func, const char *filename)
 
 static state_t load_sim_action(void *arg)
 {
-	const char *filename = arg;
+	char *filename = arg;
 	Simulation *sim;
 	if ((sim = load_simulation(filename))) {
 		load_status = STATUS_SUCCESS;
@@ -157,12 +161,18 @@ static state_t load_button_clicked(bool input)
 	static char filename[FILENAME_SIZE] = { 0 };
 	static int index = 0;
 	if (input) {
+#if GALLERY_MODE
+		strcpy(filename, USER_FILE);
+#else
 		if (read_filename(filename)) {
+#endif
 			set_pending_action(load_sim_action, filename);
 			load_status = STATUS_PENDING;
+#if !GALLERY_MODE
 		} else {
 			load_status = STATUS_FAILURE;
 		}
+#endif
 	} else {
 		set_pending_action(load_sim_action, example_files[index]);
 		index = (index + 1) % LEN(example_files);
@@ -171,7 +181,7 @@ static state_t load_button_clicked(bool input)
 	return STATE_MENU_CHANGED;
 }
 
-#if MENU_SAVE_ENABLE
+#if SAVE_ENABLE
 
 static state_t save_sim_action(void *arg)
 {
@@ -189,16 +199,22 @@ static state_t save_sim_action(void *arg)
 static state_t save_button_clicked(void)
 {
 	static char filename[FILENAME_SIZE] = { 0 };
+#if GALLERY_MODE
+	strcpy(filename, USER_FILE);
+#else
 	if (read_filename(filename)) {
+#endif
 		set_pending_action(save_sim_action, filename);
 		save_status = STATUS_PENDING;
+#if !GALLERY_MODE
 	} else {
 		save_status = STATUS_FAILURE;
 	}
+#endif
 	return STATE_MENU_CHANGED;
 }
 
-#endif  // MENU_SAVE_ENABLE
+#endif  // SAVE_ENABLE
 
 state_t menu_key_command(int key, MEVENT *mouse)
 {
@@ -252,7 +268,7 @@ state_t menu_key_command(int key, MEVENT *mouse)
 		/* IO */
 	case KEY_F(1): case KEY_F(3):
 		return load_button_clicked(key == KEY_F(3));
-#if MENU_SAVE_ENABLE
+#if SAVE_ENABLE
 	case KEY_F(2):
 		return save_button_clicked();
 #endif
@@ -365,7 +381,7 @@ state_t menu_mouse_command(MEVENT *mouse)
 	if (area_contains(menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
 		return load_button_clicked(!!(mouse->bstate & MOUSE_RB_EVENT));
 	}
-#if MENU_SAVE_ENABLE
+#if SAVE_ENABLE
 	if (area_contains(menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
 		return save_button_clicked();
 	}

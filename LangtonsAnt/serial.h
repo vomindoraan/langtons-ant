@@ -9,12 +9,16 @@
 
 #include "io.h"
 
+/** Compile flags (serial disabled by default) */
+///@{
 #ifndef SERIAL_COLORS
 #	define SERIAL_COLORS  0
 #endif
+
 #ifndef SERIAL_SCRIPT
 #	define SERIAL_SCRIPT  "./write_serial.py"
 #endif
+///@}
 
 #if SERIAL_COLORS
 

@@ -25,7 +25,7 @@ const Vector2i  menu_speed_d_pos      = { MENU_SPEED_Y+MENU_SPEED_HEIGHT+4,   ME
 const Vector2i  menu_play_pos         = { MENU_CONTROLS_Y,    MENU_PLAY_X };
 const Vector2i  menu_stop_pos         = { MENU_CONTROLS_Y,    MENU_STOP_X };
 const Vector2i  menu_load_pos         = { MENU_CONTROLS_Y,    MENU_LOAD_X };
-#if MENU_SAVE_ENABLE
+#if SAVE_ENABLE
 const Vector2i  menu_save_pos         = { MENU_CONTROLS_Y-MENU_BUTTON_PHEIGHT, MENU_SAVE_X };
 #endif
 
@@ -494,7 +494,7 @@ static void draw_io_buttons(void)
 		"       ",
 		"EXAMPLE",
 	};
-#if MENU_SAVE_ENABLE
+#if SAVE_ENABLE
 	const char *save_label[] = {
 		" SAVE  ",
 		"       ",
