@@ -58,7 +58,7 @@ static void grid_delete_s(Grid *grid)
 	for (i = 0; i < grid->size; i++) {
 		while (grid->csr[i]) {
 			curr = grid->csr[i];
-			grid->csr[i] = (grid->csr[i])->next;
+			grid->csr[i] = grid->csr[i]->next;
 			free(curr);
 		}
 	}

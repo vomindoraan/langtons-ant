@@ -77,7 +77,7 @@ Simulation *load_simulation(const char *filename)
 	Simulation *sim;
 	Colors *colors;
 	FILE *input;
-	unsigned skip = 0, i, j;
+	unsigned skip, i, j;
 	byte def;
 	bool is_sparse;
 
@@ -88,13 +88,7 @@ Simulation *load_simulation(const char *filename)
 	if (!(input = fopen(filename, "r"))) {
 		return NULL;
 	}
-
-	while (skip < 5) {
-		int c = getc(input);
-		if (c == '\n') {
-			skip++;
-		}
-	}
+	for (skip = 0; skip < 5; skip += (getc(input) == '\n'));
 
 	sim = simulation_new(colors, GRID_DEF_INIT_SIZE);
 
@@ -102,10 +96,10 @@ Simulation *load_simulation(const char *filename)
 		       &sim->ant->dir) < 3) {
 		return sim;  // Colors only
 	}
-	if (fscanf(input, "%u\n", &sim->steps) < 0) {
+	if (fscanf(input, "%u\n", &sim->steps) < 1) {
 		goto error_end;
 	}
-	if (fscanf(input, "%hhu\n", &is_sparse) < 0) {
+	if (fscanf(input, "%hhu\n", &is_sparse) < 1) {
 		goto error_end;
 	}
 
@@ -117,17 +111,17 @@ Simulation *load_simulation(const char *filename)
 	sim->grid->csr = NULL;
 
 	if (fscanf(input, "%hhu %u %u %u\n", &def,
-		       &sim->grid->init_size, &sim->grid->size, &sim->grid->colored) < 0) {
+		       &sim->grid->init_size, &sim->grid->size, &sim->grid->colored) < 4) {
 		goto error_end;
 	}
 	sim->grid->def_color = BGR(def);
 	if (fscanf(input, "%d %d %d %d\n", &sim->grid->top_left.x, &sim->grid->top_left.y,
-		       &sim->grid->bottom_right.x, &sim->grid->bottom_right.y) < 0) {
+		       &sim->grid->bottom_right.x, &sim->grid->bottom_right.y) < 4) {
 		goto error_end;
 	}
 
 	if (is_sparse) {
-		SparseCell *curr;
+		SparseCell *curr, cell = { .next = NULL };
 		sim->grid->csr = malloc(sim->grid->size * sizeof(SparseCell *));
 
 		for (i = 0; i < sim->grid->size; i++) {
@@ -135,11 +129,7 @@ Simulation *load_simulation(const char *filename)
 			curr = NULL;
 			sim->grid->csr[i] = NULL;
 
-			while (fscanf(input, "%c", &c) > 0 && c == ' ') {
-				SparseCell cell = { .next = NULL };
-				if (fscanf(input, "%u", &cell.packed) < 0) {
-					goto error_end;
-				}
+			while (fscanf(input, "%X%c", &cell.packed, &c) == 2) {
 				CSR_SET_COLOR(&cell, BGR(CSR_GET_COLOR(&cell)));
 
 				if (!curr) {
@@ -150,6 +140,12 @@ Simulation *load_simulation(const char *filename)
 					curr->next = malloc(sizeof(SparseCell));
 					*curr->next = cell;
 					curr = curr->next;
+				}
+
+				if (c == '\r' || c == '\n') {
+					// Consumes either LF or leading ' ' if CRLF
+					(void)(fscanf(input, "%c", &c) == 1);
+					break;
 				}
 			}
 		}
@@ -163,7 +159,7 @@ Simulation *load_simulation(const char *filename)
 			sim->grid->c[i] = malloc(sim->grid->size);
 			for (j = 0; j < sim->grid->size; j++) {
 				byte c;
-				if (fscanf(input, (j < sim->grid->size-1) ? "%hhu " : "%hhu\n", &c) < 0) {
+				if (fscanf(input, (j < sim->grid->size-1) ? "%hhu " : "%hhu\n", &c) < 1) {
 					goto error_end;
 				}
 				sim->grid->c[i][j] = BGR(c);
@@ -218,12 +214,12 @@ int save_simulation(const char *filename, Simulation *sim)
 				SparseCell cell = *curr;
 				CSR_SET_COLOR(&cell, BGR(CSR_GET_COLOR(&cell)));
 
-				if (fprintf(output, " %u", cell.packed) < 0) {
+				if (fprintf(output, " %08X", cell.packed) < 0) {
 					goto error_end;
 				}
 				curr = curr->next;
 			}
-			if (fprintf(output, "\n") < 0) {
+			if (fprintf(output, " 0\n") < 0) {
 				goto error_end;
 			}
 		}
