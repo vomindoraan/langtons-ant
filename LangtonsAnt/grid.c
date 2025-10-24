@@ -185,7 +185,7 @@ void grid_make_sparse(Grid *grid)
 		for (j = 0; j < size; j++) {
 			c = grid->c[i][j];
 			if (c != grid->def_color) {
-				sparse_insert(curr, j, c);
+				sparse_prepend(curr, j, c);
 				curr = &(*curr)->next;
 			}
 		}
@@ -206,13 +206,27 @@ bool is_grid_usage_low(Grid *grid)
 	return (double)grid->colored / b < GRID_USAGE_THRESHOLD;
 }
 
-void sparse_insert(SparseCell **head, unsigned column, byte color)
+void sparse_prepend(SparseCell **phead, unsigned column, byte color)
 {
 	SparseCell *new = malloc(sizeof(SparseCell));
 	CSR_SET_COLUMN(new, column);
 	CSR_SET_COLOR(new, color);
-	new->next = *head;
-	*head = new;
+	new->next = *phead;
+	*phead = new;
+}
+
+SparseCell *sparse_append(SparseCell *head, unsigned column, byte color)
+{
+	SparseCell *new = malloc(sizeof(SparseCell));
+	CSR_SET_COLUMN(new, column);
+	CSR_SET_COLOR(new, color);
+	new->next = NULL;
+
+	if (head) {
+		for (; head->next; head = head->next);
+		head->next = new;
+	}
+	return new;
 }
 
 byte sparse_color_at(Grid *grid, Vector2i pos)

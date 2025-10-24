@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-Colors *load_colors(const char *filename)  // TODO format checks
+Colors *load_colors(const char *filename)
 {
 	Colors *colors;
 	FILE *input;
@@ -99,7 +99,7 @@ static int save_cells_n(Simulation *sim, FILE *output)
 	unsigned i, j;
 	for (i = 0; i < sim->grid->size; i++) {
 		for (j = 0; j < sim->grid->size; j++) {
-			color_t c = BGR(sim->grid->c[i][j]);
+			byte c = BGR(sim->grid->c[i][j]);
 			if (fprintf(output, (j < sim->grid->size-1) ? "%hhu " : "%hhu\n", c) < 0) {
 				return EOF;
 			}
@@ -109,14 +109,13 @@ static int save_cells_n(Simulation *sim, FILE *output)
 }
 
 static int load_cells_s(Simulation *sim, FILE *input) {
+	SparseCell cell = { CSR_INVALID, NULL }, *sc = &cell;
 	unsigned i;
-	SparseCell *curr, cell = { CSR_INVALID, NULL };
-	sim->grid->csr = malloc(sim->grid->size * sizeof(SparseCell *));
+	sim->grid->csr = calloc(sim->grid->size, sizeof(SparseCell *));
 
 	for (i = 0; i < sim->grid->size; i++) {
+		SparseCell *p = NULL;
 		char c;
-		curr = NULL;
-		sim->grid->csr[i] = NULL;
 
 		while (TRUE) {
 			if (fscanf(input, "%c", &c) < 1) {
@@ -129,15 +128,10 @@ static int load_cells_s(Simulation *sim, FILE *input) {
 				return EOF;
 			}
 
-			CSR_SET_COLOR(&cell, BGR(CSR_GET_COLOR(&cell)));
-			if (!curr) {
-				sim->grid->csr[i] = malloc(sizeof(SparseCell));
-				*sim->grid->csr[i] = cell;
-				curr = sim->grid->csr[i];
-			} else {
-				curr->next = malloc(sizeof(SparseCell));
-				*curr->next = cell;
-				curr = curr->next;
+			CSR_SET_COLOR(sc, BGR(CSR_GET_COLOR(sc)));
+			p = sparse_append(p, CSR_GET_COLUMN(sc), CSR_GET_COLOR(sc));
+			if (!sim->grid->csr[i]) {
+				sim->grid->csr[i] = p;
 			}
 		}
 	}
@@ -171,8 +165,8 @@ Simulation *load_simulation(const char *filename)
 	Simulation *sim;
 	Colors *colors;
 	FILE *input;
-	byte skip, def;
 	bool is_sparse;
+	byte def, skip;
 	io_func_t load_cells;
 
 	if (!(colors = load_colors(filename))) {
@@ -219,8 +213,8 @@ Simulation *load_simulation(const char *filename)
 	return (fclose(input) == EOF) ? NULL : sim;
 
 error_end:
-	simulation_delete(sim);
 	fclose(input);
+	simulation_delete(sim);
 	return NULL;
 }
 
