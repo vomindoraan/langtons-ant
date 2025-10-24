@@ -195,7 +195,7 @@ void grid_make_sparse(Grid *grid)
 	grid->c = NULL;
 }
 
-bool is_grid_sparse(Grid *grid)
+inline bool is_grid_sparse(Grid *grid)
 {
 	return grid->csr ? assert(!grid->c), TRUE : FALSE;
 }
