@@ -36,11 +36,7 @@ Colors *load_colors(const char *filename)  // TODO format checks
 	colors->first = BGR(i), colors->last = BGR(c);
 	e += fscanf(input, "%u\n", &colors->n);
 
-	if (fclose(input) == EOF) {
-		return NULL;
-	}
-
-	if (e < COLORS_TOTAL_FIELDS) {
+	if (fclose(input) == EOF || e < COLORS_TOTAL_FIELDS) {
 		colors_delete(colors);
 		return NULL;
 	}
@@ -175,8 +171,7 @@ Simulation *load_simulation(const char *filename)
 		}
 	}
 
-	fclose(input);
-	return sim;
+	return (fclose(input) == EOF) ? NULL : sim;
 
 error_end:
 	simulation_delete(sim);
@@ -199,21 +194,21 @@ int save_simulation(const char *filename, Simulation *sim)
 
 	if (fprintf(output, "%d %d %u\n", sim->ant->pos.x, sim->ant->pos.y,
 		        sim->ant->dir) < 0) {
-		return EOF;
+		goto error_end;
 	}
 	if (fprintf(output, "%u\n", sim->steps) < 0) {
-		return EOF;
+		goto error_end;
 	}
 	if (fprintf(output, "%hhu\n", is_grid_sparse(sim->grid)) < 0) {
-		return EOF;
+		goto error_end;
 	}
 	if (fprintf(output, "%hhu %u %u %u\n", BGR(sim->grid->def_color),
 		        sim->grid->init_size, sim->grid->size, sim->grid->colored) < 0) {
-		return EOF;
+		goto error_end;
 	}
 	if (fprintf(output, "%d %d %d %d\n", sim->grid->top_left.x, sim->grid->top_left.y,
 		        sim->grid->bottom_right.x, sim->grid->bottom_right.y) < 0) {
-		return EOF;
+		goto error_end;
 	}
 
 	if (is_grid_sparse(sim->grid)) {
@@ -224,12 +219,12 @@ int save_simulation(const char *filename, Simulation *sim)
 				CSR_SET_COLOR(&cell, BGR(CSR_GET_COLOR(&cell)));
 
 				if (fprintf(output, " %u", cell.packed) < 0) {
-					return EOF;
+					goto error_end;
 				}
 				curr = curr->next;
 			}
 			if (fprintf(output, "\n") < 0) {
-				return EOF;
+				goto error_end;
 			}
 		}
 	} else {
@@ -237,16 +232,17 @@ int save_simulation(const char *filename, Simulation *sim)
 			for (j = 0; j < sim->grid->size; j++) {
 				color_t c = BGR(sim->grid->c[i][j]);
 				if (fprintf(output, (j == sim->grid->size-1) ? "%hhu\n" : "%hhu ", c) < 0) {
-					return EOF;
+					goto error_end;
 				}
 			}
 		}
 	}
 
-	if (fclose(output) == EOF) {
-		return EOF;
-	}
-	return 0;  // TODO return success bool
+	return fclose(output);
+
+error_end:
+	fclose(output);
+	return EOF;
 }
 
 int save_grid_bitmap(const char *filename, Grid *grid)
