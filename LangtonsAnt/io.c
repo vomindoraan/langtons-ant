@@ -118,24 +118,26 @@ static int load_cells_s(Simulation *sim, FILE *input) {
 		curr = NULL;
 		sim->grid->csr[i] = NULL;
 
-		while (fscanf(input, "%X%c", &cell.packed, &c) == 2) {
-			if (cell.packed != CSR_INVALID) {
-				CSR_SET_COLOR(&cell, BGR(CSR_GET_COLOR(&cell)));
-
-				if (!curr) {
-					sim->grid->csr[i] = malloc(sizeof(SparseCell));
-					*sim->grid->csr[i] = cell;
-					curr = sim->grid->csr[i];
-				} else {
-					curr->next = malloc(sizeof(SparseCell));
-					*curr->next = cell;
-					curr = curr->next;
-				}
+		while (TRUE) {
+			if (fscanf(input, "%c", &c) < 1) {
+				return EOF;
 			}
-			if (c == '\r' || c == '\n') {
-				// Consumes either LF or leading ' ' if CRLF
-				(void)(fscanf(input, "%c", &c) == 1);
-				break;
+			if ((c == '\r' && fscanf(input, "%c", &c)) || c == '\n') {
+				break;  // newline, end of row
+			}
+			if (fscanf(input, "%X", &cell.packed) < 1) {
+				return EOF;
+			}
+
+			CSR_SET_COLOR(&cell, BGR(CSR_GET_COLOR(&cell)));
+			if (!curr) {
+				sim->grid->csr[i] = malloc(sizeof(SparseCell));
+				*sim->grid->csr[i] = cell;
+				curr = sim->grid->csr[i];
+			} else {
+				curr->next = malloc(sizeof(SparseCell));
+				*curr->next = cell;
+				curr = curr->next;
 			}
 		}
 	}
@@ -157,7 +159,7 @@ static int save_cells_s(Simulation *sim, FILE *output)
 			curr = curr->next;
 		}
 
-		if (fprintf(output, " %08X\n", CSR_INVALID) < 0) {
+		if (fprintf(output, "\n") < 0) {
 			return EOF;
 		}
 	}
@@ -204,7 +206,7 @@ Simulation *load_simulation(const char *filename)
 		goto error_end;
 	}
 	sim->grid->def_color = BGR(def);
-	if (fscanf(input, "%d %d %d %d\n", &sim->grid->top_left.x, &sim->grid->top_left.y,
+	if (fscanf(input, "%d %d %d %d", &sim->grid->top_left.x, &sim->grid->top_left.y,
 		       &sim->grid->bottom_right.x, &sim->grid->bottom_right.y) < 4) {
 		goto error_end;
 	}
