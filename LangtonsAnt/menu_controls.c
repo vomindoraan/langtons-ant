@@ -37,6 +37,7 @@ static const char* example_files[] = {
 	"examples/zigzag.lant",
 	"examples/cauliflower.lant",
 	"examples/square3.lant",
+	"examples/test.lant",
 };
 
 state_t set_simulation(Simulation *sim)
