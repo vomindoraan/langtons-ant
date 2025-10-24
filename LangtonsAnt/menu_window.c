@@ -48,12 +48,12 @@ static const Vector2i  steps_pos      = { MENU_STATUS_Y+2,     MENU_LEFT_COL_X+7
 static const Vector2i  steps_msg_pos  = { MENU_STATUS_Y+6,     MENU_LEFT_COL_X };
 
 static const char *logo_msg           = " 14-COLOR 2D TURING MACHINE SIMULATOR ";
-static const char *rules_msg          = "COLOR RULES:";
-static const char *isize_msg          = "INIT GRID SIZE:";
-static const char *dir_msg            = "ANT DIRECTION:";
+static const char *rules_msg          = "COLOR RULES";
+static const char *isize_msg          = "INIT GRID SIZE";
+static const char *dir_msg            = "ANT DIRECTION";
 static const char *speed_msg          = "SIMULATION SPEED";
-static const char *stepup_msg         = "STEP BY STEP:";
-static const char *func_msg           = "STATE FUNCTION:";
+static const char *stepup_msg         = "STEP BY STEP";
+static const char *func_msg           = "STATE FUNCTION";
 static const char *sparse_msg         = "[SPARSE MATRIX]";
 static const char *size_msg           = "GRID SIZE:";
 static const char *steps_msg          = "STEPS:";
