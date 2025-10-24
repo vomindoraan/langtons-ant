@@ -9,7 +9,8 @@ Colors *load_colors(const char *filename)  // TODO format checks
 	Colors *colors;
 	FILE *input;
 	int e;
-	color_t def, c;
+	color_t def, i, c;
+	turn_t t;
 
 	if (!(input = fopen(filename, "r"))) {
 		return NULL;
@@ -19,16 +20,20 @@ Colors *load_colors(const char *filename)  // TODO format checks
 	if (def < 0 || def >= COLOR_COUNT) {
 		return NULL;
 	}
+	def = BGR(def);
 	colors = colors_new(def);
 	colors->def = def;
 
-	for (c = 0; c < COLOR_COUNT; c++) {
-		e += fscanf(input, (c == COLOR_COUNT-1) ? "%hd\n" : "%hd ", colors->next+c);
+	for (i = 0; i < COLOR_COUNT; i++) {
+		e += fscanf(input, (i == COLOR_COUNT-1) ? "%hd\n" : "%hd ", &c);
+		colors->next[BGR(i)] = BGR(c);
 	}
-	for (c = 0; c < COLOR_COUNT; c++) {
-		e += fscanf(input, (c == COLOR_COUNT-1) ? "%c\n" : "%c ", colors->turn+c);
+	for (i = 0; i < COLOR_COUNT; i++) {
+		e += fscanf(input, (i == COLOR_COUNT-1) ? "%c\n" : "%c ", &t);
+		colors->turn[BGR(i)] = t;
 	}
-	e += fscanf(input, "%hd %hd\n", &colors->first, &colors->last);
+	e += fscanf(input, "%hd %hd\n", &i, &c);
+	colors->first = BGR(i), colors->last = BGR(c);
 	e += fscanf(input, "%u\n", &colors->n);
 
 	if (fclose(input) == EOF) {
@@ -47,20 +52,22 @@ int save_colors(const char *filename, Colors *colors)
 {
 	FILE *output;
 	int e;
-	color_t c;
+	color_t i;
 
 	if (!(output = fopen(filename, "w"))) {
 		return EOF;
 	}
 
-	e = fprintf(output, "%hd\n", colors->def);
-	for (c = 0; c < COLOR_COUNT; c++) {
-		e += fprintf(output, (c == COLOR_COUNT-1) ? "%hd\n" : "%hd ", colors->next[c]);
+	e = fprintf(output, "%hd\n", BGR(colors->def));
+	for (i = 0; i < COLOR_COUNT; i++) {
+		e += fprintf(output, (i == COLOR_COUNT-1) ? "%hd\n" : "%hd ",
+		             BGR(colors->next[BGR(i)]));
 	}
-	for (c = 0; c < COLOR_COUNT; c++) {
-		e += fprintf(output, (c == COLOR_COUNT-1) ? "%c\n" : "%c ", colors->turn[c]);
+	for (i = 0; i < COLOR_COUNT; i++) {
+		e += fprintf(output, (i == COLOR_COUNT-1) ? "%c\n" : "%c ",
+		             colors->turn[BGR(i)]);
 	}
-	e += fprintf(output, "%hd %hd\n", colors->first, colors->last);
+	e += fprintf(output, "%hd %hd\n", BGR(colors->first), BGR(colors->last));
 	e += fprintf(output, "%u\n", colors->n);
 
 	if (fclose(output) == EOF || e < COLORS_TOTAL_FIELDS) {
@@ -75,6 +82,7 @@ Simulation *load_simulation(const char *filename)
 	Colors *colors;
 	FILE *input;
 	unsigned skip = 0, i, j;
+	byte def;
 	bool is_sparse;
 
 	if (!(colors = load_colors(filename))) {
@@ -112,53 +120,57 @@ Simulation *load_simulation(const char *filename)
 	sim->grid->tmp_size = 0;
 	sim->grid->csr = NULL;
 
-	if (fscanf(input, "%hhu %u %u %u\n", &sim->grid->def_color,
+	if (fscanf(input, "%hhu %u %u %u\n", &def,
 		       &sim->grid->init_size, &sim->grid->size, &sim->grid->colored) < 0) {
 		goto error_end;
 	}
+	sim->grid->def_color = BGR(def);
 	if (fscanf(input, "%d %d %d %d\n", &sim->grid->top_left.x, &sim->grid->top_left.y,
 		       &sim->grid->bottom_right.x, &sim->grid->bottom_right.y) < 0) {
 		goto error_end;
 	}
 
 	if (is_sparse) {
+		SparseCell *curr;
 		sim->grid->csr = malloc(sim->grid->size * sizeof(SparseCell *));
-		unsigned colp;
-		SparseCell *cell;
 
 		for (i = 0; i < sim->grid->size; i++) {
 			char c;
-			cell = NULL;
+			curr = NULL;
 			sim->grid->csr[i] = NULL;
+
 			while (fscanf(input, "%c", &c) > 0 && c == ' ') {
-				if (fscanf(input, "%u", &colp) < 0) {
+				SparseCell cell = { .next = NULL };
+				if (fscanf(input, "%u", &cell.packed) < 0) {
 					goto error_end;
 				}
-				if (!cell) {
+				CSR_SET_COLOR(&cell, BGR(CSR_GET_COLOR(&cell)));
+
+				if (!curr) {
 					sim->grid->csr[i] = malloc(sizeof(SparseCell));
-					sim->grid->csr[i]->packed = colp;
-					sim->grid->csr[i]->next = NULL;
-					cell = sim->grid->csr[i];
+					*sim->grid->csr[i] = cell;
+					curr = sim->grid->csr[i];
 				} else {
-					cell->next = malloc(sizeof(SparseCell));
-					cell->next->packed = colp;
-					cell->next->next = NULL;
-					cell = cell->next;
+					curr->next = malloc(sizeof(SparseCell));
+					*curr->next = cell;
+					curr = curr->next;
 				}
 			}
 		}
 	} else {
 		sim->grid->c = malloc(sim->grid->size * sizeof(byte *));
+
 		for (i = 0; i < sim->grid->size; i++) {
-			sim->grid->c[i] = malloc(sim->grid->size);
 			if (feof(input)) {
 				goto error_end;
 			}
+			sim->grid->c[i] = malloc(sim->grid->size);
 			for (j = 0; j < sim->grid->size; j++) {
-				if (fscanf(input, (j == sim->grid->size - 1) ? "%hhu\n" : "%hhu ",
-					       &sim->grid->c[i][j]) < 0) {
+				byte c;
+				if (fscanf(input, (j == sim->grid->size-1) ? "%hhu\n" : "%hhu ", &c) < 0) {
 					goto error_end;
 				}
+				sim->grid->c[i][j] = BGR(c);
 			}
 		}
 	}
@@ -175,7 +187,6 @@ error_end:
 int save_simulation(const char *filename, Simulation *sim)
 {
 	FILE *output;
-	SparseCell *cell;
 	unsigned i, j;
 
 	if (save_colors(filename, sim->colors) == EOF) {
@@ -196,7 +207,7 @@ int save_simulation(const char *filename, Simulation *sim)
 	if (fprintf(output, "%c\n", is_grid_sparse(sim->grid)) < 0) {
 		return EOF;
 	}
-	if (fprintf(output, "%hhu %u %u %u\n", sim->grid->def_color,
+	if (fprintf(output, "%hhu %u %u %u\n", BGR(sim->grid->def_color),
 		        sim->grid->init_size, sim->grid->size, sim->grid->colored) < 0) {
 		return EOF;
 	}
@@ -207,12 +218,15 @@ int save_simulation(const char *filename, Simulation *sim)
 
 	if (is_grid_sparse(sim->grid)) {
 		for (i = 0; i < sim->grid->size; i++) {
-			cell = sim->grid->csr[i];
-			while (cell) {
-				if (fprintf(output, " %u", cell->packed) < 0) {
+			SparseCell *curr = sim->grid->csr[i];
+			while (curr) {
+				SparseCell cell = *curr;
+				CSR_SET_COLOR(&cell, BGR(CSR_GET_COLOR(&cell)));
+
+				if (fprintf(output, " %u", cell.packed) < 0) {
 					return EOF;
 				}
-				cell = cell->next;
+				curr = curr->next;
 			}
 			if (fprintf(output, "\n") < 0) {
 				return EOF;
@@ -221,8 +235,8 @@ int save_simulation(const char *filename, Simulation *sim)
 	} else {
 		for (i = 0; i < sim->grid->size; i++) {
 			for (j = 0; j < sim->grid->size; j++) {
-				if (fprintf(output, (j == sim->grid->size-1) ? "%hhu\n" : "%hhu ",
-					        sim->grid->c[i][j]) < 0) {
+				color_t c = BGR(sim->grid->c[i][j]);
+				if (fprintf(output, (j == sim->grid->size-1) ? "%hhu\n" : "%hhu ", c) < 0) {
 					return EOF;
 				}
 			}
@@ -247,9 +261,9 @@ int save_grid_bitmap(const char *filename, Grid *grid)
 
 	for (i = 0; i < height; i++) {
 		for (j = 0; j < width; j++) {
-			Vector2i pos = (Vector2i) { j, i };  // Flip axes
-			color_t color = GRID_COLOR_AT(grid, pos);
-			memcpy(image[i*width + j], color_map[color], sizeof(pixel_t));
+			Vector2i pos = (Vector2i) { height-i-1, j };
+			pixel_t const *pixel = color_map + GRID_COLOR_AT(grid, pos);
+			memcpy(image[i*width + j], pixel, sizeof(pixel_t));
 		}
 	}
 

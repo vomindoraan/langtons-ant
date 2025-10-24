@@ -18,7 +18,7 @@
 
 #if SERIAL_COLORS
 
-/* Message format: {BBGGRR,T} */
+/* Message format: {RRGGBB,T} */
 #define COLOR_RULE_FMT        "{%02hhx%02hhx%02hhx,%c}"
 #define COLOR_RULE_LEN        (BYTES_PER_PIXEL*2 + 1 + 3)
 #define COLOR_RULES_MSG_LEN   (COLOR_COUNT * COLOR_RULE_LEN)

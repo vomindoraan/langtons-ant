@@ -12,25 +12,44 @@
 /*------------------------- Input/output attributes --------------------------*/
 
 /** Filename buffer size */
-#define FILENAME_SIZE  256
+#define FILENAME_SIZE         256
 
 /** Total number of fields in a Colors struct */
-#define COLORS_TOTAL_FIELDS  (COLOR_COUNT*2 + 4)
+#define COLORS_TOTAL_FIELDS   (COLOR_COUNT*2 + 4)
+
+/** Pixel format size */
+#define BYTES_PER_PIXEL       3
 
 /** @name Bitmap attributes */
 ///@{
-#define BYTES_PER_PIXEL       3  // BGR
 #define BMP_MAX_SIZE          (1U << 28)
 #define BMP_FILE_HEADER_SIZE  14
 #define BMP_INFO_HEADER_SIZE  40
 ///@}
 
-/*------------------------- Input/output color types -------------------------*/
 
-/** Bitmap pixel type (24-bit BGR) */
+/*---------------------- Bitmap color macros and types -----------------------*/
+
+/** @name Bitmap pixel format conversion macros */
+///@{
+#define RGB_BGR(c)  (((c) & 0xA) | ((c) & 0x1) << 2 | ((c) & 0x4) >> 2)
+
+#ifdef CURSES_RGB
+#	define RGB(c)   (c)
+#	define BGR(c)   RGB_BGR(c)
+#else
+#	define RGB(c)   RGB_BGR(c)
+#	define BGR(c)   (c)
+#endif
+///@}
+
+/** Bitmap pixel type (24-bit BGR/RGB) */
 typedef byte pixel_t[BYTES_PER_PIXEL];  // TODO make into a struct?
 
-/** Maps internal colors to bitmap-compatible pixel format */
+/**
+ * Maps internal colors to bitmap-compatible pixel type
+ * Index with @ref BGR(c) or @ref RGB(c) to explicitly convert format
+ */
 extern const pixel_t color_map[COLOR_COUNT];
 
 

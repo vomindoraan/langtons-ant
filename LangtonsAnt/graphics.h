@@ -89,6 +89,19 @@
 #define IS_COLOR_BRIGHT(c)           ((c) == COLOR_SILVER || ((c) > 8 && (c) != COLOR_BLUE))
 ///@}
 
+/** @name Color byte format conversion macros */
+///@{
+#define RGB_BGR(c)  (((c) & 0xA) | ((c) & 0x1) << 2 | ((c) & 0x4) >> 2)
+
+#ifdef CURSES_RGB
+#	define RGB(c)   (c)
+#	define BGR(c)   RGB_BGR(c)
+#else
+#	define RGB(c)   RGB_BGR(c)
+#	define BGR(c)   (c)
+#endif
+///@}
+
 
 /*----------------------- Grid window macros and types -----------------------*/
 

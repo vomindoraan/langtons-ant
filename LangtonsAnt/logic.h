@@ -49,7 +49,7 @@ typedef unsigned char byte;
 /** Vector representing an out-of-bounds position */
 #define VECTOR_INVALID     ((Vector2i) { INT_MIN, INT_MIN })
 
-/** Vector container */
+/** Vector container (int y, int x) */
 typedef struct vector2i {
 	int  y, x;  /**< Coordinates */
 } Vector2i;

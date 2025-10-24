@@ -44,10 +44,10 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg)
 	for (i = 0; i < COLOR_COUNT && is_color_rule_valid(rules[i]); i++) {
 		color_t c = rules[i].color;
 		turn_t t = rules[i].turn;
-		const pixel_t *pbgr = &color_map[c];
+		const pixel_t *prgb = &color_map[RGB(c)];
 		char tmp[COLOR_RULE_LEN+1];
 		snprintf(tmp, COLOR_RULE_LEN+1, COLOR_RULE_FMT,
-		         (*pbgr)[0], (*pbgr)[1], (*pbgr)[2], turn2arrow(t) & 0xFF);
+		         (*prgb)[0], (*prgb)[1], (*prgb)[2], turn2arrow(t) & 0xFF);
 		strcat(msg, tmp);
 	}
 }
@@ -56,9 +56,9 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg)
 //bool deserialize_color_rules(ColorRulesMsg str, ColorRules rules)
 //{
 //	int i = 0;
-//	pixel_t pbgr;
+//	pixel_t prgb;
 //	turn_t turn;
-//	while (sscanf(str, COLOR_RULE_FMT, &pbgr[0], &pbgr[1], &pbgr[2], &turn) == 4) {
+//	while (sscanf(str, COLOR_RULE_FMT, &prgb[0], &prgb[1], &prgb[2], &turn) == 4) {
 //	}
 //}
 
