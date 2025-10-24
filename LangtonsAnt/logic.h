@@ -204,8 +204,8 @@ void grid_expand(Grid *grid, Ant *ant);
 void grid_make_sparse(Grid *grid);
 bool is_grid_sparse(Grid *grid);
 bool is_grid_usage_low(Grid *grid);
-void sparse_new_cell(SparseCell **curr, unsigned column, byte c);
-byte sparse_color_at(Grid *grid, Vector2i p);
+void sparse_insert(SparseCell **head, unsigned column, byte color);
+byte sparse_color_at(Grid *grid, Vector2i pos);
 
 
 /*----------------------------------------------------------------------------*
