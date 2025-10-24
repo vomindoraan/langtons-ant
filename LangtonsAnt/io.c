@@ -25,11 +25,11 @@ Colors *load_colors(const char *filename)  // TODO format checks
 	colors->def = def;
 
 	for (i = 0; i < COLOR_COUNT; i++) {
-		e += fscanf(input, (i == COLOR_COUNT-1) ? "%hd\n" : "%hd ", &c);
+		e += fscanf(input, (i < COLOR_COUNT-1) ? "%hd " : "%hd\n", &c);
 		colors->next[BGR(i)] = BGR(c);
 	}
 	for (i = 0; i < COLOR_COUNT; i++) {
-		e += fscanf(input, (i == COLOR_COUNT-1) ? "%hhd\n" : "%hhd ", &t);
+		e += fscanf(input, (i < COLOR_COUNT-1) ? "%hhd " : "%hhd\n", &t);
 		colors->turn[BGR(i)] = t;
 	}
 	e += fscanf(input, "%hd %hd\n", &i, &c);
@@ -56,11 +56,11 @@ int save_colors(const char *filename, Colors *colors)
 
 	e = fprintf(output, "%hd\n", BGR(colors->def));
 	for (i = 0; i < COLOR_COUNT; i++) {
-		e += fprintf(output, (i == COLOR_COUNT-1) ? "%hd\n" : "%hd ",
+		e += fprintf(output, (i < COLOR_COUNT-1) ? "%hd " : "%hd\n",
 		             BGR(colors->next[BGR(i)]));
 	}
 	for (i = 0; i < COLOR_COUNT; i++) {
-		e += fprintf(output, (i == COLOR_COUNT-1) ? "%hhd\n" : "%hhd ",
+		e += fprintf(output, (i < COLOR_COUNT-1) ? "%hhd " : "%hhd\n",
 		             colors->turn[BGR(i)]);
 	}
 	e += fprintf(output, "%hd %hd\n", BGR(colors->first), BGR(colors->last));
@@ -163,7 +163,7 @@ Simulation *load_simulation(const char *filename)
 			sim->grid->c[i] = malloc(sim->grid->size);
 			for (j = 0; j < sim->grid->size; j++) {
 				byte c;
-				if (fscanf(input, (j == sim->grid->size-1) ? "%hhu\n" : "%hhu ", &c) < 0) {
+				if (fscanf(input, (j < sim->grid->size-1) ? "%hhu " : "%hhu\n", &c) < 0) {
 					goto error_end;
 				}
 				sim->grid->c[i][j] = BGR(c);
@@ -231,7 +231,7 @@ int save_simulation(const char *filename, Simulation *sim)
 		for (i = 0; i < sim->grid->size; i++) {
 			for (j = 0; j < sim->grid->size; j++) {
 				color_t c = BGR(sim->grid->c[i][j]);
-				if (fprintf(output, (j == sim->grid->size-1) ? "%hhu\n" : "%hhu ", c) < 0) {
+				if (fprintf(output, (j < sim->grid->size-1) ? "%hhu " : "%hhu\n", c) < 0) {
 					goto error_end;
 				}
 			}
