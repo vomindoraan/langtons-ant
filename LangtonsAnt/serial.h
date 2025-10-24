@@ -11,7 +11,9 @@
 
 /** Compile flags (serial disabled by default) */
 ///@{
-#ifndef SERIAL_COLORS
+#if defined(SERIAL_COLORS_ON)
+#	define SERIAL_COLORS  1
+#elif !defined(SERIAL_COLORS)
 #	define SERIAL_COLORS  0
 #endif
 

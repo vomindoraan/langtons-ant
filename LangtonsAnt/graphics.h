@@ -12,13 +12,17 @@
 
 /** @name Compile flags */
 ///@{
-#ifndef SAVE_ENABLE
-	/** Should save button in menu be drawn and active? */
+/** Should save button in menu be drawn and active? */
+#if defined(SAVE_ENABLED)
+#	define SAVE_ENABLE   1
+#elif !defined(SAVE_ENABLE)
 #	define SAVE_ENABLE   1
 #endif
 
-#ifndef GALLERY_MODE
-	/** Should load/save be limited to a single file? (e.g. no keyboard) */
+/** Should load/save be limited to a single file? (e.g. no keyboard) */
+#if defined(GALLERY_MODE_ON)
+#	define GALLERY_MODE  1
+#elif !defined (GALLERY_MODE)
 #	define GALLERY_MODE  0
 #endif
 ///@}
