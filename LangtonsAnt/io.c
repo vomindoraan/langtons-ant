@@ -121,7 +121,7 @@ Simulation *load_simulation(const char *filename)
 	}
 
 	if (is_sparse) {
-		SparseCell *curr, cell = { .next = NULL };
+		SparseCell *curr, cell = { CSR_INVALID, NULL };
 		sim->grid->csr = malloc(sim->grid->size * sizeof(SparseCell *));
 
 		for (i = 0; i < sim->grid->size; i++) {
@@ -130,18 +130,19 @@ Simulation *load_simulation(const char *filename)
 			sim->grid->csr[i] = NULL;
 
 			while (fscanf(input, "%X%c", &cell.packed, &c) == 2) {
-				CSR_SET_COLOR(&cell, BGR(CSR_GET_COLOR(&cell)));
+				if (cell.packed != CSR_INVALID) {
+					CSR_SET_COLOR(&cell, BGR(CSR_GET_COLOR(&cell)));
 
-				if (!curr) {
-					sim->grid->csr[i] = malloc(sizeof(SparseCell));
-					*sim->grid->csr[i] = cell;
-					curr = sim->grid->csr[i];
-				} else {
-					curr->next = malloc(sizeof(SparseCell));
-					*curr->next = cell;
-					curr = curr->next;
+					if (!curr) {
+						sim->grid->csr[i] = malloc(sizeof(SparseCell));
+						*sim->grid->csr[i] = cell;
+						curr = sim->grid->csr[i];
+					} else {
+						curr->next = malloc(sizeof(SparseCell));
+						*curr->next = cell;
+						curr = curr->next;
+					}
 				}
-
 				if (c == '\r' || c == '\n') {
 					// Consumes either LF or leading ' ' if CRLF
 					(void)(fscanf(input, "%c", &c) == 1);
@@ -219,7 +220,7 @@ int save_simulation(const char *filename, Simulation *sim)
 				}
 				curr = curr->next;
 			}
-			if (fprintf(output, " 0\n") < 0) {
+			if (fprintf(output, " %08X\n", CSR_INVALID) < 0) {
 				goto error_end;
 			}
 		}

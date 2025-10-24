@@ -128,6 +128,7 @@ typedef struct colors {
 
 /** @name Sparse matrix bit packing macros */
 ///@{
+#define CSR_INVALID              UINT_MAX
 #define CSR_COLOR_MASK           (0xF << 28)
 #define CSR_GET_COLOR(sc)        (((sc)->packed & CSR_COLOR_MASK) >> 28)
 #define CSR_SET_COLOR(sc, col)   ((sc)->packed = ((sc)->packed & ~CSR_COLOR_MASK) | ((col) << 28))
