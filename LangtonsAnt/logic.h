@@ -25,6 +25,12 @@
 #define LEN(a)     (sizeof(a) / sizeof(*a))
 
 ///@{
+/** Stringify macro constant */
+#define STR(x)     _STR(x)
+#define _STR(x)    #x
+///@}
+
+///@{
 /** Curses boolean literal */
 #ifndef FALSE
 #	define FALSE   0

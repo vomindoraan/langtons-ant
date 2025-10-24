@@ -49,10 +49,10 @@ static const Vector2i  dir_msg_pos    = { MENU_DIRECTION_Y,    MENU_RIGHT_COL_X 
 static const Vector2i  stepup_msg_pos = { MENU_STEPUP_Y,       MENU_RIGHT_COL_X };
 static const Vector2i  speed_pos      = { MENU_SPEED_Y+2,      MENU_RIGHT_COL_X+13 };
 static const Vector2i  speed_msg_pos  = { MENU_SPEED_Y,        MENU_RIGHT_COL_X };
-static const Vector2i  func_pos       = { MENU_STATE_FUNC_Y+2, MENU_RIGHT_COL_X+4 };
+static const Vector2i  func_pos       = { MENU_STATE_FUNC_Y+2, MENU_RIGHT_COL_X+3 };
 static const Vector2i  func_msg_pos   = { MENU_STATE_FUNC_Y,   MENU_RIGHT_COL_X };
 static const Vector2i  sparse_msg_pos = { MENU_STATE_FUNC_Y+7, MENU_RIGHT_COL_X };
-static const Vector2i  size_pos       = { MENU_STATUS_Y,       MENU_LEFT_COL_X+10 };
+static const Vector2i  size_pos       = { MENU_STATUS_Y,       MENU_RIGHT_COL_X };
 static const Vector2i  size_msg_pos   = { MENU_STATUS_Y,       MENU_LEFT_COL_X };
 static const Vector2i  steps_pos      = { MENU_STATUS_Y+2,     MENU_LEFT_COL_X+7 };
 static const Vector2i  steps_msg_pos  = { MENU_STATUS_Y+6,     MENU_LEFT_COL_X };
@@ -354,25 +354,22 @@ static void draw_speed(void)
 static void draw_state_func(void)
 {
 	Simulation *sim = stgs.simulation;
-	chtype pair = PAIR_FOR(MENU_ACTIVE_COLOR);
-	char str[8];
+	char str[8], q[4];
 	color_t ant_color = GRID_ANT_COLOR(sim->grid, sim->ant);
 	color_t next_color = sim->colors->next[ant_color];  // Uses sim->colors instead of stgs.colors
 
-	sprintf(str, "f(q%-2u, ", state_map[ant_color]);
-	wattrset(menuw, pair);
+	wattrset(menuw, PAIR_FOR(MENU_ACTIVE_COLOR));
+	sprintf(q, "q%u", state_map[ant_color]);
+	sprintf(str, "f(%3s, ", q);
 	mvwaddstr(menuw, func_pos.y, func_pos.x, str);
-	wattrset(menuw, PAIR_FOR(ant_color));
-	waddch(menuw, ACS_CKBOARD);
-	wattrset(menuw, pair);
-	waddstr(menuw, ") = ");
+	waddch(menuw, CHAR_VISIBLE(ant_color));
+	waddstr(menuw, " ) = ");
 
-	sprintf(str, "(q%-2u, ", state_map[next_color]);
+	sprintf(q, "q%u", state_map[next_color]);
+	sprintf(str, "(%3s, ", q);
 	mvwaddstr(menuw, func_pos.y+1, func_pos.x+1, str);
-	wattrset(menuw, PAIR_FOR(next_color));
-	waddch(menuw, ACS_CKBOARD);
-	sprintf(str, ", %c) ", turn2arrow(sim->colors->turn[ant_color]));
-	wattrset(menuw, pair);
+	waddch(menuw, CHAR_VISIBLE(next_color));
+	sprintf(str, ", %c )", turn2arrow(sim->colors->turn[ant_color]));
 	waddstr(menuw, str);
 }
 
@@ -424,14 +421,10 @@ static void draw_io_button(Vector2i pos, const char *label[MENU_BUTTON_HEIGHT-4]
 	}
 
 	if (draw_status) {
-		chtype pair = (status == STATUS_SUCCESS) ? PAIR_FOR(COLOR_LIME)
-		            : (status == STATUS_FAILURE) ? PAIR_FOR(COLOR_RED)
-		            : (status == STATUS_PENDING) ? bg_pair
-		            : 0;
-		if (pair) {
-			wattrset(menuw, pair);
-			mvwvline(menuw, pos.y, pos.x+MENU_BUTTON_WIDTH, CHAR_FULL, MENU_BUTTON_HEIGHT);
-		}
+		chtype ch = (status == STATUS_SUCCESS) ? PAIR_FOR(COLOR_LIME) | CHAR_FULL
+		          : (status == STATUS_FAILURE) ? PAIR_FOR(COLOR_RED)  | CHAR_FULL
+		          : CHAR_SEMI;
+		mvwvline(menuw, pos.y, pos.x+MENU_BUTTON_WIDTH, ch, MENU_BUTTON_HEIGHT);
 	}
 }
 
@@ -459,8 +452,8 @@ static void draw_size(void)
 {
 	Simulation *sim = stgs.simulation;
 	unsigned size = sim ? sim->grid->size : 0;
-	char str[29];
-	sprintf(str, "%28u", size);
+	char str[MENU_COL_WIDTH+1];
+	sprintf(str, "%" STR(MENU_COL_WIDTH) "u", size);
 	wattrset(menuw, fg_pair);
 	mvwaddstr(menuw, size_pos.y, size_pos.x, str);
 }

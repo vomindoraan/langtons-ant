@@ -19,11 +19,17 @@
 ///@}
 
 /** Empty character used for drawing */
-#define CHAR_EMPTY  ' '
+#define CHAR_EMPTY       ' '
 
 /** Full character used for drawing */
-#define CHAR_FULL  (' ' | A_REVERSE)
-//#define CHAR_FULL  ACS_BLOCK
+#define CHAR_FULL        (' ' | A_REVERSE)
+//#define CHAR_FULL        ACS_BLOCK
+
+/** Semi-visible on the UI background */
+#define CHAR_SEMI        (ui_pair | ACS_CKBOARD)
+
+/** Guaranteed to be visible on the UI background */
+#define CHAR_VISIBLE(c)  (((c) == COLOR_FOR(ui_pair)) ? CHAR_SEMI : PAIR_FOR(c) | CHAR_FULL)
 
 
 /*--------------------------- Display color macros ---------------------------*/
@@ -136,8 +142,9 @@ typedef struct scroll_info {
 #define MENU_V_MARGIN        3
 #define MENU_H_PAD           2
 #define MENU_V_PAD           4
+#define MENU_COL_WIDTH       16
 #define MENU_LEFT_COL_X      MENU_H_MARGIN
-#define MENU_RIGHT_COL_X     (MENU_WINDOW_WIDTH - MENU_H_MARGIN - 16)
+#define MENU_RIGHT_COL_X     (MENU_WINDOW_WIDTH - MENU_H_MARGIN - MENU_COL_WIDTH)
 #define MENU_LEFT_COL_Y      (MENU_LOGO_Y + MENU_LOGO_HEIGHT + MENU_V_PAD + 1)
 #define MENU_RIGHT_COL_Y     MENU_LEFT_COL_Y
 #define MENU_LOGO_WIDTH      40
@@ -150,7 +157,8 @@ typedef struct scroll_info {
 #define MENU_SPEED_Y         (MENU_STEPUP_Y + MENU_V_PAD + 5)
 #define MENU_SPEED_HEIGHT    9  // n*8 + 1
 #define MENU_STATE_FUNC_Y    (MENU_SPEED_Y + MENU_SPEED_HEIGHT + MENU_V_PAD + 6)
-#define MENU_STATUS_Y        (MENU_WINDOW_HEIGHT - 10)
+#define MENU_GRID_SIZE_Y     (MENU_STATE_FUNC_Y + MENU_V_PAD + 4)
+#define MENU_STATUS_Y        (MENU_WINDOW_HEIGHT - MENU_V_MARGIN - 7)
 #define MENU_BORDER_COLOR    COLOR_NAVY
 #define MENU_BORDER_COLOR_S  COLOR_MAROON
 #define MENU_ACTIVE_COLOR    COLOR_BLUE
@@ -164,7 +172,7 @@ typedef struct scroll_info {
 
 /** @name Menu button attributes */
 ///@{
-#define MENU_CONTROLS_Y      (MENU_STATUS_Y - 10)
+#define MENU_CONTROLS_Y      (MENU_STATUS_Y - MENU_V_PAD - MENU_BUTTON_HEIGHT + 1)
 #define MENU_BUTTON_WIDTH    11
 #define MENU_BUTTON_HEIGHT   7
 #define MENU_BUTTON_PWIDTH   (MENU_BUTTON_WIDTH + MENU_H_PAD)

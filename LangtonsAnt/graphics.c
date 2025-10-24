@@ -124,14 +124,7 @@ bool area_contains(Vector2i top_left, unsigned width, unsigned height, Vector2i 
 
 void draw_square(WINDOW *w, Vector2i top_left, unsigned size)
 {
-	unsigned i;
-	if (size == 1) {
-		mvwaddch(w, top_left.y, top_left.x, CHAR_FULL);
-		return;
-	}
-	for (i = 0; i < size; i++) {
-		mvwhline(w, top_left.y+i, top_left.x, CHAR_FULL, size);
-	}
+	draw_rect(w, top_left, size, size);
 }
 
 void draw_rect(WINDOW *w, Vector2i top_left, unsigned width, unsigned height)
