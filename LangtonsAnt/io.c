@@ -29,7 +29,7 @@ Colors *load_colors(const char *filename)  // TODO format checks
 		colors->next[BGR(i)] = BGR(c);
 	}
 	for (i = 0; i < COLOR_COUNT; i++) {
-		e += fscanf(input, (i == COLOR_COUNT-1) ? "%c\n" : "%c ", &t);
+		e += fscanf(input, (i == COLOR_COUNT-1) ? "%hhd\n" : "%hhd ", &t);
 		colors->turn[BGR(i)] = t;
 	}
 	e += fscanf(input, "%hd %hd\n", &i, &c);
@@ -64,7 +64,7 @@ int save_colors(const char *filename, Colors *colors)
 		             BGR(colors->next[BGR(i)]));
 	}
 	for (i = 0; i < COLOR_COUNT; i++) {
-		e += fprintf(output, (i == COLOR_COUNT-1) ? "%c\n" : "%c ",
+		e += fprintf(output, (i == COLOR_COUNT-1) ? "%hhd\n" : "%hhd ",
 		             colors->turn[BGR(i)]);
 	}
 	e += fprintf(output, "%hd %hd\n", BGR(colors->first), BGR(colors->last));
@@ -109,7 +109,7 @@ Simulation *load_simulation(const char *filename)
 	if (fscanf(input, "%u\n", &sim->steps) < 0) {
 		goto error_end;
 	}
-	if (fscanf(input, "%c\n", &is_sparse) < 0) {
+	if (fscanf(input, "%hhu\n", &is_sparse) < 0) {
 		goto error_end;
 	}
 
@@ -204,7 +204,7 @@ int save_simulation(const char *filename, Simulation *sim)
 	if (fprintf(output, "%u\n", sim->steps) < 0) {
 		return EOF;
 	}
-	if (fprintf(output, "%c\n", is_grid_sparse(sim->grid)) < 0) {
+	if (fprintf(output, "%hhu\n", is_grid_sparse(sim->grid)) < 0) {
 		return EOF;
 	}
 	if (fprintf(output, "%hhu %u %u %u\n", BGR(sim->grid->def_color),
