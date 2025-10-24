@@ -146,8 +146,9 @@ typedef struct scroll_info {
 #define MENU_RULES_Y         MENU_LEFT_COL_Y
 #define MENU_INIT_SIZE_Y     MENU_RIGHT_COL_Y
 #define MENU_DIRECTION_Y     (MENU_INIT_SIZE_Y + MENU_V_PAD + 7)
-#define MENU_SPEED_Y         (MENU_DIRECTION_Y + MENU_V_PAD + 9)
-#define MENU_SPEED_HEIGHT    17
+#define MENU_STEPUP_Y        (MENU_DIRECTION_Y + MENU_V_PAD + 9)
+#define MENU_SPEED_Y         (MENU_STEPUP_Y + MENU_V_PAD + 5)
+#define MENU_SPEED_HEIGHT    9  // n*8 + 1
 #define MENU_STATE_FUNC_Y    (MENU_SPEED_Y + MENU_SPEED_HEIGHT + MENU_V_PAD + 6)
 #define MENU_STATUS_Y        (MENU_WINDOW_HEIGHT - 10)
 #define MENU_BORDER_COLOR    COLOR_NAVY

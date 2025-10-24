@@ -13,13 +13,13 @@ PendingAction  pending_action;
 const Vector2i  menu_pos              = { 0,                  GRID_WINDOW_SIZE };
 const Vector2i  menu_isize_u_pos      = { MENU_INIT_SIZE_Y+2, MENU_RIGHT_COL_X+9 };
 const Vector2i  menu_isize_d_pos      = { MENU_INIT_SIZE_Y+5, MENU_RIGHT_COL_X+9 };
-const Vector2i  menu_dir_u_pos        = { MENU_DIRECTION_Y+2, MENU_RIGHT_COL_X+10 };
-const Vector2i  menu_dir_r_pos        = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL_X+14 };
-const Vector2i  menu_dir_d_pos        = { MENU_DIRECTION_Y+7, MENU_RIGHT_COL_X+10 };
-const Vector2i  menu_dir_l_pos        = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL_X+7 };
+const Vector2i  menu_dir_u_pos        = { MENU_DIRECTION_Y+2, MENU_RIGHT_COL_X+9 };
+const Vector2i  menu_dir_r_pos        = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL_X+13 };
+const Vector2i  menu_dir_d_pos        = { MENU_DIRECTION_Y+7, MENU_RIGHT_COL_X+9 };
+const Vector2i  menu_dir_l_pos        = { MENU_DIRECTION_Y+4, MENU_RIGHT_COL_X+6 };
+const Vector2i  menu_stepup_pos       = { MENU_STEPUP_Y+2,    MENU_RIGHT_COL_X+9 };
 const Vector2i  menu_speed_u_pos      = { MENU_SPEED_Y+2,     MENU_RIGHT_COL_X+9 };
-const Vector2i  menu_speed_d_pos      = { MENU_SPEED_Y+MENU_SPEED_HEIGHT+4, MENU_RIGHT_COL_X+9 };
-const Vector2i  menu_stepup_pos       = { MENU_SPEED_Y+20,    MENU_RIGHT_COL_X+1 };
+const Vector2i  menu_speed_d_pos      = { MENU_SPEED_Y+MENU_SPEED_HEIGHT+4,   MENU_RIGHT_COL_X+9 };
 const Vector2i  menu_play_pos         = { MENU_CONTROLS_Y,    MENU_PLAY_X };
 const Vector2i  menu_stop_pos         = { MENU_CONTROLS_Y,    MENU_STOP_X };
 const Vector2i  menu_load_pos         = { MENU_CONTROLS_Y,    MENU_LOAD_X };
@@ -32,7 +32,7 @@ static const char *rules_msg          = "COLOR RULES:";
 static const char *isize_msg          = "INIT GRID SIZE:";
 static const char *dir_msg            = "ANT DIRECTION:";
 static const char *speed_msg          = "SIMULATION SPEED";
-static const char *stepup_msg         = "STEP+";
+static const char *stepup_msg         = "STEP BY STEP:";
 static const char *func_msg           = "STATE FUNCTION:";
 static const char *sparse_msg         = "[SPARSE MATRIX]";
 static const char *size_msg           = "GRID SIZE:";
@@ -46,12 +46,12 @@ static const Vector2i  rules_msg_pos  = { MENU_RULES_Y,        MENU_LEFT_COL_X }
 static const Vector2i  isize_pos      = { MENU_INIT_SIZE_Y+2,  MENU_RIGHT_COL_X+13 };
 static const Vector2i  isize_msg_pos  = { MENU_INIT_SIZE_Y,    MENU_RIGHT_COL_X };
 static const Vector2i  dir_msg_pos    = { MENU_DIRECTION_Y,    MENU_RIGHT_COL_X };
+static const Vector2i  stepup_msg_pos = { MENU_STEPUP_Y,       MENU_RIGHT_COL_X };
 static const Vector2i  speed_pos      = { MENU_SPEED_Y+2,      MENU_RIGHT_COL_X+13 };
 static const Vector2i  speed_msg_pos  = { MENU_SPEED_Y,        MENU_RIGHT_COL_X };
-static const Vector2i  stepup_msg_pos = { MENU_SPEED_Y+18,     MENU_RIGHT_COL_X };
 static const Vector2i  func_pos       = { MENU_STATE_FUNC_Y+2, MENU_RIGHT_COL_X+4 };
 static const Vector2i  func_msg_pos   = { MENU_STATE_FUNC_Y,   MENU_RIGHT_COL_X };
-static const Vector2i  sparse_msg_pos = { MENU_STATE_FUNC_Y+8, MENU_RIGHT_COL_X };
+static const Vector2i  sparse_msg_pos = { MENU_STATE_FUNC_Y+7, MENU_RIGHT_COL_X };
 static const Vector2i  size_pos       = { MENU_STATUS_Y,       MENU_LEFT_COL_X+10 };
 static const Vector2i  size_msg_pos   = { MENU_STATUS_Y,       MENU_LEFT_COL_X };
 static const Vector2i  steps_pos      = { MENU_STATUS_Y+2,     MENU_LEFT_COL_X+7 };
@@ -321,8 +321,9 @@ static void draw_direction(void)
 static void draw_speed(void)
 {
 	chtype pair = PAIR_FOR(MENU_ACTIVE_COLOR);
-	int dy = menu_speed_d_pos.y - menu_speed_u_pos.y - 2;
-	Vector2i slider_pos = { speed_pos.y + dy+1 - 2*stgs.speed, speed_pos.x };  // TODO better way for speed slider pos
+	int mult = MENU_SPEED_HEIGHT / 8;
+	int dy = menu_speed_d_pos.y - menu_speed_u_pos.y - 2/mult;
+	Vector2i slider_pos = { speed_pos.y + dy - mult*stgs.speed, speed_pos.x };  // TODO better way for speed slider pos
 
 	/* Draw scrollbar */
 	wattrset(menuw, ui_pair);

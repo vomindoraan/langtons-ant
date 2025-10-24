@@ -219,6 +219,13 @@ state_t menu_key_command(int key, MEVENT *mouse)
 	case 'A': case 'a':
 		return dir_button_clicked(DIR_LEFT);
 
+		/* Step+ */
+	case 'E': case 'e': case '.':
+#ifdef PDCURSES
+	case PADSTOP:
+#endif
+		return stepup_button_clicked();
+
 		/* Speed */
 	case 'Q': case 'q': case '=':
 #ifdef PDCURSES
@@ -230,13 +237,6 @@ state_t menu_key_command(int key, MEVENT *mouse)
 	case PADMINUS:
 #endif
 		return speed_button_clicked(-1);
-
-		/* Step+ */
-	case 'E': case 'e': case '.':
-#ifdef PDCURSES
-	case PADSTOP:
-#endif
-		return stepup_button_clicked();
 
 		/* Control */
 	case ' ': case '\n':
@@ -335,17 +335,17 @@ state_t menu_mouse_command(MEVENT *mouse)
 		return dir_button_clicked(DIR_LEFT);
 	}
 
+	/* Step+ button */
+	if (area_contains(menu_stepup_pos, MENU_STEPUP_SIZE, MENU_STEPUP_SIZE, pos)) {
+		return stepup_button_clicked();
+	}
+
 	/* Speed buttons */
 	if (area_contains(menu_speed_u_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
 		return speed_button_clicked(+1);
 	}
 	if (area_contains(menu_speed_d_pos, MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT, pos)) {
 		return speed_button_clicked(-1);
-	}
-
-	/* Step+ button */
-	if (area_contains(menu_stepup_pos, MENU_STEPUP_SIZE, MENU_STEPUP_SIZE, pos)) {
-		return stepup_button_clicked();
 	}
 
 	/* Control buttons */
