@@ -18,7 +18,7 @@
 #endif
 
 #ifndef SERIAL_SCRIPT
-#	define SERIAL_SCRIPT  "./write_serial.py"
+#	define SERIAL_SCRIPT  "scripts/write_serial.py"
 #endif
 ///@}
 
