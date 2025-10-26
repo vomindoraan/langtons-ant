@@ -17,8 +17,8 @@
 /** Total number of fields in a Colors struct */
 #define COLORS_TOTAL_FIELDS   (COLOR_COUNT*2 + 4)
 
-/** Pixel format size */
-#define BYTES_PER_PIXEL       3
+
+/*----------------------- Bitmap I/O macros and types ------------------------*/
 
 /** @name Bitmap attributes */
 ///@{
@@ -27,10 +27,10 @@
 #define BMP_INFO_HEADER_SIZE  40
 ///@}
 
+/** Pixel format size */
+#define BYTES_PER_PIXEL       3
 
-/*---------------------- Bitmap color macros and types -----------------------*/
-
-/** @name Bitmap pixel format conversion macros */
+/** @name Pixel format conversion macros */
 ///@{
 #define RGB_BGR(c)  (((c) & 0xA) | ((c) & 0x1) << 2 | ((c) & 0x4) >> 2)
 
@@ -44,7 +44,7 @@
 ///@}
 
 /** Bitmap pixel type (24-bit BGR/RGB) */
-typedef byte pixel_t[BYTES_PER_PIXEL];  // TODO make into a struct?
+typedef byte pixel_t[BYTES_PER_PIXEL];
 
 /**
  * Maps internal colors to bitmap-compatible pixel type

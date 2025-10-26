@@ -73,7 +73,7 @@ typedef enum {
 
 /** Ant container */
 typedef struct ant {
-	Vector2i   pos;  /**< Current position */  // TODO use unsigned vector
+	Vector2i   pos;  /**< Current position */  // TODO: Use unsigned vector?
 	Direction  dir;  /**< Direction the ant is facing */
 } Ant;
 
@@ -108,7 +108,7 @@ typedef struct colors {
 	color_t   first, last;
 	color_t   def;
 	unsigned  n;
-} Colors;  // TODO finish logic docs & add @see
+} Colors;  // TODO: Finish logic docs & add @see
 
 
 /*-------------------------- Grid macros and types ---------------------------*/
@@ -121,13 +121,13 @@ typedef struct colors {
 #define GRID_DEF_INIT_SIZE       4
 #define GRID_MAX_INIT_SIZE       7
 #define GRID_MIN_INIT_SIZE       2
-#define GRID_MAX_SILENT_EXPAND   (GRID_SIZE_THRESHOLD + 1)  // TODO add a dynamic silent expand step
+#define GRID_MAX_SILENT_EXPAND   (GRID_SIZE_THRESHOLD + 1)  // TODO: Add a dynamic silent expand step
 
 #define GRID_SIZE_SMALL(g)       (g)->init_size  // 2, 3, 4, 5, 6, 7
 #define GRID_SIZE_MEDIUM(g)      (GRID_SIZE_SMALL(g) * GRID_MULT)
 #define GRID_SIZE_LARGE(g)       (GRID_SIZE_MEDIUM(g) * GRID_MULT)
 #define IS_GRID_LARGE(g)         ((g)->size >= GRID_SIZE_LARGE(g))
-#define GRID_EFFICIENCY(g)       ((g)->size*(g)->size / ((double)sizeof(SparseCell) * (g)->colored))
+#define GRID_EFFICIENCY(g)       ((g)->size*(g)->size / ((g)->colored * (double)sizeof(SparseCell)))
 #define GRID_COLOR_AT(g, p)      (is_grid_sparse(g) ? sparse_color_at(g, p) : (g)->c[(p).y][(p).x])
 #define GRID_ANT_COLOR(g, a)     GRID_COLOR_AT(g, (a)->pos)
 ///@}

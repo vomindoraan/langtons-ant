@@ -35,7 +35,7 @@ void simulation_halt(Simulation *sim)
 bool simulation_step(Simulation *sim)
 {
 	bool in_bounds = ant_move(sim->ant, sim->grid, sim->colors);
-	++(sim->steps);
+	++sim->steps;
 	grid_silent_expand(sim->grid);
 	if (!in_bounds) {
 		grid_expand(sim->grid, sim->ant);

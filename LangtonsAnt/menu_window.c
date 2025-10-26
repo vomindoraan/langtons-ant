@@ -59,7 +59,7 @@ static const char *size_msg           = "GRID SIZE:";
 static const char *steps_msg          = "STEPS:";
 
 static const char *about_msgs[MENU_LOGO_WIDTH] = {
-	APP_NAME " v" APP_VERSION " on " APP_CURSES,
+	APP_NAME " v" APP_VERSION " (" APP_CURSES ")",
 	"",
 	" " APP_COPYRIGHT1,
 	" " APP_COPYRIGHT2,
@@ -110,11 +110,6 @@ static const Logo logos[] = {
 	{ NULL,         NULL,            MENU_INACTIVE_COLOR },
 };
 static unsigned logo_index;
-
-void cycle_logo(void)
-{
-	logo_index = (logo_index+1) % LEN(logos);
-}
 
 static const byte arrow_sprites[][1] = {
 	{ 0x5C }, { 0xB8 }, { 0xE8 }, { 0x74 },
@@ -182,23 +177,9 @@ Vector2i get_menu_cdef_pos(void)
 	};
 }
 
-static void draw_border(void)
+void cycle_logo(void)
 {
-	Simulation *sim = stgs.simulation;
-	unsigned h = MENU_WINDOW_WIDTH, v = MENU_WINDOW_HEIGHT;
-
-	if (sim && is_grid_sparse(sim->grid)) {
-		wattrset(menuw, PAIR_FOR(MENU_BORDER_COLOR_S));
-		mvwaddstr(menuw, sparse_msg_pos.y, sparse_msg_pos.x, sparse_msg);
-	} else {
-		wattrset(menuw, PAIR_FOR(MENU_BORDER_COLOR));
-		mvwhline(menuw, sparse_msg_pos.y, sparse_msg_pos.x, CHAR_EMPTY, (int)strlen(sparse_msg));
-	}
-
-	mvwhline(menuw, 0,   0,   CHAR_FULL, h);
-	mvwvline(menuw, 0,   0,   CHAR_FULL, v);
-	mvwhline(menuw, v-1, 0,   CHAR_FULL, h);
-	mvwvline(menuw, 0,   h-1, CHAR_FULL, v);
+	logo_index = (logo_index+1) % LEN(logos);
 }
 
 static void draw_logo(void)
@@ -224,6 +205,50 @@ static void draw_logo(void)
 
 			wattrset(menuw, PAIR_FOR(logo->highlight_color));
 		}
+	}
+}
+
+static void draw_border(void)
+{
+	Simulation *sim = stgs.simulation;
+	unsigned h = MENU_WINDOW_WIDTH, v = MENU_WINDOW_HEIGHT;
+
+	if (sim && is_grid_sparse(sim->grid)) {
+		wattrset(menuw, PAIR_FOR(MENU_BORDER_COLOR_S));
+		mvwaddstr(menuw, sparse_msg_pos.y, sparse_msg_pos.x, sparse_msg);
+	} else {
+		wattrset(menuw, PAIR_FOR(MENU_BORDER_COLOR));
+		mvwhline(menuw, sparse_msg_pos.y, sparse_msg_pos.x, CHAR_EMPTY, (int)strlen(sparse_msg));
+	}
+
+	mvwhline(menuw, 0,   0,   CHAR_FULL, h);
+	mvwvline(menuw, 0,   0,   CHAR_FULL, v);
+	mvwhline(menuw, v-1, 0,   CHAR_FULL, h);
+	mvwvline(menuw, 0,   h-1, CHAR_FULL, v);
+}
+
+static void draw_color_tile(Vector2i top_left, color_t c)
+{
+	chtype tile_pair = PAIR_FOR(c);
+	chtype frame_pair = (c != COLOR_FOR(bg_pair)) ? tile_pair : ui_pair;
+	bool is_def = c == stgs.colors->def;
+	int y = top_left.y, x = top_left.x, s = MENU_TILE_SIZE;
+
+	/* Draw tile */
+	wattrset(menuw, is_def ? bg_pair : tile_pair);
+	draw_square(menuw, top_left, s);
+
+	/* Draw frame */
+	wattrset(menuw, is_def ? frame_pair : fg_pair);
+	mvwhline(menuw, y,     x,     CHAR_FULL, s);
+	mvwvline(menuw, y,     x,     CHAR_FULL, s);
+	mvwhline(menuw, y+s-1, x,     CHAR_FULL, s);
+	mvwvline(menuw, y,     x+s-1, CHAR_FULL, s);
+
+	/* Draw direction arrow */
+	if (!is_def) {
+		wattrset(menuw, tile_pair | A_REVERSE);
+		mvwaddch(menuw, y+s/2, x+s/2, turn2arrow(stgs.colors->turn[c]));
 	}
 }
 
@@ -268,32 +293,7 @@ static void draw_color_arrow(Vector2i pos1, Vector2i pos2)
 	}
 }
 
-static void draw_color_tile(Vector2i top_left, color_t c)
-{
-	chtype tile_pair = PAIR_FOR(c);
-	chtype frame_pair = (c != COLOR_FOR(bg_pair)) ? tile_pair : ui_pair;
-	bool is_def = c == stgs.colors->def;
-	int y = top_left.y, x = top_left.x, s = MENU_TILE_SIZE;
-
-	/* Draw tile */
-	wattrset(menuw, is_def ? bg_pair : tile_pair);
-	draw_square(menuw, top_left, s);
-
-	/* Draw frame */
-	wattrset(menuw, is_def ? frame_pair : fg_pair);
-	mvwhline(menuw, y,     x,     CHAR_FULL, s);
-	mvwvline(menuw, y,     x,     CHAR_FULL, s);
-	mvwhline(menuw, y+s-1, x,     CHAR_FULL, s);
-	mvwvline(menuw, y,     x+s-1, CHAR_FULL, s);
-
-	/* Draw direction arrow */
-	if (!is_def) {
-		wattrset(menuw, tile_pair | A_REVERSE);
-		mvwaddch(menuw, y+s/2, x+s/2, turn2arrow(stgs.colors->turn[c]));
-	}
-}
-
-static void draw_color_list(void)
+static void draw_color_rules(void)
 {
 	color_t c;
 	unsigned i = 0;
@@ -377,12 +377,18 @@ static void draw_direction(void)
 	draw_dir_arrow();
 }
 
+static void draw_stepup(void)
+{
+	wattrset(menuw, PAIR_FOR(has_enough_colors(stgs.colors) ? MENU_ACTIVE_COLOR : MENU_INACTIVE_COLOR));
+	draw_sprite(menuw, (SpriteInfo) { stepup_sprite, 3, 3 }, menu_stepup_pos, FALSE);
+}
+
 static void draw_speed(void)
 {
 	chtype pair = PAIR_FOR(MENU_ACTIVE_COLOR);
 	int mult = MENU_SPEED_HEIGHT / 8;
 	int dy = menu_speed_d_pos.y - menu_speed_u_pos.y - 2/mult;
-	Vector2i slider_pos = { speed_pos.y + dy - mult*stgs.speed, speed_pos.x };  // TODO better way for speed slider pos
+	Vector2i slider_pos = { speed_pos.y + dy - mult*stgs.speed, speed_pos.x };
 
 	/* Draw scrollbar */
 	wattrset(menuw, ui_pair);
@@ -404,10 +410,6 @@ static void draw_speed(void)
 	draw_rect(menuw, speed_pos, MENU_DIGIT_WIDTH, dy + 4);
 	wattrset(menuw, fg_pair);
 	draw_sprite(menuw, (SpriteInfo) { digit_sprites[stgs.speed], 3, 5 }, slider_pos, TRUE);
-
-	/* Draw Step+ sprite */
-	wattrset(menuw, PAIR_FOR(has_enough_colors(stgs.colors) ? MENU_ACTIVE_COLOR : MENU_INACTIVE_COLOR));
-	draw_sprite(menuw, (SpriteInfo) { stepup_sprite, 3, 3 }, menu_stepup_pos, FALSE);
 }
 
 static void draw_state_func(void)
@@ -559,8 +561,8 @@ static void draw_labels(void)
 	mvwaddstr(menuw, rules_msg_pos.y,  rules_msg_pos.x,  rules_msg);
 	mvwaddstr(menuw, isize_msg_pos.y,  isize_msg_pos.x,  isize_msg);
 	mvwaddstr(menuw, dir_msg_pos.y,    dir_msg_pos.x,    dir_msg);
-	mvwaddstr(menuw, speed_msg_pos.y,  speed_msg_pos.x,  speed_msg);
 	mvwaddstr(menuw, stepup_msg_pos.y, stepup_msg_pos.x, stepup_msg);
+	mvwaddstr(menuw, speed_msg_pos.y,  speed_msg_pos.x,  speed_msg);
 	mvwaddstr(menuw, func_msg_pos.y,   func_msg_pos.x,   func_msg);
 	mvwaddstr(menuw, size_msg_pos.y,   size_msg_pos.x,   size_msg);
 	mvwaddstr(menuw, steps_msg_pos.y,  steps_msg_pos.x,  steps_msg);
@@ -568,11 +570,12 @@ static void draw_labels(void)
 
 void draw_menu_full(void)
 {
-	draw_border();
 	draw_logo();
-	draw_color_list();
+	draw_border();
+	draw_color_rules();
 	draw_init_size();
 	draw_direction();
+	draw_stepup();
 	draw_speed();
 	draw_state_func();
 	draw_control_buttons();
@@ -592,7 +595,7 @@ void draw_menu_iter(void)
 	Simulation *sim = stgs.simulation;
 	static bool sparse = FALSE;
 #if LOOP_OPT_ENABLE
-	// TODO fixed timestep loop
+	// TODO: Fixed timestep loop
 	static unsigned prev_steps = 0;
 	unsigned mult = MAX(stgs.speed - LOOP_OPT_SPEED + 1, 0);
 	unsigned threshold = (stgs.speed == LOOP_MAX_SPEED) ? LOOP_MAX_OPT

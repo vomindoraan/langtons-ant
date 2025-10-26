@@ -43,6 +43,33 @@ static void draw_buffer_zone(int total, int offset)
 	}
 }
 
+
+static bool draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
+{
+	/* Ignore if cell isn't visible */
+	if (yx.y < 0 || yx.y >= GRID_VIEW_SIZE || yx.x < 0 || yx.x >= GRID_VIEW_SIZE) {
+		return FALSE;
+	}
+
+	wattrset(gridw, PAIR_FOR(c));
+	draw_square(gridw, yx, cs);
+
+	if (ant) {
+		Vector2i center = { yx.y + cs/2, yx.x + cs/2 };
+		SpriteInfo sprite = get_ant_sprite(cs, ant->dir);
+		if (sprite.data) {
+			yx.y = center.y - sprite.height/2;
+			yx.x = center.x - sprite.width/2;
+			wattrset(gridw, fg_pair);
+			draw_sprite(gridw, sprite, yx, FALSE);
+		} else {
+			mvwaddch(gridw, center.y, center.x, dir2arrow(ant->dir) | A_REVERSE);
+		}
+	}
+
+	return TRUE;
+}
+
 static void draw_scrollbars(color_t def)
 {
 	int n = GRID_VIEW_SIZE, mid = n/2, step = n-2;
@@ -71,32 +98,6 @@ static void draw_scrollbars(color_t def)
 	wattrset(gridw, sb_fg_pair);
 	mvwhline(gridw, n, h, CHAR_FULL, size);
 	mvwvline(gridw, v, n, CHAR_FULL, size);
-}
-
-static bool draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
-{
-	/* Ignore if cell isn't visible */
-	if (yx.y < 0 || yx.y >= GRID_VIEW_SIZE || yx.x < 0 || yx.x >= GRID_VIEW_SIZE) {
-		return FALSE;
-	}
-
-	wattrset(gridw, PAIR_FOR(c));
-	draw_square(gridw, yx, cs);
-
-	if (ant) {
-		Vector2i center = { yx.y + cs/2, yx.x + cs/2 };
-		SpriteInfo sprite = get_ant_sprite(cs, ant->dir);
-		if (sprite.data) {
-			yx.y = center.y - sprite.height/2;
-			yx.x = center.x - sprite.width/2;
-			wattrset(gridw, fg_pair);
-			draw_sprite(gridw, sprite, yx, FALSE);
-		} else {
-			mvwaddch(gridw, center.y, center.x, dir2arrow(ant->dir) | A_REVERSE);
-		}
-	}
-
-	return TRUE;
 }
 
 static void bordered(Grid *grid, Ant *ant, int line_width)

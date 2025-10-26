@@ -16,7 +16,7 @@ static const Vector2i input_pos = {
 static bool read_filename(char* filename)
 {
 	int ret;
-	inputw = newwin(3, INPUT_WINDOW_WIDTH, input_pos.y, input_pos.x);  // TODO move to window drawing file
+	inputw = newwin(3, INPUT_WINDOW_WIDTH, input_pos.y, input_pos.x);  // TODO: Move to window drawing file
 	wbkgd(inputw, PAIR_FOR(COLOR_GRAY) | A_REVERSE);
 	wattron(inputw, fg_pair);
 	waddstr(inputw, " Filename: ");

@@ -179,7 +179,7 @@ Simulation *load_simulation(const char *filename)
 
 	sim = simulation_new(colors, GRID_DEF_INIT_SIZE);
 	if (fscanf(input, "%d %d %u\n", &sim->ant->pos.x, &sim->ant->pos.y,
-		       &sim->ant->dir) < 3) {
+	           &sim->ant->dir) < 3) {
 		return sim;  // Colors only
 	}
 	if (fscanf(input, "%u\n", &sim->steps) < 1) {
@@ -196,12 +196,12 @@ Simulation *load_simulation(const char *filename)
 	sim->grid->tmp_size = 0;
 	sim->grid->csr = NULL;
 	if (fscanf(input, "%hhu %u %u %u\n", &def,
-		       &sim->grid->init_size, &sim->grid->size, &sim->grid->colored) < 4) {
+	           &sim->grid->init_size, &sim->grid->size, &sim->grid->colored) < 4) {
 		goto error_end;
 	}
 	sim->grid->def_color = BGR(def);
 	if (fscanf(input, "%d %d %d %d", &sim->grid->top_left.x, &sim->grid->top_left.y,
-		       &sim->grid->bottom_right.x, &sim->grid->bottom_right.y) < 4) {
+	           &sim->grid->bottom_right.x, &sim->grid->bottom_right.y) < 4) {
 		goto error_end;
 	}
 
@@ -231,7 +231,7 @@ int save_simulation(const char *filename, Simulation *sim)
 	}
 
 	if (fprintf(output, "%d %d %u\n", sim->ant->pos.x, sim->ant->pos.y,
-		        sim->ant->dir) < 0) {
+	            sim->ant->dir) < 0) {
 		goto error_end;
 	}
 	if (fprintf(output, "%u\n", sim->steps) < 0) {
@@ -241,11 +241,11 @@ int save_simulation(const char *filename, Simulation *sim)
 		goto error_end;
 	}
 	if (fprintf(output, "%hhu %u %u %u\n", BGR(sim->grid->def_color),
-		        sim->grid->init_size, sim->grid->size, sim->grid->colored) < 0) {
+	            sim->grid->init_size, sim->grid->size, sim->grid->colored) < 0) {
 		goto error_end;
 	}
 	if (fprintf(output, "%d %d %d %d\n", sim->grid->top_left.x, sim->grid->top_left.y,
-		        sim->grid->bottom_right.x, sim->grid->bottom_right.y) < 0) {
+	            sim->grid->bottom_right.x, sim->grid->bottom_right.y) < 0) {
 		goto error_end;
 	}
 
@@ -274,7 +274,7 @@ int save_grid_bitmap(const char *filename, Grid *grid)
 	for (i = 0; i < height; i++) {
 		for (j = 0; j < width; j++) {
 			Vector2i pos = (Vector2i) { height-i-1, j };
-			pixel_t const *pixel = color_map + GRID_COLOR_AT(grid, pos);
+			const pixel_t *pixel = color_map + GRID_COLOR_AT(grid, pos);
 			memcpy(image[i*width + j], pixel, sizeof(pixel_t));
 		}
 	}

@@ -43,7 +43,7 @@ static state_t handle_input(Simulation *sim)
 	return ret;
 }
 
-// TODO fixed timestep loop
+// TODO: Fixed timestep loop
 static void sleep(void)
 {
 	int dd = LOOP_MAX_DELAY - LOOP_MIN_DELAY;

@@ -22,7 +22,7 @@
 /** Should load/save be limited to a single file? (e.g. no keyboard) */
 #if defined(GALLERY_MODE_ON)
 #	define GALLERY_MODE  1
-#elif !defined (GALLERY_MODE)
+#elif !defined(GALLERY_MODE)
 #	define GALLERY_MODE  0
 #endif
 ///@}
@@ -119,7 +119,7 @@
 /** @name Grid window attributes */
 ///@{
 #define GRID_WINDOW_SIZE    109
-#define GRID_VIEW_SIZE      (GRID_WINDOW_SIZE - 1)  // TODO variable scrollbar size
+#define GRID_VIEW_SIZE      (GRID_WINDOW_SIZE - 1)  // TODO: Variable scrollbar size
 #define LINE_WIDTH_SMALL    2
 #define LINE_WIDTH_MEDIUM   1
 #define LINE_WIDTH_LARGE    0
@@ -281,8 +281,8 @@ typedef enum {
 #	define MOUSE_LB_EVENT  BUTTON1_PRESSED
 #	define MOUSE_RB_EVENT  BUTTON3_PRESSED
 #	ifdef NCURSES
-		// WARN ncurses mouse handling breaks if mouseinterval(0) is called and
-		//      only *_PRESSED is selected without *_CLICKED or *_RELEASED
+		// WARN: ncurses mouse handling breaks if mouseinterval(0) is called and
+		//       only *_PRESSED is selected without *_CLICKED or *_RELEASED
 #		define MOUSE_MASK  (BUTTON1_PRESSED | BUTTON3_PRESSED | BUTTON1_CLICKED | BUTTON3_CLICKED)
 #	else
 #		define MOUSE_MASK  (BUTTON1_PRESSED | BUTTON3_PRESSED)
@@ -362,7 +362,8 @@ extern const Vector2i  menu_pos;
 extern const Vector2i  menu_logo_pos;
 extern const Vector2i  menu_isize_u_pos, menu_isize_d_pos;
 extern const Vector2i  menu_dir_u_pos, menu_dir_r_pos, menu_dir_d_pos, menu_dir_l_pos;
-extern const Vector2i  menu_speed_u_pos, menu_speed_d_pos, menu_stepup_pos;
+extern const Vector2i  menu_stepup_pos;
+extern const Vector2i  menu_speed_u_pos, menu_speed_d_pos;
 extern const Vector2i  menu_play_pos, menu_stop_pos;
 extern const Vector2i  menu_load_pos;
 #if SAVE_ENABLE
