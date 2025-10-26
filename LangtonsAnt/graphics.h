@@ -163,10 +163,10 @@ typedef struct scroll_info {
 #define MENU_COL_WIDTH       16
 #define MENU_LEFT_COL_X      MENU_H_MARGIN
 #define MENU_RIGHT_COL_X     (MENU_WINDOW_WIDTH - MENU_H_MARGIN - MENU_COL_WIDTH)
-#define MENU_LEFT_COL_Y      (MENU_LOGO_Y + MENU_LOGO_HEIGHT + MENU_V_PAD + 1)
+#define MENU_LEFT_COL_Y      (MENU_LOGO_Y + MENU_LOGO_HEIGHT + MENU_V_PAD - 1)
 #define MENU_RIGHT_COL_Y     MENU_LEFT_COL_Y
-#define MENU_LOGO_WIDTH      40
-#define MENU_LOGO_HEIGHT     8
+#define MENU_LOGO_WIDTH      38
+#define MENU_LOGO_HEIGHT     10
 #define MENU_LOGO_Y          MENU_V_MARGIN
 #define MENU_RULES_Y         MENU_LEFT_COL_Y
 #define MENU_INIT_SIZE_Y     MENU_RIGHT_COL_Y
@@ -334,12 +334,12 @@ typedef struct pending_action {
 /*------------------------------- Sprite type --------------------------------*/
 
 /** Raw sprite bytearray */
-typedef const byte *sprite_data_t;
+typedef const byte *sprite_t;
 
 /** Structure containing sprite data and size */
 typedef struct sprite_info {
-	sprite_data_t data;           /**< Sprite data */  /**@{*/
-	unsigned      width, height;  /**< Sprite size */  /**@}*/
+	sprite_t data;           /**< Sprite data */  /**@{*/
+	unsigned width, height;  /**< Sprite size */  /**@}*/
 } SpriteInfo;
 
 

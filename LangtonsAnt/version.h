@@ -12,7 +12,8 @@
 #define APP_COPYRIGHT1 "(C) 2015-2025  " APP_AUTHOR
 #define APP_COPYRIGHT2 "(C) 2015  Natalija Radic"
 #define APP_COPYRIGHT3 "(C) 2025  Konstantinos Petrovic"
-#define APP_URL        "github.com/vomindoraan/langtons-ant"
+#define APP_URL_REPO   "github.com/vomindoraan/langtons-ant"
+#define APP_URL_ABOUT  "suluv.org/pomeraj-u-kodu-3"
 
 #if defined(PDCURSES)
 #	define APP_CURSES  "PDCurses"
