@@ -5,11 +5,9 @@
 
 Colors *colors_new(color_t def)
 {
-	color_t i;
-	Colors* colors;
-
 	assert(def >= 0 && def < COLOR_COUNT);
-	colors = malloc(sizeof(Colors));
+	color_t i;
+	Colors* colors = malloc(sizeof(Colors));
 
 	for (i = 0; i < COLOR_COUNT; i++) {
 		colors->next[i] = def;
@@ -24,6 +22,7 @@ Colors *colors_new(color_t def)
 
 void colors_delete(Colors *colors)
 {
+	assert(colors);
 	free(colors);
 }
 
@@ -35,6 +34,7 @@ static inline void update_def(Colors *c)
 
 void colors_push(Colors *colors, color_t c, turn_t turn)
 {
+	assert(colors);
 	if (c < 0 || c >= COLOR_COUNT || c == colors->def) {
 		return;
 	}
@@ -54,6 +54,7 @@ void colors_push(Colors *colors, color_t c, turn_t turn)
 
 void colors_pop(Colors *colors, color_t c)
 {
+	assert(colors);
 	color_t i;
 	if (c < 0 || c >= COLOR_COUNT || c == colors->def || colors->n == 0) {
 		return;
@@ -82,6 +83,7 @@ void colors_pop(Colors *colors, color_t c)
 
 void colors_clear(Colors *colors)
 {
+	assert(colors);
 	color_t i;
 	for (i = 0; i < COLOR_COUNT; i++) {
 		colors->next[i] = colors->def;
@@ -93,8 +95,8 @@ void colors_clear(Colors *colors)
 
 void colors_update(Colors *colors, unsigned index, color_t c, turn_t turn)
 {
+	assert(colors && index < colors->n);
 	color_t prev = colors->last, i = colors->first, j;
-	assert(index < colors->n);
 	for (; index > 0; index--) {
 		prev = i;
 		i = colors->next[i];
@@ -124,8 +126,8 @@ void colors_update(Colors *colors, unsigned index, color_t c, turn_t turn)
 
 void colors_set_turn(Colors *colors, unsigned index, turn_t turn)
 {
+	assert(colors && index < colors->n);
 	color_t i = colors->first;
-	assert(index < colors->n);
 	for (; index > 0; index--) {
 		i = colors->next[i];
 	}
@@ -135,8 +137,8 @@ void colors_set_turn(Colors *colors, unsigned index, turn_t turn)
 
 color_t colors_at(Colors *colors, unsigned index)
 {
+	assert(colors && index < colors->n);
 	color_t i = colors->first;
-	assert(index < colors->n);
 	for (; index > 0; index--) {
 		i = colors->next[i];
 	}
@@ -145,20 +147,24 @@ color_t colors_at(Colors *colors, unsigned index)
 
 bool color_exists(Colors *colors, color_t c)
 {
+	assert(colors);
 	return colors->turn[c] != TURN_NONE;
 }
 
 bool is_color_special(Colors *colors, color_t c)
 {
+	assert(colors);
 	return colors->next[c] != colors->def && colors->turn[c] == TURN_NONE;
 }
 
 bool is_colors_empty(Colors *colors)
 {
+	assert(colors);
 	return colors->n == 0;
 }
 
 bool has_enough_colors(Colors *colors)
 {
+	assert(colors);
 	return colors->n >= 2;
 }

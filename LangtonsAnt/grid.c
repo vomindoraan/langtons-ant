@@ -7,6 +7,7 @@
 
 Grid *grid_new(Colors *colors, unsigned init_size)
 {
+	assert(colors);
 	unsigned i;
 	Grid *grid = malloc(sizeof(Grid));
 
@@ -67,6 +68,7 @@ static void grid_delete_s(Grid *grid)
 
 void grid_delete(Grid *grid)
 {
+	assert(grid);
 	is_grid_sparse(grid) ? grid_delete_s(grid) : grid_delete_n(grid);
 	free(grid);
 }
@@ -84,6 +86,7 @@ static inline bool is_in_old_matrix_row(unsigned y, unsigned old_size)
 
 void grid_silent_expand(Grid *grid)
 {
+	assert(grid);
 	unsigned size = grid->size * GRID_MULT, i;
 	if (is_grid_sparse(grid) || grid->tmp_size >= size) {
 		return;
@@ -157,6 +160,7 @@ static void grid_expand_s(Grid *grid)
 
 void grid_expand(Grid *grid, Ant *ant)
 {
+	assert(grid), assert(ant);
 	transfer_vector(&ant->pos, grid->size);
 	transfer_vector(&grid->top_left, grid->size);
 	transfer_vector(&grid->bottom_right, grid->size);
@@ -175,6 +179,7 @@ void grid_expand(Grid *grid, Ant *ant)
 
 void grid_make_sparse(Grid *grid)
 {
+	assert(grid);
 	unsigned i, j;
 	SparseCell **curr;
 	byte c;
@@ -200,11 +205,13 @@ void grid_make_sparse(Grid *grid)
 
 inline bool is_grid_sparse(Grid *grid)
 {
+	assert(grid);
 	return grid->csr ? assert(!grid->c), TRUE : FALSE;
 }
 
 bool is_grid_usage_low(Grid *grid)
 {
+	assert(grid);
 	int b = (grid->bottom_right.y - grid->top_left.y + 1)
 	      * (grid->bottom_right.x - grid->top_left.x + 1);
 	return (double)grid->colored / b < GRID_USAGE_THRESHOLD;
@@ -212,6 +219,7 @@ bool is_grid_usage_low(Grid *grid)
 
 void sparse_prepend(SparseCell **phead, unsigned column, byte color)
 {
+	assert(phead);
 	SparseCell *new = malloc(sizeof(SparseCell));
 	CSR_SET_COLUMN(new, column);
 	CSR_SET_COLOR(new, color);
@@ -235,6 +243,7 @@ SparseCell *sparse_append(SparseCell *head, unsigned column, byte color)
 
 byte sparse_color_at(Grid *grid, Vector2i pos)
 {
+	assert(grid);
 	unsigned x = pos.x;
 	SparseCell *t = grid->csr[pos.y];
 	while (t && CSR_GET_COLUMN(t) < x) {

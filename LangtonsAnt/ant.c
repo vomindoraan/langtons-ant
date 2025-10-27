@@ -5,6 +5,7 @@
 
 Ant *ant_new(Grid *grid, Direction dir)
 {
+	assert(grid);
 	Ant *ant = malloc(sizeof(Ant));
 	ant->pos.y = ant->pos.x = grid->size / 2;
 	ant->dir = dir;
@@ -13,6 +14,7 @@ Ant *ant_new(Grid *grid, Direction dir)
 
 void ant_delete(Ant *ant)
 {
+	assert(ant);
 	free(ant);
 }
 
@@ -99,6 +101,7 @@ static void ant_move_s(Ant *ant, Grid *grid, Colors *colors)
 
 bool ant_move(Ant *ant, Grid *grid, Colors *colors)
 {
+	assert(ant), assert(grid), assert(colors);
 	if (is_grid_sparse(grid)) {
 		ant_move_s(ant, grid, colors);
 	} else {
@@ -109,6 +112,7 @@ bool ant_move(Ant *ant, Grid *grid, Colors *colors)
 
 bool is_ant_in_bounds(Ant *ant, Grid *grid)
 {
+	assert(ant), assert(grid);
 	return ant->pos.y >= 0 && (unsigned)ant->pos.y < grid->size
 	    && ant->pos.x >= 0 && (unsigned)ant->pos.x < grid->size;
 }

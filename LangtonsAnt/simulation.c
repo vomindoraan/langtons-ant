@@ -17,6 +17,7 @@ Simulation *simulation_new(Colors *colors, unsigned init_size)
 
 void simulation_delete(Simulation *sim)
 {
+	assert(sim);
 	grid_delete(sim->grid);
 	ant_delete(sim->ant);
 	free(sim);
@@ -24,16 +25,19 @@ void simulation_delete(Simulation *sim)
 
 void simulation_run(Simulation *sim)
 {
+	assert(sim);
 	sim->is_running = TRUE;
 }
 
 void simulation_halt(Simulation *sim)
 {
+	assert(sim);
 	sim->is_running = FALSE;
 }
 
 bool simulation_step(Simulation *sim)
 {
+	assert(sim);
 	bool in_bounds = ant_move(sim->ant, sim->grid, sim->colors);
 	grid_silent_expand(sim->grid);
 	if (!in_bounds) {
