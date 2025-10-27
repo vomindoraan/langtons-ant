@@ -64,11 +64,9 @@ void game_loop(void)
 
 	while (run_loop) {
 		state_t input = handle_input(sim);
-		bool grid_changed = input & STATE_GRID_CHANGED;
-		bool menu_changed = input & STATE_MENU_CHANGED;
-#if SERIAL_COLORS
-		bool colors_changed = input & STATE_COLORS_CHANGED;
-#endif
+		bool grid_changed   = !!(input & STATE_GRID_CHANGED);
+		bool menu_changed   = !!(input & STATE_MENU_CHANGED);
+		bool colors_changed = !!(input & STATE_COLORS_CHANGED);
 		sim = stgs.simulation;
 
 		if (is_simulation_running(sim)) {
@@ -88,11 +86,11 @@ void game_loop(void)
 		if (menu_changed) {
 			draw_menu_full();
 		}
-#if SERIAL_COLORS
 		if (colors_changed) {
+#if SERIAL_COLORS
 			serial_send_colors(sim->colors);
-		}
 #endif
+		}
 
 		doupdate();
 	}

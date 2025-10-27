@@ -25,7 +25,7 @@
 #define LEN(a)     (sizeof(a) / sizeof(*a))
 
 ///@{
-/** Stringify macro constant */
+/** Stringify macro value macro */
 #define STR(x)     _STR(x)
 #define _STR(x)    #x
 ///@}

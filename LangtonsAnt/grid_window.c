@@ -10,6 +10,7 @@ const Vector2i  grid_pos = { 0, 0 };
 void init_grid_window(void)
 {
 	gridw = newwin(GRID_WINDOW_SIZE, GRID_WINDOW_SIZE, grid_pos.y, grid_pos.x);
+	wbkgd(gridw, ui_pair);
 	keypad(gridw, TRUE);
 	nodelay(gridw, TRUE);
 }
@@ -37,9 +38,9 @@ static void draw_buffer_zone(int total, int offset)
 		mvwhline(gridw, n-1-i, i,     CHAR_FULL, n-i);
 		mvwvline(gridw, i,     n-1-i, CHAR_FULL, n-i);
 	}
-	if ((n-total-2*offset) % 2) {
-		mvwhline(gridw, n-1-i, i, CHAR_FULL, n-i);
-		mvwvline(gridw, i, n-1-i, CHAR_FULL, n-i);
+	if ((n - total - 2*offset) % 2) {
+		mvwhline(gridw, n-1-i, i,     CHAR_FULL, n-i);
+		mvwvline(gridw, i,     n-1-i, CHAR_FULL, n-i);
 	}
 }
 
@@ -73,7 +74,7 @@ static bool draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
 static void draw_scrollbars(color_t def)
 {
 	int n = GRID_VIEW_SIZE, mid = n/2, step = n-2;
-	int size = (int)(MAX(step * gridscrl.scale, 1));
+	int size = (int)MAX(step * gridscrl.scale, 1);
 	int h = mid + gridscrl.hcenter - size/2;
 	int v = mid + gridscrl.vcenter - size/2;
 	chtype sb_fg_pair = AVAILABLE_PAIR(def, COLOR_WHITE, COLOR_SILVER);
@@ -178,11 +179,7 @@ void draw_grid_full(Grid *grid, Ant *ant)
 			borderless(grid, ant);
 		}
 	} else {
-		int i;
-		wattrset(gridw, bg_pair);
-		for (i = 0; i < GRID_WINDOW_SIZE; i++) {
-			mvwhline(gridw, i, 0, CHAR_FULL, GRID_WINDOW_SIZE);
-		}
+		wbkgd(gridw, ui_pair);
 	}
 	wnoutrefresh(gridw);
 }

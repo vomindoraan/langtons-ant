@@ -57,6 +57,19 @@ static const char *sparse_msg         = "[SPARSE MATRIX]";
 static const char *size_msg           = "GRID SIZE:";
 static const char *steps_msg          = "STEPS:";
 
+static const char *load_label[] = {
+	" LOAD  ",
+	"",
+	"EXAMPLE",
+};
+#if SAVE_ENABLE
+static const char *save_label[] = {
+	" SAVE  ",
+	"",
+	"TO FILE",
+};
+#endif
+
 typedef const char  logo_str_t[MENU_LOGO_WIDTH+1];
 typedef logo_str_t *logo_text_t;
 
@@ -162,7 +175,7 @@ static unsigned state_map[COLOR_COUNT] = { 0 };
 void init_menu_window(void)
 {
 	menuw = newwin(MENU_WINDOW_HEIGHT, MENU_WINDOW_WIDTH, menu_pos.y, menu_pos.x);
-	wbkgd(menuw, fg_pair);
+	wbkgd(menuw, ui_pair);
 	keypad(menuw, TRUE);
 	nodelay(menuw, TRUE);
 	assert(!IS_COLOR_BRIGHT(MENU_BORDER_COLOR)
@@ -329,7 +342,7 @@ static void draw_color_rules(void)
 	bool do_for = TRUE;
 	Vector2i pos1, pos2, cdef_pos;
 
-	pos1.y = rules_pos.y - 1;
+	pos1.y = rules_pos.y - 3;
 	pos1.x = rules_pos.x - MENU_TILE_PWIDTH;
 	wattrset(menuw, bg_pair);
 	draw_rect(menuw, pos1, MENU_TILES_WIDTH, MENU_TILES_HEIGHT);
@@ -419,6 +432,9 @@ static void draw_speed(void)
 	int dy = menu_speed_d_pos.y - menu_speed_u_pos.y - 2/mult;
 	Vector2i slider_pos = { speed_pos.y + dy - mult*stgs.speed, speed_pos.x };
 
+	wattrset(menuw, bg_pair);
+	draw_rect(menuw, speed_pos, MENU_DIGIT_WIDTH, MENU_SPEED_HEIGHT+4);
+
 	/* Draw scrollbar */
 	wattrset(menuw, ui_pair);
 	mvwvline(menuw, menu_speed_u_pos.y+2, menu_speed_u_pos.x+1, ACS_VLINE, dy);
@@ -429,14 +445,12 @@ static void draw_speed(void)
 
 	/* Draw arrow buttons */
 	wattrset(menuw, pair);
-	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_UP], MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
+	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_UP],   MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
 	            menu_speed_u_pos, FALSE);
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_DOWN], MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
 	            menu_speed_d_pos, FALSE);
 
 	/* Draw speed value */
-	wattrset(menuw, bg_pair);
-	draw_rect(menuw, speed_pos, MENU_DIGIT_WIDTH, dy + 4);
 	wattrset(menuw, fg_pair);
 	draw_sprite(menuw, (SpriteInfo) { digit_sprites[stgs.speed], 3, 5 }, slider_pos, TRUE);
 }
@@ -444,7 +458,7 @@ static void draw_speed(void)
 static void draw_state_func(void)
 {
 	Simulation *sim = stgs.simulation;
-	char str[8], q[4];
+	char q[4], str[8];
 	color_t ant_color = GRID_ANT_COLOR(sim->grid, sim->ant);
 	color_t next_color = sim->colors->next[ant_color];  // Uses sim->colors instead of stgs.colors
 
@@ -490,7 +504,7 @@ static void draw_control_buttons(void)
 	}
 }
 
-static void draw_io_button(Vector2i pos, const char *label[MENU_BUTTON_HEIGHT-4], IOStatus status, bool draw_status)
+static void draw_io_button(Vector2i pos, const char **label, IOStatus status, bool draw_status)
 {
 	Vector2i inner_pos  = { pos.y+1, pos.x+1 };
 	Vector2i text_pos   = { pos.y+2, pos.x+2 };
@@ -520,21 +534,13 @@ static void draw_io_button(Vector2i pos, const char *label[MENU_BUTTON_HEIGHT-4]
 
 static void draw_io_buttons(void)
 {
-	const char *load_label[] = {
-		" LOAD  ",
-		"       ",
-		"EXAMPLE",
-	};
-#if SAVE_ENABLE
-	const char *save_label[] = {
-		" SAVE  ",
-		"       ",
-		"TO FILE",
-	};
-	draw_io_button(menu_save_pos, save_label, save_status, TRUE);
-	draw_io_button(menu_load_pos, load_label, load_status, TRUE);
-#else
+#if !SAVE_ENABLE && GALLERY_MODE
 	draw_io_button(menu_load_pos, load_label, load_status, FALSE);
+#else
+	draw_io_button(menu_load_pos, load_label, load_status, TRUE);
+#endif
+#if SAVE_ENABLE
+	draw_io_button(menu_save_pos, save_label, save_status, TRUE);
 #endif
 }
 

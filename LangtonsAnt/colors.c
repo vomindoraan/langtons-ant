@@ -27,7 +27,7 @@ void colors_delete(Colors *colors)
 	free(colors);
 }
 
-static void update_def(Colors *c)
+static inline void update_def(Colors *c)
 {
 	c->next[c->def] = c->next[c->first];
 	c->turn[c->def] = c->turn[c->first];

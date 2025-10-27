@@ -168,8 +168,8 @@ void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left, bool overwrite
 {
 	unsigned read, y, x;
 	byte pixel;
-	for (read = 0; read < sprite.width*sprite.height; read++) {
-		pixel = sprite.data[read/8] >> (7-read%8) & 0x1;
+	for (read = 0; read < sprite.width * sprite.height; read++) {
+		pixel = (sprite.data[read/8] >> (7-read%8)) & 1;
 		y = read / sprite.width, x = read % sprite.width;
 		if (overwrite) {
 			mvwaddch(w, top_left.y+y, top_left.x+x, pixel ? CHAR_FULL : CHAR_EMPTY);

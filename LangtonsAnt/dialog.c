@@ -171,7 +171,6 @@ state_t dialog_mouse_command(MEVENT *mouse)
 			goto button_clicked;
 		}
 	}
-
 	if (cidx >= 0 && area_contains(delete_pos, DIALOG_DELETE_WIDTH, DIALOG_DELETE_HEIGHT, pos)) {
 		del = TRUE;
 		goto button_clicked;
@@ -179,8 +178,8 @@ state_t dialog_mouse_command(MEVENT *mouse)
 
 	for (i = 0; i < COLOR_COUNT; i++) {
 		tl = get_dialog_tile_pos(i);
-		if ((cidx == CIDX_DEFAULT || !color_exists(stgs.colors, i))
-				&& area_contains(tl, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, pos)) {
+		if ((cidx == CIDX_DEFAULT || !color_exists(stgs.colors, i)) &&
+				area_contains(tl, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, pos)) {
 			picked_color = i;
 			goto button_clicked;
 		}

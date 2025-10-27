@@ -43,8 +43,9 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg)
 	msg[0] = '\0';
 	for (i = 0; i < COLOR_COUNT && is_color_rule_valid(rules[i]); i++) {
 		color_t c = rules[i].color;
-		turn_t t = rules[i].turn;
+		turn_t  t = rules[i].turn;
 		const pixel_t *prgb = &color_map[RGB(c)];
+
 		char tmp[COLOR_RULE_LEN+1];
 		snprintf(tmp, COLOR_RULE_LEN+1, COLOR_RULE_FMT,
 		         (*prgb)[0], (*prgb)[1], (*prgb)[2], turn2arrow(t) & 0xFF);
@@ -68,7 +69,9 @@ bool serial_send_colors(Colors *colors)
 	ColorRules rules;
 	ColorRulesMsg msg;
 
-	colors_to_color_rules(colors, rules);
+	if (!colors_to_color_rules(colors, rules)) {
+		return FALSE;
+	}
 	serialize_color_rules(rules, msg);
 
 #ifdef _WIN32
