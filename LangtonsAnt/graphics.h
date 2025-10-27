@@ -47,7 +47,7 @@
 #define CHAR_SEMI        (ui_pair | ACS_CKBOARD)
 
 /** Guaranteed to be visible on the UI background */
-#define CHAR_VISIBLE(c)  (((c) == COLOR_FOR(ui_pair)) ? CHAR_SEMI : PAIR_FOR(c) | CHAR_FULL)
+#define CHAR_VISIBLE(c)  (((c) == COLOR_FOR(bg_pair)) ? CHAR_SEMI : PAIR_FOR(c) | CHAR_FULL)
 
 
 /*--------------------------- Display color macros ---------------------------*/
