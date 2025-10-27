@@ -160,7 +160,7 @@ static state_t load_example(int index) {
 	static int last_index = 0;
 	if (index < 0) {
 		index = last_index;
-		last_index = (last_index + 1) % LEN(example_files);
+		last_index = (last_index+1) % LEN(example_files);
 	} else if (index >= (int)LEN(example_files)) {
 		return STATE_NO_CHANGE;
 	}

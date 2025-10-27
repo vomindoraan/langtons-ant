@@ -30,7 +30,7 @@ const pixel_t color_map[COLOR_COUNT] = {
 
 static byte *init_file_header(size_t height, size_t stride)
 {
-	size_t file_size = BMP_FILE_HEADER_SIZE + BMP_INFO_HEADER_SIZE + (stride * height);
+	size_t file_size = BMP_FILE_HEADER_SIZE + BMP_INFO_HEADER_SIZE + stride*height;
 	static byte file_header[] = {
 		0, 0,        // signature
 		0, 0, 0, 0,  // image file size in bytes
@@ -85,7 +85,7 @@ int create_bitmap_file(const char *filename, pixel_t *image, size_t height, size
 	FILE *output;
 	size_t width_in_bytes = width * BYTES_PER_PIXEL;
 	byte padding[3] = { 0, 0, 0 };
-	size_t padding_size = (4 - width_in_bytes % 4) % 4;
+	size_t padding_size = (4 - width_in_bytes%4) % 4;
 	size_t stride = width_in_bytes + padding_size;
 	size_t total_size = BMP_FILE_HEADER_SIZE + BMP_INFO_HEADER_SIZE
 	                  + height * (width_in_bytes + padding_size);
@@ -102,7 +102,7 @@ int create_bitmap_file(const char *filename, pixel_t *image, size_t height, size
 	e += fwrite(info_header, 1, BMP_INFO_HEADER_SIZE, output);
 
 	for (i = 0; i < height; i++) {
-		e += fwrite(image+i*width, BYTES_PER_PIXEL, width, output);
+		e += fwrite(image + i*width, BYTES_PER_PIXEL, width, output);
 		e += fwrite(padding, 1, padding_size, output);
 	}
 

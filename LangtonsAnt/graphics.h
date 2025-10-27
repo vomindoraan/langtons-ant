@@ -177,6 +177,7 @@ typedef struct scroll_info {
 #define MENU_STATE_FUNC_Y    (MENU_SPEED_Y + MENU_SPEED_HEIGHT + MENU_V_PAD + 6)
 #define MENU_GRID_SIZE_Y     (MENU_STATE_FUNC_Y + MENU_V_PAD + 4)
 #define MENU_STATUS_Y        (MENU_WINDOW_HEIGHT - MENU_V_MARGIN - 7)
+#define MENU_STEPS_LEN       8
 #define MENU_BORDER_COLOR    COLOR_NAVY
 #define MENU_BORDER_COLOR_S  COLOR_MAROON
 #define MENU_ACTIVE_COLOR    COLOR_BLUE
@@ -202,14 +203,12 @@ typedef struct scroll_info {
 #define MENU_CLEAR_COLOR     COLOR_TEAL
 ///@}
 
-/** @name Menu sprite dimensions */
+/** @name Menu sprite attributes */
 ///@{
 #define MENU_UDARROW_WIDTH   3
 #define MENU_UDARROW_HEIGHT  2
 #define MENU_RLARROW_WIDTH   MENU_UDARROW_HEIGHT
 #define MENU_RLARROW_HEIGHT  MENU_UDARROW_WIDTH
-#define MENU_DIGIT_WIDTH     3
-#define MENU_DIGIT_HEIGHT    5
 #define MENU_STEPUP_SIZE     3
 ///@}
 

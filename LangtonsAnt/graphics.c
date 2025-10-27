@@ -171,10 +171,10 @@ void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left, bool overwrite
 	for (read = 0; read < sprite.width * sprite.height; read++) {
 		pixel = (sprite.data[read/8] >> (7-read%8)) & 1;
 		y = read / sprite.width, x = read % sprite.width;
-		if (overwrite) {
-			mvwaddch(w, top_left.y+y, top_left.x+x, pixel ? CHAR_FULL : CHAR_EMPTY);
-		} else if (pixel) {
+		if (pixel) {
 			mvwaddch(w, top_left.y+y, top_left.x+x, CHAR_FULL);
+		} else if (overwrite) {  // TODO: Separate into two functions if slow
+			mvwaddch(w, top_left.y+y, top_left.x+x, CHAR_EMPTY);
 		}
 	}
 }

@@ -101,7 +101,20 @@ static logo_str_t logo_help_text[MENU_LOGO_HEIGHT] = {
 #endif
 };
 
-#define LOGO_SPRITEINFO(s)  (SpriteInfo) { s, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT }
+#define BUTTON_SPRITE_WIDTH    5
+#define BUTTON_SPRITE_HEIGHT   5
+#define DIGIT_SPRITE_WIDTH     3
+#define DIGIT_SPRITE_HEIGHT    5
+#define INF_SPRITE_WIDTH       11
+#define INF_SPRITE_HEIGHT      DIGIT_SPRITE_HEIGHT
+
+#define LOGO_SPRITEINFO(s)     (SpriteInfo) { s,                 MENU_LOGO_WIDTH,     MENU_LOGO_HEIGHT }
+#define UDARROW_SPRITEINFO(d)  (SpriteInfo) { arrow_sprites[d],  MENU_UDARROW_WIDTH,  MENU_UDARROW_HEIGHT }
+#define RLARROW_SPRITEINFO(d)  (SpriteInfo) { arrow_sprites[d],  MENU_RLARROW_WIDTH,  MENU_RLARROW_HEIGHT }
+#define STEPUP_SPRITEINFO()    (SpriteInfo) { stepup_sprite,     MENU_STEPUP_SIZE,    MENU_STEPUP_SIZE }
+#define BUTTON_SPRITEINFO(d)   (SpriteInfo) { button_sprites[d], BUTTON_SPRITE_WIDTH, BUTTON_SPRITE_HEIGHT }
+#define DIGIT_SPRITEINFO(d)    (SpriteInfo) { digit_sprites[d],  DIGIT_SPRITE_WIDTH,  DIGIT_SPRITE_HEIGHT }
+#define INF_SPRITEINFO()       (SpriteInfo) { inf_sprite,        INF_SPRITE_WIDTH,    INF_SPRITE_HEIGHT }
 
 typedef struct logo {
 	sprite_t         sprite;
@@ -152,22 +165,21 @@ static const Logo logos[] = {
 };
 static unsigned logo_index;
 
-static const byte arrow_sprites[][1] = {
+static const byte arrow_sprites[][1] = {  // Index by DIR_*
 	{ 0x5C }, { 0xB8 }, { 0xE8 }, { 0x74 },
 };
 static const byte stepup_sprite[] = { 0x5D, 0x00 };  // > 0xCF, + 0x5D
+static const byte button_sprites[][4] = {
+	{ 0x43, 0x1C, 0xC4, 0x00 }, { 0x02, 0x94, 0xA0, 0x00 },
+	{ 0x03, 0x9C, 0xE0, 0x00 }, { 0x47, 0x92, 0x17, 0x00 },
+	{ 0x00, 0x2A, 0x00, 0x00 },
+};
 static const byte digit_sprites[][2] = {
 	{ 0xF6, 0xDE }, { 0x24, 0x92 }, { 0xE7, 0xCE }, { 0xE7, 0x9E }, { 0xB7, 0x92 },
 	{ 0xF3, 0x9E }, { 0xF3, 0xDE }, { 0xE4, 0x92 }, { 0xF7, 0xDE }, { 0xF7, 0x9E },
 };
 static const byte inf_sprite[] = {
-	0x00, 0x00, 0x07, 0x1C, 0x00, 0x00, 0x11, 0x44, 0x00, 0x00,
-	0x21, 0x08, 0x00, 0x00, 0x45, 0x10, 0x00, 0x00, 0x71, 0xC0,
-};
-static const byte button_sprites[][4] = {
-	{ 0x43, 0x1C, 0xC4, 0x00 }, { 0x02, 0x94, 0xA0, 0x00 },
-	{ 0x03, 0x9C, 0xE0, 0x00 }, { 0x47, 0x92, 0x17, 0x00 },
-	{ 0x00, 0x2A, 0x00, 0x00 },
+	0x71, 0xD1, 0x46, 0x10, 0xC5, 0x17, 0x1C
 };
 
 static unsigned state_map[COLOR_COUNT] = { 0 };
@@ -391,12 +403,11 @@ static void draw_color_rules(void)
 static void draw_init_size(void)
 {
 	wattrset(menuw, PAIR_FOR(MENU_ACTIVE_COLOR));
-	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_UP],   MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
-	            menu_isize_u_pos, FALSE);
-	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_DOWN], MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
-	            menu_isize_d_pos, FALSE);
+	draw_sprite(menuw, UDARROW_SPRITEINFO(DIR_UP),   menu_isize_u_pos, FALSE);
+	draw_sprite(menuw, UDARROW_SPRITEINFO(DIR_DOWN), menu_isize_d_pos, FALSE);
+
 	wattrset(menuw, fg_pair);
-	draw_sprite(menuw, (SpriteInfo) { digit_sprites[stgs.init_size], 3, 5 }, isize_pos, TRUE);
+	draw_sprite(menuw, DIGIT_SPRITEINFO(stgs.init_size), isize_pos, TRUE);
 }
 
 static void draw_dir_arrow(void)
@@ -408,21 +419,19 @@ static void draw_dir_arrow(void)
 static void draw_direction(void)
 {
 	wattrset(menuw, PAIR_FOR(MENU_ACTIVE_COLOR));
-	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_UP],    MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
-	            menu_dir_u_pos, FALSE);
-	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_RIGHT], MENU_RLARROW_WIDTH, MENU_RLARROW_HEIGHT },
-	            menu_dir_r_pos, FALSE);
-	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_DOWN],  MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
-	            menu_dir_d_pos, FALSE);
-	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_LEFT],  MENU_RLARROW_WIDTH, MENU_RLARROW_HEIGHT },
-	            menu_dir_l_pos, FALSE);
+	draw_sprite(menuw, UDARROW_SPRITEINFO(DIR_UP),    menu_dir_u_pos, FALSE);
+	draw_sprite(menuw, RLARROW_SPRITEINFO(DIR_RIGHT), menu_dir_r_pos, FALSE);
+	draw_sprite(menuw, UDARROW_SPRITEINFO(DIR_DOWN),  menu_dir_d_pos, FALSE);
+	draw_sprite(menuw, RLARROW_SPRITEINFO(DIR_LEFT),  menu_dir_l_pos, FALSE);
 	draw_dir_arrow();
 }
 
 static void draw_stepup(void)
 {
-	wattrset(menuw, PAIR_FOR(has_enough_colors(stgs.colors) ? MENU_ACTIVE_COLOR : MENU_INACTIVE_COLOR));
-	draw_sprite(menuw, (SpriteInfo) { stepup_sprite, 3, 3 }, menu_stepup_pos, FALSE);
+	wattrset(menuw, PAIR_FOR(
+		has_enough_colors(stgs.colors) ? MENU_ACTIVE_COLOR : MENU_INACTIVE_COLOR
+	));
+	draw_sprite(menuw, STEPUP_SPRITEINFO(), menu_stepup_pos, FALSE);
 }
 
 static void draw_speed(void)
@@ -432,7 +441,7 @@ static void draw_speed(void)
 	Vector2i slider_pos = { speed_pos.y + dy - mult*stgs.speed, speed_pos.x };
 
 	wattrset(menuw, bg_pair);
-	draw_rect(menuw, speed_pos, MENU_DIGIT_WIDTH, MENU_SPEED_HEIGHT+4);
+	draw_rect(menuw, speed_pos, DIGIT_SPRITE_WIDTH, MENU_SPEED_HEIGHT+DIGIT_SPRITE_HEIGHT-1);
 
 	/* Draw scrollbar */
 	wattrset(menuw, ui_pair);
@@ -443,14 +452,12 @@ static void draw_speed(void)
 	mvwvline(menuw, slider_pos.y+1, slider_pos.x-3, CHAR_FULL, 3);
 
 	/* Draw speed value */
-	draw_sprite(menuw, (SpriteInfo) { digit_sprites[stgs.speed], 3, 5 }, slider_pos, FALSE);
+	draw_sprite(menuw, DIGIT_SPRITEINFO(stgs.speed), slider_pos, FALSE);
 
 	/* Draw arrow buttons */
 	wattrset(menuw, PAIR_FOR(MENU_ACTIVE_COLOR));
-	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_UP],   MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
-	            menu_speed_u_pos, FALSE);
-	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_DOWN], MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
-	            menu_speed_d_pos, FALSE);
+	draw_sprite(menuw, UDARROW_SPRITEINFO(DIR_UP),   menu_speed_u_pos, FALSE);
+	draw_sprite(menuw, UDARROW_SPRITEINFO(DIR_DOWN), menu_speed_d_pos, FALSE);
 }
 
 static void draw_state_func(void)
@@ -477,7 +484,10 @@ static void draw_state_func(void)
 
 static void draw_control_buttons(void)
 {
-	Vector2i o = { (MENU_BUTTON_HEIGHT-5)/2, (MENU_BUTTON_WIDTH-5)/2 };
+	Vector2i o = {
+		.y = (MENU_BUTTON_HEIGHT - BUTTON_SPRITE_HEIGHT) / 2,
+		.x = (MENU_BUTTON_WIDTH  - BUTTON_SPRITE_WIDTH)  / 2
+	};
 	Vector2i pos1 = { menu_play_pos.y + o.y, menu_play_pos.x + o.x };
 	Vector2i pos2 = { menu_stop_pos.y + o.y, menu_stop_pos.x + o.x };
 
@@ -487,18 +497,22 @@ static void draw_control_buttons(void)
 
 	if (is_simulation_running(stgs.simulation)) {
 		wattrset(menuw, PAIR_FOR(MENU_PAUSE_COLOR));
-		draw_sprite(menuw, (SpriteInfo) { button_sprites[1], 5, 5 }, pos1, FALSE);
+		draw_sprite(menuw, BUTTON_SPRITEINFO(1), pos1, FALSE);
 	} else {
-		wattrset(menuw, PAIR_FOR(has_enough_colors(stgs.colors) ? MENU_PLAY_COLOR : MENU_INACTIVE_COLOR));
-		draw_sprite(menuw, (SpriteInfo) { button_sprites[0], 5, 5 }, pos1, FALSE);
+		wattrset(menuw, PAIR_FOR(
+			has_enough_colors(stgs.colors) ? MENU_PLAY_COLOR : MENU_INACTIVE_COLOR
+		));
+		draw_sprite(menuw, BUTTON_SPRITEINFO(0), pos1, FALSE);
 	}
 
 	if (has_simulation_started(stgs.simulation)) {
 		wattrset(menuw, PAIR_FOR(MENU_STOP_COLOR));
-		draw_sprite(menuw, (SpriteInfo) { button_sprites[2], 5, 5 }, pos2, FALSE);
+		draw_sprite(menuw, BUTTON_SPRITEINFO(2), pos2, FALSE);
 	} else {
-		wattrset(menuw, PAIR_FOR(!is_colors_empty(stgs.colors) ? MENU_CLEAR_COLOR : MENU_INACTIVE_COLOR));
-		draw_sprite(menuw, (SpriteInfo) { button_sprites[3], 5, 5 }, pos2, FALSE);
+		wattrset(menuw, PAIR_FOR(
+			!is_colors_empty(stgs.colors) ? MENU_CLEAR_COLOR : MENU_INACTIVE_COLOR
+		));
+		draw_sprite(menuw, BUTTON_SPRITEINFO(3), pos2, FALSE);
 	}
 }
 
@@ -515,7 +529,7 @@ static void draw_io_button(Vector2i pos, const char **label, IOStatus status, bo
 
 	wattrset(menuw, fg_pair);
 	if (status == STATUS_PENDING) {
-		draw_sprite(menuw, (SpriteInfo) { button_sprites[4], 5, 5 }, sprite_pos, FALSE);
+		draw_sprite(menuw, BUTTON_SPRITEINFO(4), sprite_pos, FALSE);
 	} else {
 		for (int i = 0; i < MENU_BUTTON_HEIGHT-4; i++) {
 			mvwaddnstr(menuw, text_pos.y+i, text_pos.x, label[i], MENU_BUTTON_WIDTH-4);
@@ -556,10 +570,10 @@ static void draw_steps(void)
 {
 	static bool do_draw;
 	Simulation *sim = stgs.simulation;
-	unsigned steps = sim ? sim->steps : 0;
-	int len = (int)log10(steps) + 1;
-	Vector2i tl = steps_pos;
-	char digits[9], *d;
+	Vector2i pos = steps_pos;
+	char digits[MENU_STEPS_LEN+1], *d;
+	unsigned steps = sim   ? sim->steps     : 0;
+	unsigned len   = steps ? log10(steps)+1 : 0;
 
 	if (steps <= 1) {
 		do_draw = TRUE;
@@ -568,23 +582,24 @@ static void draw_steps(void)
 	}
 
 	wattrset(menuw, fg_pair);
-	if (len > 8) {
-		draw_sprite(menuw, (SpriteInfo) { inf_sprite, 31, 5 }, tl, TRUE);
+	if (len > MENU_STEPS_LEN) {
+		pos.x += MENU_STEPS_LEN*(DIGIT_SPRITE_WIDTH+1) - INF_SPRITE_WIDTH - 1;
+		draw_sprite(menuw, INF_SPRITEINFO(), pos, TRUE);
 		do_draw = FALSE;
 		return;
 	}
 
-	sprintf(digits, "%8u", steps);
-	for (d = digits; d < digits+8; d++) {
+	sprintf(digits, "%" STR(MENU_STEPS_LEN) "u", steps);
+	for (d = digits; d < digits + MENU_STEPS_LEN; d++) {
 		if (*d != ' ') {
 			int digit = *d - '0';
 			wattrset(menuw, fg_pair);
-			draw_sprite(menuw, (SpriteInfo) { digit_sprites[digit], 3, 5 }, tl, TRUE);
+			draw_sprite(menuw, DIGIT_SPRITEINFO(digit), pos, TRUE);
 		} else {
 			wattrset(menuw, bg_pair);
-			draw_rect(menuw, tl, 3, 5);
+			draw_rect(menuw, pos, DIGIT_SPRITE_WIDTH, DIGIT_SPRITE_HEIGHT);
 		}
-		tl.x += 4;
+		pos.x += DIGIT_SPRITE_WIDTH+1;
 	}
 }
 
