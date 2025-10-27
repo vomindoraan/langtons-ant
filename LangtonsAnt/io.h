@@ -7,29 +7,28 @@
 #define __IO_H__
 
 #include "logic.h"
-#include "graphics.h"
 
 
 /*------------------------- Input/output attributes --------------------------*/
 
 /** Filename buffer size */
-#define FILENAME_SIZE         256
+#define FILENAME_SZ         (size_t)256U
 
 /** Total number of fields in a Colors struct */
-#define COLORS_TOTAL_FIELDS   (COLOR_COUNT*2 + 4)
+#define COLORS_FIELD_COUNT  (COLOR_COUNT*2 + 4)
 
 
 /*----------------------- Bitmap I/O macros and types ------------------------*/
 
 /** @name Bitmap attributes */
 ///@{
-#define BMP_MAX_SIZE          (1U << 28)
-#define BMP_FILE_HEADER_SIZE  14
-#define BMP_INFO_HEADER_SIZE  40
+#define BMP_MAX_SZ          (size_t)(1U << 28)
+#define BMP_FILE_HEADER_SZ  (size_t)14U
+#define BMP_INFO_HEADER_SZ  (size_t)40U
 ///@}
 
 /** Pixel format size */
-#define BYTES_PER_PIXEL       3
+#define BYTES_PER_PIXEL     (size_t)3U
 
 /** @name Pixel format conversion macros */
 ///@{
@@ -45,13 +44,13 @@
 ///@}
 
 /** Bitmap pixel type (24-bit BGR/RGB) */
-typedef byte pixel_t[BYTES_PER_PIXEL];
+typedef byte  pixel_t[BYTES_PER_PIXEL];
 
 /**
  * Maps internal colors to bitmap-compatible pixel type
  * Index with @ref BGR(c) or @ref RGB(c) to explicitly convert format
  */
-extern const pixel_t color_map[COLOR_COUNT];
+extern const pixel_t  color_map[COLOR_COUNT];
 
 
 /*----------------------------------------------------------------------------*

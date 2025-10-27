@@ -13,21 +13,27 @@
 /*--------------------- General purpose macros and types ---------------------*/
 
 ///@{
-/** Standard max/min macro */
-#define MAX(a, b)  (((a) > (b)) ? (a) : (b))
-#define MIN(a, b)  (((a) < (b)) ? (a) : (b))
+/** Standard max/min macros */
+#define MAX(x, y)  (((x) > (y)) ? (x) : (y))
+#define MIN(x, y)  (((x) < (y)) ? (x) : (y))
 ///@}
 
 /** Standard sign macro */
 #define SGN(x)     (((x) > 0) - ((x) < 0))
 
+/** Standard square macro */
+#define SQ(x)      ((x) * (x))
+
+/** Integer ceiling division macro */
+#define CDIV(x, y) (((x) + (y) - 1) / (y))
+
 /** Static array length macro */
 #define LEN(a)     (sizeof(a) / sizeof(*a))
 
 ///@{
-/** Stringify macro value macro */
-#define STR(x)     _STR(x)
-#define _STR(x)    #x
+/** Stringify macro value macros */
+#define STR(x)     STR_(x)
+#define STR_(x)    #x
 ///@}
 
 ///@{
@@ -41,10 +47,10 @@
 ///@}
 
 /** Curses boolean type */
-typedef unsigned char bool;
+typedef unsigned char  bool;
 
 /** Global byte type */
-typedef unsigned char byte;
+typedef unsigned char  byte;
 
 
 /*------------------------- Vector macros and types --------------------------*/
@@ -84,6 +90,7 @@ typedef struct ant {
 ///@{
 #define COLOR_COUNT  16
 #define COLOR_NONE   -1
+
 #define TURN_LEFT    -1
 #define TURN_NONE    0
 #define TURN_RIGHT   1
@@ -93,13 +100,16 @@ typedef struct ant {
 ///@{
 #define COLOR_NEXT(cs, c)  (cs)->next[c]
 #define COLOR_TURN(cs, c)  (cs)->turn[c]
+
+#define TURN_CHAR(t)       ((t) == TURN_LEFT)  ? '<' :     \
+                           ((t) == TURN_RIGHT) ? '>' : '-'
 ///@}
 
 /** Curses color type */
-typedef short color_t;
+typedef short        color_t;
 
 /** Turn direction for given rule */
-typedef signed char turn_t;
+typedef signed char  turn_t;
 
 /** Color rules container */
 typedef struct colors {
@@ -127,7 +137,7 @@ typedef struct colors {
 #define GRID_SIZE_MEDIUM(g)      (GRID_SIZE_SMALL(g) * GRID_MULT)
 #define GRID_SIZE_LARGE(g)       (GRID_SIZE_MEDIUM(g) * GRID_MULT)
 #define IS_GRID_LARGE(g)         ((g)->size >= GRID_SIZE_LARGE(g))
-#define GRID_EFFICIENCY(g)       ((g)->size*(g)->size / ((g)->colored * (double)sizeof(SparseCell)))
+#define GRID_EFFICIENCY(g)       (SQ((g)->size) / ((g)->colored * (double)sizeof(SparseCell)))
 #define GRID_COLOR_AT(g, p)      (is_grid_sparse(g) ? sparse_color_at(g, p) : (g)->c[(p).y][(p).x])
 #define GRID_ANT_COLOR(g, a)     GRID_COLOR_AT(g, (a)->pos)
 ///@}

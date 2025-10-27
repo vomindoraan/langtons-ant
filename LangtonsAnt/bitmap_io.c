@@ -1,4 +1,5 @@
 // Adapted from: https://stackoverflow.com/a/47785639
+#include "graphics.h"
 #include "io.h"
 
 #include <stdio.h>
@@ -30,7 +31,7 @@ const pixel_t color_map[COLOR_COUNT] = {
 
 static byte *init_file_header(size_t height, size_t stride)
 {
-	size_t file_size = BMP_FILE_HEADER_SIZE + BMP_INFO_HEADER_SIZE + stride*height;
+	size_t file_size = BMP_FILE_HEADER_SZ + BMP_INFO_HEADER_SZ + stride*height;
 	static byte file_header[] = {
 		0, 0,        // signature
 		0, 0, 0, 0,  // image file size in bytes
@@ -44,7 +45,7 @@ static byte *init_file_header(size_t height, size_t stride)
 	file_header[3]  = (byte)(file_size >> 8);
 	file_header[4]  = (byte)(file_size >> 16);
 	file_header[5]  = (byte)(file_size >> 24);
-	file_header[10] = (byte)(BMP_FILE_HEADER_SIZE + BMP_INFO_HEADER_SIZE);
+	file_header[10] = (byte)(BMP_FILE_HEADER_SZ + BMP_INFO_HEADER_SZ);
 
 	return file_header;
 }
@@ -65,7 +66,7 @@ static byte *init_info_header(size_t height, size_t width)
 		0, 0, 0, 0,  // important color count
 	};
 
-	info_header[0]  = (byte)(BMP_INFO_HEADER_SIZE);
+	info_header[0]  = (byte)(BMP_INFO_HEADER_SZ);
 	info_header[4]  = (byte)(width);
 	info_header[5]  = (byte)(width >> 8);
 	info_header[6]  = (byte)(width >> 16);
@@ -87,7 +88,7 @@ int create_bitmap_file(const char *filename, pixel_t *image, size_t height, size
 	byte padding[3] = { 0, 0, 0 };
 	size_t padding_size = (4 - width_in_bytes%4) % 4;
 	size_t stride = width_in_bytes + padding_size;
-	size_t total_size = BMP_FILE_HEADER_SIZE + BMP_INFO_HEADER_SIZE
+	size_t total_size = BMP_FILE_HEADER_SZ + BMP_INFO_HEADER_SZ
 	                  + height * (width_in_bytes + padding_size);
 	size_t i, e;
 
@@ -96,10 +97,10 @@ int create_bitmap_file(const char *filename, pixel_t *image, size_t height, size
 	}
 
 	byte *file_header = init_file_header(height, stride);
-	e = fwrite(file_header, 1, BMP_FILE_HEADER_SIZE, output);
+	e = fwrite(file_header, 1, BMP_FILE_HEADER_SZ, output);
 
 	byte *info_header = init_info_header(height, width);
-	e += fwrite(info_header, 1, BMP_INFO_HEADER_SIZE, output);
+	e += fwrite(info_header, 1, BMP_INFO_HEADER_SZ, output);
 
 	for (i = 0; i < height; i++) {
 		e += fwrite(image + i*width, BYTES_PER_PIXEL, width, output);

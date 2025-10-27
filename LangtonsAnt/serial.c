@@ -21,11 +21,11 @@ bool colors_to_color_rules(Colors *colors, ColorRules rules)
 			break;
 		}
 		rules[i++] = (ColorRule) { c, colors->turn[c] };
-		do_for = c != colors->last;
+		do_for = (c != colors->last && i < COLOR_RULES_COUNT);
 	}
 
 	/* Mark remaining color rules as invalid */
-	for (; i < COLOR_COUNT; i++) {
+	for (; i < COLOR_RULES_COUNT; i++) {
 		rules[i] = (ColorRule) { COLOR_NONE, TURN_NONE };
 	}
 
@@ -41,14 +41,14 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg)
 {
 	int i;
 	msg[0] = '\0';
-	for (i = 0; i < COLOR_COUNT && is_color_rule_valid(rules[i]); i++) {
+	for (i = 0; i < COLOR_RULES_COUNT && is_color_rule_valid(rules[i]); i++) {
 		color_t c = rules[i].color;
 		turn_t  t = rules[i].turn;
 		const pixel_t *prgb = &color_map[RGB(c)];
 
 		char tmp[COLOR_RULE_LEN+1];
 		snprintf(tmp, COLOR_RULE_LEN+1, COLOR_RULE_FMT,
-		         (*prgb)[0], (*prgb)[1], (*prgb)[2], turn2arrow(t) & 0xFF);
+		         (*prgb)[0], (*prgb)[1], (*prgb)[2], TURN_CHAR(t));
 		strcat(msg, tmp);
 	}
 }

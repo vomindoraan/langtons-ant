@@ -7,6 +7,7 @@
 #define __GRAPHICS_H__
 
 #include "logic.h"
+#include "sprites.h"
 
 #include "include/curses.h"
 
@@ -165,8 +166,8 @@ typedef struct scroll_info {
 #define MENU_RIGHT_COL_X     (MENU_WINDOW_WIDTH - MENU_H_MARGIN - MENU_COL_WIDTH)
 #define MENU_LEFT_COL_Y      (MENU_LOGO_Y + MENU_LOGO_HEIGHT + MENU_V_PAD - 1)
 #define MENU_RIGHT_COL_Y     MENU_LEFT_COL_Y
-#define MENU_LOGO_WIDTH      38
-#define MENU_LOGO_HEIGHT     10
+#define MENU_LOGO_WIDTH      SPRITE_LOGO_WIDTH
+#define MENU_LOGO_HEIGHT     SPRITE_LOGO_HEIGHT
 #define MENU_LOGO_Y          MENU_V_MARGIN
 #define MENU_RULES_Y         MENU_LEFT_COL_Y
 #define MENU_INIT_SIZE_Y     MENU_RIGHT_COL_Y
@@ -201,15 +202,12 @@ typedef struct scroll_info {
 #define MENU_PAUSE_COLOR     COLOR_YELLOW
 #define MENU_STOP_COLOR      COLOR_RED
 #define MENU_CLEAR_COLOR     COLOR_TEAL
-///@}
 
-/** @name Menu sprite attributes */
-///@{
-#define MENU_UDARROW_WIDTH   3
-#define MENU_UDARROW_HEIGHT  2
-#define MENU_RLARROW_WIDTH   MENU_UDARROW_HEIGHT
-#define MENU_RLARROW_HEIGHT  MENU_UDARROW_WIDTH
-#define MENU_STEPUP_SIZE     3
+#define MENU_UDARROW_WIDTH   SPRITE_UDARROW_WIDTH
+#define MENU_UDARROW_HEIGHT  SPRITE_UDARROW_HEIGHT
+#define MENU_RLARROW_WIDTH   SPRITE_RLARROW_WIDTH
+#define MENU_RLARROW_HEIGHT  SPRITE_RLARROW_HEIGHT
+#define MENU_STEPUP_SIZE     SPRITE_STEPUP_SIZE
 ///@}
 
 /** @name Menu color tiles attributes */
@@ -302,10 +300,10 @@ typedef enum {
 ///@}
 
 /** Window state change as a result of input events (bitwise OR of STATE_* fields) */
-typedef byte state_t;
+typedef byte     state_t;
 
 /** Pending action function pointer */
-typedef state_t (*pending_func_t)(void *);
+typedef state_t  (*pending_func_t)(void *);
 
 /** Structure for scheduling actions to be processed on the next frame */
 typedef struct pending_action {
@@ -328,18 +326,6 @@ typedef struct pending_action {
 #define LOOP_DEF_OPT     3     /**< Default number of steps to skip */
 #define LOOP_MAX_OPT     1097  /**< Number of steps to skip at maximum speed */
 ///@}
-
-
-/*------------------------------- Sprite type --------------------------------*/
-
-/** Raw sprite bytearray */
-typedef const byte *sprite_t;
-
-/** Structure containing sprite data and size */
-typedef struct sprite_info {
-	sprite_t data;           /**< Sprite data */  /**@{*/
-	unsigned width, height;  /**< Sprite size */  /**@}*/
-} SpriteInfo;
 
 
 /*------------------------ Global variables/constants ------------------------*/
@@ -480,19 +466,6 @@ chtype dir2arrow(Direction dir);
  * @see dir2arrow(Direction)
  */
 chtype turn2arrow(turn_t turn);
-
-
-/*----------------------------------------------------------------------------*
- *                               ant_sprites.c                                *
- *----------------------------------------------------------------------------*/
-
-/**
- * Finds a suitable sprite for the given cell size and ant direction
- * @param size Cell size
- * @param dir Current ant direction
- * @return Ant sprite with requested size and direction, if one exists; NULL otherwise
- */
-SpriteInfo ant_sprite(unsigned size, Direction dir);
 
 
 /*----------------------------------------------------------------------------*

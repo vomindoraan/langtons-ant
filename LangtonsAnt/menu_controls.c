@@ -22,7 +22,7 @@ static bool read_filename(char* filename)
 	waddstr(inputw, " Filename: ");
 	wattroff(inputw, fg_pair);
 	echo();
-	ret = mvwgetnstr(inputw, 1, 1, filename, FILENAME_SIZE - 5);  // Leave room for ".bmp"
+	ret = mvwgetnstr(inputw, 1, 1, filename, FILENAME_SZ - 5);  // Leave room for ".bmp"
 	noecho();
 	delwin(inputw);
 	return ret != ERR && strlen(filename) > 0;
@@ -171,7 +171,7 @@ static state_t load_example(int index) {
 
 static state_t load_button_clicked(bool input)
 {
-	static char filename[FILENAME_SIZE] = { 0 };
+	static char filename[FILENAME_SZ];
 	if (input) {
 #if GALLERY_MODE
 		strcpy(filename, USER_FILE);
@@ -207,7 +207,7 @@ static state_t save_sim_action(void *arg)
 
 static state_t save_button_clicked(void)
 {
-	static char filename[FILENAME_SIZE] = { 0 };
+	static char filename[FILENAME_SZ];
 #if GALLERY_MODE
 	strcpy(filename, USER_FILE);
 #else

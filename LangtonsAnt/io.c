@@ -36,7 +36,7 @@ Colors *load_colors(const char *filename)
 	colors->first = BGR(i), colors->last = BGR(c);
 	e += fscanf(input, "%u\n", &colors->n);
 
-	if (fclose(input) == EOF || e < COLORS_TOTAL_FIELDS) {
+	if (fclose(input) == EOF || e < COLORS_FIELD_COUNT) {
 		colors_delete(colors);
 		return NULL;
 	}
@@ -65,7 +65,7 @@ int save_colors(const char *filename, Colors *colors)
 	e += fprintf(output, "%hd %hd\n", BGR(colors->first), BGR(colors->last));
 	e += fprintf(output, "%u\n", colors->n);
 
-	if (fclose(output) == EOF || e < COLORS_TOTAL_FIELDS) {
+	if (fclose(output) == EOF || e < COLORS_FIELD_COUNT) {
 		return EOF;
 	}
 	return e;
@@ -267,7 +267,7 @@ int save_grid_bitmap(const char *filename, Grid *grid)
 	unsigned height = grid->size, width = grid->size, i, j;
 	size_t size = width * height * sizeof(pixel_t);
 
-	if (size > BMP_MAX_SIZE || !(image = malloc(size))) {
+	if (size > BMP_MAX_SZ || !(image = malloc(size))) {
 		return EOF;
 	}
 

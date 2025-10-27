@@ -197,14 +197,5 @@ chtype dir2arrow(Direction dir)
 
 chtype turn2arrow(turn_t turn)
 {
-	switch (turn) {
-	case TURN_LEFT:
-		return '<';
-	case TURN_RIGHT:
-		return '>';
-	case TURN_NONE:
-		return '-';
-	default:
-		return assert(0), ' ';
-	}
+	return (chtype)TURN_CHAR(turn);
 }

@@ -1,7 +1,5 @@
 #include "graphics.h"
-#if SERIAL_COLORS
-#	include "serial.h"
-#endif
+#include "serial.h"
 
 #include <stdlib.h>
 

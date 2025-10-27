@@ -98,10 +98,11 @@
     <ClInclude Include="logic.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="serial.h" />
+    <ClInclude Include="sprites.h" />
     <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ant_sprites.c" />
+    <ClCompile Include="sprites.c" />
     <ClCompile Include="bitmap_io.c" />
     <ClCompile Include="colors.c" />
     <ClCompile Include="dialog.c" />
