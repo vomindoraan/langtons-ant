@@ -190,7 +190,7 @@ void end_menu_window(void)
 	menuw = NULL;
 }
 
-Vector2i get_menu_tile_pos(unsigned index)
+Vector2i menu_tile_pos(unsigned index)
 {
 	Vector2i pos;
 	unsigned index_x, index_y;
@@ -210,15 +210,15 @@ Vector2i get_menu_tile_pos(unsigned index)
 	return pos;
 }
 
-Vector2i get_menu_cdef_pos(void)
+Vector2i menu_cdef_pos(void)
 {
 	return (Vector2i) {
-		.y = get_menu_tile_pos(MIN(stgs.colors->n, MENU_TILES_PER_COL)).y + MENU_TILE_PHEIGHT + 1,
+		.y = menu_tile_pos(MIN(stgs.colors->n, MENU_TILES_PER_COL)).y + MENU_TILE_PHEIGHT + 1,
 		.x = rules_pos.x - MENU_TILE_PWIDTH + 1,
 	};
 }
 
-void cycle_logo(void)
+void menu_cycle_logo(void)
 {
 	logo_index = (logo_index+1) % LEN(logos);
 }
@@ -353,12 +353,12 @@ static void draw_color_rules(void)
 
 	/* Draw color tiles */
 	for (c = stgs.colors->first; do_for; c = stgs.colors->next[c]) {
-		pos1 = pos2 = get_menu_tile_pos(i++);
+		pos1 = pos2 = menu_tile_pos(i++);
 		if (c == COLOR_NONE) {
 			break;
 		}
 		if (i < MENU_TILES_COUNT) {
-			pos2 = get_menu_tile_pos(i);
+			pos2 = menu_tile_pos(i);
 			draw_color_arrow(pos1, pos2);
 		}
 		draw_color_tile(pos1, c);
@@ -373,17 +373,17 @@ static void draw_color_rules(void)
 
 	/* Draw arrow back to first tile */
 	if (i >= MENU_TILES_PER_COL) {
-		draw_color_arrow(pos2, get_menu_tile_pos(0));
+		draw_color_arrow(pos2, menu_tile_pos(0));
 	} else {
 		pos1.y = pos2.y;
 		pos1.x = pos2.x - MENU_TILE_PWIDTH;
 		draw_color_arrow(pos2, pos1);
 		pos1.y += MENU_TILE_SIZE+1;
-		draw_color_arrow(pos1, get_menu_tile_pos(0));
+		draw_color_arrow(pos1, menu_tile_pos(0));
 	}
 
 	/* Draw default color picker message */
-	cdef_pos = get_menu_cdef_pos();
+	cdef_pos = menu_cdef_pos();
 	wattrset(menuw, PAIR_FOR(MENU_ACTIVE_COLOR));
 	mvwaddstr(menuw, cdef_pos.y, cdef_pos.x, dialog_cdef_msg);
 }

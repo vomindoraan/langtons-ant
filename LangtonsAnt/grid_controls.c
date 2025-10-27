@@ -12,16 +12,16 @@ state_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse)
 	switch (key) {
 		/* Scroll - arrow keys */
 	case KEY_UP:
-		scroll_grid(grid, -SCROLL_STEP_MEDIUM, 0);
+		scroll_by(grid, -SCROLL_STEP_MEDIUM, 0);
 		break;
 	case KEY_DOWN:
-		scroll_grid(grid,  SCROLL_STEP_MEDIUM, 0);
+		scroll_by(grid,  SCROLL_STEP_MEDIUM, 0);
 		break;
 	case KEY_LEFT:
-		scroll_grid(grid, 0, -SCROLL_STEP_MEDIUM);
+		scroll_by(grid, 0, -SCROLL_STEP_MEDIUM);
 		break;
 	case KEY_RIGHT:
-		scroll_grid(grid, 0,  SCROLL_STEP_MEDIUM);
+		scroll_by(grid, 0,  SCROLL_STEP_MEDIUM);
 		break;
 
 		/* Scroll - numpad keys */
@@ -29,63 +29,63 @@ state_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse)
 #ifdef PDCURSES
 	case KEY_A2:
 #endif
-		scroll_grid(grid, -SCROLL_STEP_LARGE, 0);
+		scroll_by(grid, -SCROLL_STEP_LARGE, 0);
 		break;
 	case '2':
 #ifdef PDCURSES
 	case KEY_C2:
 #endif
-		scroll_grid(grid,  SCROLL_STEP_LARGE, 0);
+		scroll_by(grid,  SCROLL_STEP_LARGE, 0);
 		break;
 	case '4':
 #ifdef PDCURSES
 	case KEY_B1:
 #endif
-		scroll_grid(grid, 0, -SCROLL_STEP_LARGE);
+		scroll_by(grid, 0, -SCROLL_STEP_LARGE);
 		break;
 	case '6':
 #ifdef PDCURSES
 	case KEY_B3:
 #endif
-		scroll_grid(grid, 0,  SCROLL_STEP_LARGE);
+		scroll_by(grid, 0,  SCROLL_STEP_LARGE);
 		break;
 	case '7':
 #ifdef PDCURSES
 	case KEY_A1:
 #endif
-		scroll_grid(grid, -SCROLL_STEP_LARGE, -SCROLL_STEP_LARGE);
+		scroll_by(grid, -SCROLL_STEP_LARGE, -SCROLL_STEP_LARGE);
 		break;
 	case '9':
 #ifdef PDCURSES
 	case KEY_A3:
 #endif
-		scroll_grid(grid, -SCROLL_STEP_LARGE,  SCROLL_STEP_LARGE);
+		scroll_by(grid, -SCROLL_STEP_LARGE,  SCROLL_STEP_LARGE);
 		break;
 	case '1':
 #ifdef PDCURSES
 	case KEY_C1:
 #endif
-		scroll_grid(grid,  SCROLL_STEP_LARGE, -SCROLL_STEP_LARGE);
+		scroll_by(grid,  SCROLL_STEP_LARGE, -SCROLL_STEP_LARGE);
 		break;
 	case '3':
 #ifdef PDCURSES
 	case KEY_C3:
 #endif
-		scroll_grid(grid,  SCROLL_STEP_LARGE,  SCROLL_STEP_LARGE);
+		scroll_by(grid,  SCROLL_STEP_LARGE,  SCROLL_STEP_LARGE);
 		break;
 
 		/* Jump to bounds */
 	case KEY_PPAGE:
-		set_scroll(grid, tl.y+o, gridscrl.x);
+		scroll_set(grid, tl.y+o, gridscrl.x);
 		break;
 	case KEY_NPAGE:
-		set_scroll(grid, br.y-o, gridscrl.x);
+		scroll_set(grid, br.y-o, gridscrl.x);
 		break;
 	case KEY_HOME:
-		set_scroll(grid, gridscrl.y, tl.x+o);
+		scroll_set(grid, gridscrl.y, tl.x+o);
 		break;
 	case KEY_END:
-		set_scroll(grid, gridscrl.y, br.x-o);
+		scroll_set(grid, gridscrl.y, br.x-o);
 		break;
 
 		/* Jump to ant */
@@ -93,7 +93,7 @@ state_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse)
 #ifdef PDCURSES
 	case KEY_B2:
 #endif
-		set_scroll(grid, pos.y, pos.x);
+		scroll_set(grid, pos.y, pos.x);
 		break;
 
 		/* Jump to center */
@@ -101,7 +101,7 @@ state_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse)
 #ifdef PDCURSES
 	case PAD0:
 #endif
-		set_scroll(grid, 0, 0);
+		scroll_set(grid, 0, 0);
 		break;
 
 	case KEY_MOUSE:
@@ -130,14 +130,14 @@ static void scrollbar_clicked(Grid *grid, MEVENT *mevent, ScrollbarType sbtype)
 		} else {
 			rel = abs2rel(pos, (Vector2i) { GRID_VIEW_SIZE, mid+gridscrl.hcenter });
 		}
-		scroll_grid(grid, SGN(rel.y)*step, SGN(rel.x)*step);
+		scroll_by(grid, SGN(rel.y)*step, SGN(rel.x)*step);
 	} else if (mevent->bstate & MOUSE_RB_EVENT) {
 		if (sbtype == SB_VERTICAL) {
 			rel = abs2rel(pos, (Vector2i) { mid, GRID_VIEW_SIZE });
-			set_scroll(grid, (int)(rel.y / gridscrl.scale), gridscrl.x);
+			scroll_set(grid, (int)(rel.y / gridscrl.scale), gridscrl.x);
 		} else {
 			rel = abs2rel(pos, (Vector2i) { GRID_VIEW_SIZE, mid });
-			set_scroll(grid, gridscrl.y, (int)(rel.x / gridscrl.scale));
+			scroll_set(grid, gridscrl.y, (int)(rel.x / gridscrl.scale));
 		}
 	}
 }
@@ -163,9 +163,9 @@ state_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse)
 	/* Vertical scrollbar */
 	if (mouse->x == GRID_VIEW_SIZE && mouse->y < GRID_VIEW_SIZE) {
 		if (mouse->y == 0) {
-			scroll_grid(grid, -step, 0);
+			scroll_by(grid, -step, 0);
 		} else if (mouse->y == GRID_VIEW_SIZE-1) {
-			scroll_grid(grid,  step, 0);
+			scroll_by(grid,  step, 0);
 		} else {
 			scrollbar_clicked(grid, mouse, SB_VERTICAL);
 		}
@@ -175,9 +175,9 @@ state_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse)
 	/* Horizontal scrollbar */
 	if (mouse->y == GRID_VIEW_SIZE && mouse->x < GRID_VIEW_SIZE) {
 		if (mouse->x == 0) {
-			scroll_grid(grid, 0, -step);
+			scroll_by(grid, 0, -step);
 		} else if (mouse->x == GRID_VIEW_SIZE-1) {
-			scroll_grid(grid, 0,  step);
+			scroll_by(grid, 0,  step);
 		} else {
 			scrollbar_clicked(grid, mouse, SB_HORIZONTAL);
 		}
@@ -186,6 +186,6 @@ state_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse)
 
 	/* Grid proper - jump to ant/center */
 	pos = abs2rel(lb_clicked ? ant->pos : center, center);
-	set_scroll(grid, pos.y, pos.x);
+	scroll_set(grid, pos.y, pos.x);
 	return STATE_GRID_CHANGED;
 }

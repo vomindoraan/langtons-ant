@@ -57,7 +57,7 @@ static bool draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
 
 	if (ant) {
 		Vector2i center = { yx.y + cs/2, yx.x + cs/2 };
-		SpriteInfo sprite = get_ant_sprite(cs, ant->dir);
+		SpriteInfo sprite = ant_sprite(cs, ant->dir);
 		if (sprite.data) {
 			yx.y = center.y - sprite.height/2;
 			yx.x = center.x - sprite.width/2;
@@ -212,12 +212,12 @@ void draw_grid_iter(Grid *grid, Ant *ant, Vector2i prev_pos)
 	}
 }
 
-void scroll_grid(Grid *grid, int dy, int dx)
+void scroll_by(Grid *grid, int dy, int dx)
 {
-	set_scroll(grid, gridscrl.y+dy, gridscrl.x+dx);
+	scroll_set(grid, gridscrl.y+dy, gridscrl.x+dx);
 }
 
-void set_scroll(Grid *grid, int y, int x)
+void scroll_set(Grid *grid, int y, int x)
 {
 	int gs = grid->size, n = GRID_VIEW_SIZE, clamp = MAX(gs/2 - n/2, 0);
 
@@ -233,7 +233,7 @@ void set_scroll(Grid *grid, int y, int x)
 	gridscrl.vcenter = (int)(gridscrl.scale * y);
 }
 
-void reset_scroll(void)
+void scroll_reset(void)
 {
 	if (gridscrl.enabled) {
 		gridscrl.y = gridscrl.x = 0;

@@ -52,7 +52,7 @@ state_t set_simulation(Simulation *sim)
 	colors_delete(stgs.colors);
 	stgs.colors = sim->colors;
 	stgs.init_size = sim->grid->init_size;
-	reset_scroll();
+	scroll_reset();
 	return STATE_GRID_CHANGED | STATE_MENU_CHANGED | STATE_COLORS_CHANGED;
 }
 
@@ -63,7 +63,7 @@ state_t reset_simulation(void)
 		simulation_delete(sim);
 	}
 	stgs.simulation = simulation_new(stgs.colors, stgs.init_size);
-	reset_scroll();
+	scroll_reset();
 	return STATE_GRID_CHANGED | STATE_MENU_CHANGED;
 }
 
@@ -327,13 +327,13 @@ state_t menu_mouse_command(MEVENT *mouse)
 
 	/* Logo area */
 	if (area_contains(menu_logo_pos, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT, pos)) {
-		cycle_logo();
+		menu_cycle_logo();
 		return STATE_MENU_CHANGED;
 	}
 
 	/* Color tiles */
 	for (i = 0; i <= stgs.colors->n; i++) {
-		tile = get_menu_tile_pos(i);
+		tile = menu_tile_pos(i);
 		if (area_contains(tile, MENU_TILE_SIZE, MENU_TILE_SIZE, pos)) {
 			if (lb_clicked) {
 				open_dialog(pos, (i == stgs.colors->n) ? CIDX_NEWCOLOR : (color_t)i);
@@ -343,7 +343,7 @@ state_t menu_mouse_command(MEVENT *mouse)
 			return STATE_MENU_CHANGED;
 		}
 	}
-	if (area_contains(get_menu_cdef_pos(), (unsigned)strlen(dialog_cdef_msg), 1, pos)) {
+	if (area_contains(menu_cdef_pos(), (unsigned)strlen(dialog_cdef_msg), 1, pos)) {
 		open_dialog(pos, CIDX_DEFAULT);
 		return STATE_MENU_CHANGED;
 	}

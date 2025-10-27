@@ -124,7 +124,7 @@ void draw_dialog(void)
 	wnoutrefresh(dialogw);
 }
 
-Vector2i get_dialog_tile_pos(color_t color)
+Vector2i dialog_tile_pos(color_t color)
 {
 	Vector2i pos = { 1, 1 };
 	color_t fg = COLOR_FOR(fg_pair), i;
@@ -177,7 +177,7 @@ state_t dialog_mouse_command(MEVENT *mouse)
 	}
 
 	for (i = 0; i < COLOR_COUNT; i++) {
-		tl = get_dialog_tile_pos(i);
+		tl = dialog_tile_pos(i);
 		if ((cidx == CIDX_DEFAULT || !color_exists(stgs.colors, i)) &&
 				area_contains(tl, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, pos)) {
 			picked_color = i;

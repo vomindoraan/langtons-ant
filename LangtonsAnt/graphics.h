@@ -493,7 +493,7 @@ chtype turn2arrow(turn_t turn);
  * @param dir Current ant direction
  * @return Ant sprite with requested size and direction, if one exists; NULL otherwise
  */
-SpriteInfo get_ant_sprite(unsigned size, Direction dir);
+SpriteInfo ant_sprite(unsigned size, Direction dir);
 
 
 /*----------------------------------------------------------------------------*
@@ -553,26 +553,27 @@ void draw_grid_iter(Grid *grid, Ant *ant, Vector2i prev_pos);
  * @param grid Grid from which to draw
  * @param dy Relative y offset
  * @param dx Relative x offset
- * @see set_scroll(Grid *, int, int)
- * @see reset_scroll(void)
+ * @see scroll_set(Grid *, int, int)
+ * @see scroll_reset(void)
  */
-void scroll_grid(Grid *grid, int dy, int dx);
+void scroll_by(Grid *grid, int dy, int dx);
 
 /**
- * Sets the absolute scroll of gridscrl
+ * Sets the absolute gridscrl position on the grid
+ * @param grid Grid from which to draw
  * @param y Absolute y offset
  * @param x Absolute x offset
- * @see scroll_grid(Grid, int, int)
- * @see reset_scroll(void)
+ * @see scroll_by(Grid, int, int)
+ * @see scroll_reset(void)
  */
-void set_scroll(Grid *grid, int y, int x);
+void scroll_set(Grid *grid, int y, int x);
 
 /**
  * Resets gridscrl to its initial state
- * @see scroll_grid(Grid *, int, int)
- * @see set_scroll(Grid *, int, int)
+ * @see scroll_by(Grid *, int, int)
+ * @see scroll_set(Grid *, int, int)
  */
-void reset_scroll(void);
+void scroll_reset(void);
 
 
 /*----------------------------------------------------------------------------*
@@ -635,18 +636,18 @@ void draw_menu_iter(void);
  * @param index Index in the color list
  * @return Relative position of found tile; or VECTOR_INVALID if index is out of bounds
  */
-Vector2i get_menu_tile_pos(unsigned index);
+Vector2i menu_tile_pos(unsigned index);
 
 /**
  * Finds the relative position of the default color picker button
  * @return Relative position of found button
  */
-Vector2i get_menu_cdef_pos(void);
+Vector2i menu_cdef_pos(void);
 
 /**
- * Cycle through preset logo sprites / about page
+ * Cycle through preset logo sprites and about/help text
  */
-void cycle_logo(void);
+void menu_cycle_logo(void);
 
 
 /*----------------------------------------------------------------------------*
@@ -728,7 +729,7 @@ void draw_dialog(void);
  * @return Relative position of found tile; or VECTOR_INVALID if color matches default
  *         or is invalid
  */
-Vector2i get_dialog_tile_pos(color_t color);
+Vector2i dialog_tile_pos(color_t color);
 
 /**
  * Handles mouse commands passed to the dialog window
