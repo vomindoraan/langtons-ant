@@ -156,10 +156,22 @@ static state_t load_sim_action(void *arg)
 	}
 }
 
+static state_t load_example(int index) {
+	static int last_index = 0;
+	if (index < 0) {
+		index = last_index;
+		last_index = (last_index + 1) % LEN(example_files);
+	} else if (index >= (int)LEN(example_files)) {
+		return STATE_NO_CHANGE;
+	}
+	set_pending_action(load_sim_action, example_files[index]);
+	load_status = STATUS_PENDING;
+	return STATE_MENU_CHANGED;
+}
+
 static state_t load_button_clicked(bool input)
 {
 	static char filename[FILENAME_SIZE] = { 0 };
-	static int index = 0;
 	if (input) {
 #if GALLERY_MODE
 		strcpy(filename, USER_FILE);
@@ -173,12 +185,9 @@ static state_t load_button_clicked(bool input)
 			load_status = STATUS_FAILURE;
 		}
 #endif
-	} else {
-		set_pending_action(load_sim_action, example_files[index]);
-		index = (index + 1) % LEN(example_files);
-		load_status = STATUS_PENDING;
+		return STATE_MENU_CHANGED;
 	}
-	return STATE_MENU_CHANGED;
+	return load_example(-1);
 }
 
 #if SAVE_ENABLE
@@ -265,7 +274,10 @@ state_t menu_key_command(int key, MEVENT *mouse)
 	case 'X': case 'x': case '\b':
 		return clear_simulation();
 
-		/* IO */
+		/* I/O */
+	case '1': case '2': case '3': case '4': case '5':
+	case '6': case '7': case '8': case '9':
+		return load_example(key - '1');
 	case KEY_F(1): case KEY_F(3):
 		return load_button_clicked(key == KEY_F(3));
 #if SAVE_ENABLE
@@ -379,7 +391,7 @@ state_t menu_mouse_command(MEVENT *mouse)
 		return stop_button_clicked();
 	}
 
-	/* IO buttons */
+	/* I/O buttons */
 	if (area_contains(menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
 		return load_button_clicked(rb_clicked);
 	}

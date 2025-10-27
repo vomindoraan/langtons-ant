@@ -235,7 +235,7 @@ typedef struct settings {
 	Simulation *simulation;  /**< Active simulation */
 } Settings;
 
-/** Status indicator type for IO operations in the menu */
+/** Status indicator type for I/O operations in the menu */
 typedef enum {
 	STATUS_NONE,
 	STATUS_SUCCESS,
