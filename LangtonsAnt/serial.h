@@ -24,29 +24,38 @@
 
 #if SERIAL_COLORS
 
-/* Message format: {RRGGBB,T} */
+
+/*---------------------- Serialization macros and types ----------------------*/
+
+/** Serialized color rules, format: {RRGGBB,T} */
+///@{
 #define COLOR_RULE_FMT        "{%02hhx%02hhx%02hhx,%c}"
 #define COLOR_RULE_LEN        (BYTES_PER_PIXEL*2 + 1 + 3)
 #define COLOR_RULES_MSG_LEN   (COLOR_COUNT * COLOR_RULE_LEN)
 #define COLOR_RULES_MSG_SIZE  (COLOR_RULES_MSG_LEN + 1)
+///@}
 
+/** Single (color, turn) pair */
 typedef struct color_rule {
 	color_t  color;
 	turn_t   turn;
 } ColorRule;
 
-typedef ColorRule ColorRules[COLOR_COUNT];
-typedef char      ColorRulesMsg[COLOR_RULES_MSG_SIZE];
+/** Serialization types */
+///@{
+typedef ColorRule  ColorRules[COLOR_COUNT];
+typedef char       ColorRulesMsg[COLOR_RULES_MSG_SIZE];
+///@}
+
+
+/*----------------------------------------------------------------------------*
+ *                                  serial.c                                  *
+ *----------------------------------------------------------------------------*/
 
 bool colors_to_color_rules(Colors *colors, ColorRules rules);
-
 bool is_color_rule_valid(ColorRule rule);
-
 void serialize_color_rules(ColorRules rules, ColorRulesMsg msg);
-
-// TODO
-//bool deserialize_color_rules(ColorRulesMsg msg, ColorRules rules);
-
+//bool deserialize_color_rules(ColorRulesMsg msg, ColorRules rules);  // TODO
 bool serial_send_colors(Colors *colors);
 
 #endif  // SERIAL_COLORS

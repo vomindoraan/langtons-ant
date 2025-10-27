@@ -82,7 +82,6 @@ bool serial_send_colors(Colors *colors)
 	if (!pipe) {
 		return FALSE;
 	}
-
 	bool success = fputs(msg, pipe) != EOF;
 #ifdef _WIN32
 	_pclose(pipe);
