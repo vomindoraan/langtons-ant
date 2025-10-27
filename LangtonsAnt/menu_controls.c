@@ -288,8 +288,8 @@ state_t menu_key_command(int key, MEVENT *mouse)
 
 state_t menu_mouse_command(MEVENT *mouse)
 {
-	state_t ret = STATE_NO_CHANGE;
 	Vector2i mouse_pos, pos, tile;
+	bool lb_clicked, rb_clicked;
 	unsigned i;
 
 	if (!mouse) {
@@ -310,6 +310,8 @@ state_t menu_mouse_command(MEVENT *mouse)
 	}
 
 	pos = abs2rel(mouse_pos, menu_pos);
+	lb_clicked = !!(mouse->bstate & MOUSE_LB_EVENT);
+	rb_clicked = !!(mouse->bstate & MOUSE_RB_EVENT);
 
 	/* Logo area */
 	if (area_contains(menu_logo_pos, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT, pos)) {
@@ -321,9 +323,9 @@ state_t menu_mouse_command(MEVENT *mouse)
 	for (i = 0; i <= stgs.colors->n; i++) {
 		tile = get_menu_tile_pos(i);
 		if (area_contains(tile, MENU_TILE_SIZE, MENU_TILE_SIZE, pos)) {
-			if (mouse->bstate & MOUSE_LB_EVENT) {
+			if (lb_clicked) {
 				open_dialog(pos, (i == stgs.colors->n) ? CIDX_NEWCOLOR : (color_t)i);
-			} else if (mouse->bstate & MOUSE_RB_EVENT) {
+			} else if (rb_clicked) {
 				open_dialog(pos, CIDX_DEFAULT);
 			}
 			return STATE_MENU_CHANGED;
@@ -379,7 +381,7 @@ state_t menu_mouse_command(MEVENT *mouse)
 
 	/* IO buttons */
 	if (area_contains(menu_load_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
-		return load_button_clicked(!!(mouse->bstate & MOUSE_RB_EVENT));
+		return load_button_clicked(rb_clicked);
 	}
 #if SAVE_ENABLE
 	if (area_contains(menu_save_pos, MENU_BUTTON_WIDTH, MENU_BUTTON_HEIGHT, pos)) {
@@ -387,5 +389,5 @@ state_t menu_mouse_command(MEVENT *mouse)
 	}
 #endif
 
-	return ret;
+	return STATE_NO_CHANGE;
 }

@@ -146,6 +146,7 @@ state_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse)
 {
 	Vector2i center = { grid->size / 2, grid->size / 2 };
 	Vector2i mouse_pos, pos;
+	bool lb_clicked;
 	int step;
 
 	if (!mouse) {
@@ -156,9 +157,8 @@ state_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse)
 		return STATE_NO_CHANGE;
 	}
 
-	step = (mouse->bstate & MOUSE_LB_EVENT) ? SCROLL_STEP_SMALL
-	     : (mouse->bstate & MOUSE_RB_EVENT) ? grid->size  // Can be anything large
-	     : 0;
+	lb_clicked = !!(mouse->bstate & MOUSE_LB_EVENT);
+	step = lb_clicked ? SCROLL_STEP_SMALL : grid->size;  // Can be anything large
 
 	/* Vertical scrollbar */
 	if (mouse->x == GRID_VIEW_SIZE && mouse->y < GRID_VIEW_SIZE) {
@@ -184,8 +184,8 @@ state_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse)
 		return STATE_GRID_CHANGED;
 	}
 
-	/* Grid proper - jump to ant */
-	pos = abs2rel(ant->pos, center);
+	/* Grid proper - jump to ant/center */
+	pos = abs2rel(lb_clicked ? ant->pos : center, center);
 	set_scroll(grid, pos.y, pos.x);
 	return STATE_GRID_CHANGED;
 }

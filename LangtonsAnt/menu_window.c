@@ -79,7 +79,7 @@ static logo_str_t logo_help_text[MENU_LOGO_HEIGHT] = {
 	"",
 	"      play/pause   ^<v>  scroll view",
 	" R    stop/reset   F M1  jump to ant",
-	" Q +  faster       C     jump center",
+	" Q +  faster       C M2  jump center",
 	" Z -  slower       [ ]   init size",
 	" E .  step         WASD  ant direction",
 	" F1   load        "
