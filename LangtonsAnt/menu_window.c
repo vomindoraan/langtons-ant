@@ -427,7 +427,6 @@ static void draw_stepup(void)
 
 static void draw_speed(void)
 {
-	chtype pair = PAIR_FOR(MENU_ACTIVE_COLOR);
 	int mult = MENU_SPEED_HEIGHT / 8;
 	int dy = menu_speed_d_pos.y - menu_speed_u_pos.y - 2/mult;
 	Vector2i slider_pos = { speed_pos.y + dy - mult*stgs.speed, speed_pos.x };
@@ -443,16 +442,15 @@ static void draw_speed(void)
 	wattrset(menuw, fg_pair);
 	mvwvline(menuw, slider_pos.y+1, slider_pos.x-3, CHAR_FULL, 3);
 
+	/* Draw speed value */
+	draw_sprite(menuw, (SpriteInfo) { digit_sprites[stgs.speed], 3, 5 }, slider_pos, FALSE);
+
 	/* Draw arrow buttons */
-	wattrset(menuw, pair);
+	wattrset(menuw, PAIR_FOR(MENU_ACTIVE_COLOR));
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_UP],   MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
 	            menu_speed_u_pos, FALSE);
 	draw_sprite(menuw, (SpriteInfo) { arrow_sprites[DIR_DOWN], MENU_UDARROW_WIDTH, MENU_UDARROW_HEIGHT },
 	            menu_speed_d_pos, FALSE);
-
-	/* Draw speed value */
-	wattrset(menuw, fg_pair);
-	draw_sprite(menuw, (SpriteInfo) { digit_sprites[stgs.speed], 3, 5 }, slider_pos, TRUE);
 }
 
 static void draw_state_func(void)
