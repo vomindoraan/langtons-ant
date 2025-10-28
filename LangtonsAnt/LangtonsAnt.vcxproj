@@ -118,6 +118,7 @@
     <ClCompile Include="serial.c" />
     <ClCompile Include="simulation.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="timer.c" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\LangtonsAnt.ico" />

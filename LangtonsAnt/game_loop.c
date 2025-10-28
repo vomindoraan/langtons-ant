@@ -41,22 +41,14 @@ static state_t handle_input(Simulation *sim)
 	return ret;
 }
 
-// TODO: Fixed timestep loop
-static void sleep(void)
-{
-	int dd = LOOP_MAX_DELAY - LOOP_MIN_DELAY;
-	int ds = LOOP_MAX_SPEED - LOOP_MIN_SPEED;
-	int x  = LOOP_MAX_SPEED - stgs.speed;
-	// Linear delay: dd * x / ds + LOOP_MIN_DELAY
-	// Cubic delay:  ceil(dd * x^3 / ds^3) + LOOP_MIN_DELAY
-	div_t d = div(dd * (x*x*x), ds*ds*ds);
-	int delay = d.quot + (d.rem != 0) + LOOP_MIN_DELAY;
-	napms(delay);
-}
-
 void game_loop(void)
 {
+	static ttime_t step_time, menu_time, draw_time;
+	ttime_t curr_time;
+	bool do_step, do_draw, do_menu;
 	Simulation *sim = stgs.simulation;
+
+	init_timer();
 	draw_grid_full(sim->grid, sim->ant);
 	draw_menu_full();
 
@@ -67,15 +59,19 @@ void game_loop(void)
 		bool colors_changed = !!(input & STATE_COLORS_CHANGED);
 		sim = stgs.simulation;
 
-		if (is_simulation_running(sim)) {
+		curr_time = get_time_us();
+		do_step = (curr_time - step_time >= LOOP_STEP_TIME_US(stgs.speed));
+		do_menu = (curr_time - menu_time >= LOOP_FRAME_TIME_US*stgs.speed/2 + 1);
+		do_draw = (curr_time - draw_time >= LOOP_FRAME_TIME_US);
+
+		if (do_step && is_simulation_running(sim)) {
 			Vector2i prev_pos = sim->ant->pos;
 			if (simulation_step(sim)) {
 				draw_grid_iter(sim->grid, sim->ant, prev_pos);
-				draw_menu_iter();
-				sleep();
 			} else {
 				grid_changed = menu_changed = TRUE;
 			}
+			step_time = curr_time;
 		}
 
 		if (grid_changed) {
@@ -83,14 +79,21 @@ void game_loop(void)
 		}
 		if (menu_changed) {
 			draw_menu_full();
+		} else if (do_menu) {
+			draw_menu_iter();
+			menu_time = curr_time;
 		}
+
+		if (do_draw) {
+			doupdate();
+			draw_time = curr_time;
+		}
+
 		if (colors_changed) {
 #if SERIAL_COLORS
 			serial_send_colors(sim->colors);
 #endif
 		}
-
-		doupdate();
 	}
 }
 

@@ -2,7 +2,6 @@
 #include "version.h"
 
 #include <assert.h>
-#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -512,8 +511,8 @@ static void draw_steps(void)
 	Simulation *sim = stgs.simulation;
 	Vector2i pos = steps_pos;
 	char digits[MENU_STEPS_LEN+1], *d;
-	unsigned steps = sim   ? sim->steps     : 0;
-	unsigned len   = steps ? log10(steps)+1 : 0;
+	unsigned steps = sim ? sim->steps : 0;
+	unsigned len = steps ? (unsigned)log10(steps)+1 : 0;
 
 	if (steps <= 1) {
 		do_draw = TRUE;
@@ -580,37 +579,15 @@ void draw_menu_full(void)
 
 void draw_menu_iter(void)
 {
+	static bool sparse;
 	Simulation *sim = stgs.simulation;
-	static bool sparse = FALSE;
-#if LOOP_OPT_ENABLE
-	// TODO: Fixed timestep loop
-	static unsigned prev_steps = 0;
-	unsigned mult = MAX(stgs.speed - LOOP_OPT_SPEED + 1, 0);
-	unsigned threshold = (stgs.speed == LOOP_MAX_SPEED) ? LOOP_MAX_OPT
-	                   : LOOP_DEF_OPT * mult;
-	bool do_draw = sim->steps-prev_steps >= threshold;
-#endif
 
 	if (!sparse && is_grid_sparse(sim->grid)) {
 		sparse = TRUE;
-#if LOOP_OPT_ENABLE
-		do_draw = TRUE;
-#endif
 		draw_border();
 	}
-#if LOOP_OPT_ENABLE
-	if (do_draw) {
-#endif
-		draw_dir_arrow();
-		draw_state_func();
-		draw_steps();
-		wnoutrefresh(menuw);
-
-		if (dialogw) {
-			draw_dialog();
-		}
-#if LOOP_OPT_ENABLE
-		prev_steps = sim->steps;
-	}
-#endif
+	draw_dir_arrow();
+	draw_state_func();
+	draw_steps();
+	wnoutrefresh(menuw);
 }

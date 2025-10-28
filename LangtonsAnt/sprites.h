@@ -95,7 +95,6 @@ SpriteInfo ant_sprite(unsigned size, Direction dir);
 
 // TODO: Write docs
 SpriteInfo logo_sprite(unsigned index, bool highlight);
-
 SpriteInfo ui_sprite(UISpriteType type, int arg);
 
 #endif  // __SPRITES_H__

@@ -11,6 +11,8 @@
 
 #include "include/curses.h"
 
+#include <math.h>
+
 /** @name Compile flags */
 ///@{
 /** Should save button in menu be drawn and active? */
@@ -312,20 +314,41 @@ typedef struct pending_action {
 } PendingAction;
 
 
-/*------------------------- Loop performance macros --------------------------*/
+/*-------------------- Loop performance macros and types ---------------------*/
 
 /** @name Performance settings */
 ///@{
-#define LOOP_DEF_SPEED   2     /**< Default speed multiplier */
-#define LOOP_MIN_SPEED   1     /**< Minimum allowed speed multiplier */
-#define LOOP_MAX_SPEED   9     /**< Maximum allowed speed multiplier */
-#define LOOP_MAX_DELAY   150   /**< Maximum delay in ms (at minimum speed) */
-#define LOOP_MIN_DELAY   0     /**< Minimum delay in ms (at maximum speed) */
-#define LOOP_OPT_ENABLE  TRUE  /**< Should optimize drawing by skipping steps? */
-#define LOOP_OPT_SPEED   3     /**< Threshold speed at which to begin skipping */
-#define LOOP_DEF_OPT     3     /**< Default number of steps to skip */
-#define LOOP_MAX_OPT     1097  /**< Number of steps to skip at maximum speed */
+#define LOOP_DEF_SPEED          2        /**< Default speed multiplier */
+#define LOOP_MIN_SPEED          1        /**< Minimum allowed speed multiplier */
+#define LOOP_MAX_SPEED          9        /**< Maximum allowed speed multiplier */
+#define LOOP_MIN_STEP_TIME_S    1.0e-6   /**< Min time per step (max speed), ≠ 0 */
+#define LOOP_MAX_STEP_TIME_S    0.75     /**< Max time per step (min speed) */
+#define LOOP_FRAMES_PER_S       30       /**< Target framerate for drawing */
 ///@}
+
+/** @name Timestep calculation macros */
+///@{
+#define LOOP_FRAME_TIME_MS      (1.0e3 / LOOP_FRAMES_PER_S)
+#define LOOP_FRAME_TIME_US      (1.0e6 / LOOP_FRAMES_PER_S)
+#define LOOP_STEP_TIME_MS(s)    (1.0e3 * LOOP_STEP_TIME_S(s))
+#define LOOP_STEP_TIME_US(s)    (1.0e6 * LOOP_STEP_TIME_S(s))
+#define LOOP_STEP_TIME_S(s)     LOOP_EASE(LOOP_MAX_STEP_TIME_S, LOOP_MIN_STEP_TIME_S, LOOP_SPEED_COEF(s))
+#define LOOP_SPEED_COEF(s)      (((double)(s) - LOOP_MIN_SPEED) / (LOOP_MAX_SPEED - LOOP_MIN_SPEED))
+///@}
+
+/** @name Interpolation/easing macros */
+///@{
+#define EASE_LIN(a, b, t)       LERP(a, b, t)
+#define EASE_LOG(a, b, t)       (pow(a, 1.0-(t)) * pow(b, t))
+#define EASE_IN_QUAD(a, b, t)   ((a) + ((b)-(a)) * SQ(t))
+#define EASE_OUT_QUAD(a, b, t)  ((a) + ((b)-(a)) * (2*(t) - SQ(t)))
+#ifndef LOOP_EASE
+#	define LOOP_EASE            EASE_LOG
+#endif
+///@}
+
+/** Timer time type (ms/us) */
+typedef long long ttime_t;
 
 
 /*------------------------ Global variables/constants ------------------------*/
@@ -484,6 +507,16 @@ void game_loop(void);
  * @see game_loop(void)
  */
 void stop_game_loop(void);
+
+
+/*----------------------------------------------------------------------------*
+ *                                  timer.c                                   *
+ *----------------------------------------------------------------------------*/
+
+// TODO: Write docs
+void init_timer(void);
+ttime_t get_time_ms(void);
+ttime_t get_time_us(void);
 
 
 /*----------------------------------------------------------------------------*

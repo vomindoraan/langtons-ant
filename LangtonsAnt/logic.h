@@ -12,37 +12,40 @@
 
 /*--------------------- General purpose macros and types ---------------------*/
 
-///@{
-/** Standard max/min macros */
-#define MAX(x, y)  (((x) > (y)) ? (x) : (y))
-#define MIN(x, y)  (((x) < (y)) ? (x) : (y))
-///@}
-
-/** Standard sign macro */
-#define SGN(x)     (((x) > 0) - ((x) < 0))
-
-/** Standard square macro */
-#define SQ(x)      ((x) * (x))
-
-/** Integer ceiling division macro */
-#define CDIV(x, y) (((x) + (y) - 1) / (y))
-
 /** Static array length macro */
-#define LEN(a)     (sizeof(a) / sizeof(*a))
+#define LEN(a)         (sizeof(a) / sizeof(*a))
 
 ///@{
 /** Stringify macro value macros */
-#define STR(x)     STR_(x)
-#define STR_(x)    #x
+#define STR(x)         STR_(x)
+#define STR_(x)        #x
 ///@}
+
+///@{
+/** Standard max/min macros */
+#define MAX(x, y)      (((x) > (y)) ? (x) : (y))
+#define MIN(x, y)      (((x) < (y)) ? (x) : (y))
+///@}
+
+/** Standard sign macro */
+#define SGN(x)         (((x) > 0) - ((x) < 0))
+
+/** Standard square macro */
+#define SQ(x)          ((x) * (x))
+
+/** Integer ceiling division macro */
+#define CDIV(x, y)     (((x) + (y) - 1) / (y))
+
+/** Linear interpolation macro */
+#define LERP(a, b, t)  ((a) * (1.0-(t)) + (b) * (t))
 
 ///@{
 /** Curses boolean literal */
 #ifndef FALSE
-#	define FALSE   0
+#	define FALSE       0
 #endif
 #ifndef TRUE
-#	define TRUE    1
+#	define TRUE        1
 #endif
 ///@}
 

@@ -76,6 +76,7 @@ state_t clear_simulation(void)
 static state_t isize_button_clicked(int d)
 {
 	Simulation *sim = stgs.simulation;
+	unsigned old_value = stgs.init_size;
 	if (d > 0) {
 		stgs.init_size = MIN(stgs.init_size+d, GRID_MAX_INIT_SIZE);
 	} else if (d < 0) {
@@ -86,17 +87,21 @@ static state_t isize_button_clicked(int d)
 	if (!is_simulation_running(sim) && !has_simulation_started(sim)) {  // Sanity check
 		return reset_simulation();
 	}
-	return STATE_MENU_CHANGED;
+	return (stgs.init_size != old_value) ? STATE_MENU_CHANGED : STATE_NO_CHANGE;
 }
 
 static state_t dir_button_clicked(Direction dir)
 {
-	stgs.simulation->ant->dir = dir;
-	return STATE_GRID_CHANGED | STATE_MENU_CHANGED;
+	if (dir != stgs.simulation->ant->dir) {
+		stgs.simulation->ant->dir = dir;
+		return STATE_GRID_CHANGED | STATE_MENU_CHANGED;
+	}
+	return STATE_NO_CHANGE;
 }
 
 static state_t speed_button_clicked(int delta)
 {
+	unsigned old_value = stgs.speed;
 	if (delta > 0) {
 		stgs.speed = MIN((int)stgs.speed+delta, LOOP_MAX_SPEED);
 	} else if (delta < 0) {
@@ -104,7 +109,7 @@ static state_t speed_button_clicked(int delta)
 	} else {
 		return STATE_NO_CHANGE;
 	}
-	return STATE_MENU_CHANGED;
+	return (stgs.speed != old_value) ? STATE_MENU_CHANGED : STATE_NO_CHANGE;
 }
 
 static state_t stepup_button_clicked(void)
@@ -157,10 +162,10 @@ static state_t load_sim_action(void *arg)
 }
 
 static state_t load_example(int index) {
-	static int last_index = 0;
+	static int cycle_index = 0;
 	if (index < 0) {
-		index = last_index;
-		last_index = (last_index+1) % LEN(example_files);
+		index = cycle_index;
+		cycle_index = (cycle_index+1) % LEN(example_files);
 	} else if (index >= (int)LEN(example_files)) {
 		return STATE_NO_CHANGE;
 	}
