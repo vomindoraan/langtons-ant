@@ -78,7 +78,7 @@ typedef enum {
 
 /*------------------------- Global sprite constants --------------------------*/
 
-LogoSprites  logo1_sprites, logo2_sprites;
+extern const LogoSprites  logo1_sprites, logo2_sprites;
 
 
 /*----------------------------------------------------------------------------*

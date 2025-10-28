@@ -318,20 +318,20 @@ typedef struct pending_action {
 
 /** @name Performance settings */
 ///@{
-#define LOOP_DEF_SPEED          2        /**< Default speed multiplier */
-#define LOOP_MIN_SPEED          1        /**< Minimum allowed speed multiplier */
-#define LOOP_MAX_SPEED          9        /**< Maximum allowed speed multiplier */
-#define LOOP_MIN_STEP_TIME_S    1.0e-6   /**< Min time per step (max speed), ≠ 0 */
-#define LOOP_MAX_STEP_TIME_S    0.75     /**< Max time per step (min speed) */
-#define LOOP_FRAMES_PER_S       30       /**< Target framerate for drawing */
+#define LOOP_DEF_SPEED          2      /**< Default speed multiplier */
+#define LOOP_MIN_SPEED          1      /**< Minimum allowed speed multiplier */
+#define LOOP_MAX_SPEED          9      /**< Maximum allowed speed multiplier */
+#define LOOP_MIN_STEP_TIME_S    1e-6   /**< Min time per step (max speed), ≠ 0 */
+#define LOOP_MAX_STEP_TIME_S    0.75   /**< Max time per step (min speed) */
+#define LOOP_FRAMES_PER_S       30     /**< Target framerate for drawing */
 ///@}
 
 /** @name Timestep calculation macros */
 ///@{
-#define LOOP_FRAME_TIME_MS      (1.0e3 / LOOP_FRAMES_PER_S)
-#define LOOP_FRAME_TIME_US      (1.0e6 / LOOP_FRAMES_PER_S)
-#define LOOP_STEP_TIME_MS(s)    (1.0e3 * LOOP_STEP_TIME_S(s))
-#define LOOP_STEP_TIME_US(s)    (1.0e6 * LOOP_STEP_TIME_S(s))
+#define LOOP_FRAME_TIME_MS      (1e3 / LOOP_FRAMES_PER_S)
+#define LOOP_FRAME_TIME_US      (1e6 / LOOP_FRAMES_PER_S)
+#define LOOP_STEP_TIME_MS(s)    (1e3 * LOOP_STEP_TIME_S(s))
+#define LOOP_STEP_TIME_US(s)    (1e6 * LOOP_STEP_TIME_S(s))
 #define LOOP_STEP_TIME_S(s)     LOOP_EASE(LOOP_MAX_STEP_TIME_S, LOOP_MIN_STEP_TIME_S, LOOP_SPEED_COEF(s))
 #define LOOP_SPEED_COEF(s)      (((double)(s) - LOOP_MIN_SPEED) / (LOOP_MAX_SPEED - LOOP_MIN_SPEED))
 ///@}
@@ -347,7 +347,7 @@ typedef struct pending_action {
 #endif
 ///@}
 
-/** Timer time type (ms/us) */
+/** Timer (delta) time type (ms/us) */
 typedef long long ttime_t;
 
 
@@ -515,8 +515,8 @@ void stop_game_loop(void);
 
 // TODO: Write docs
 void init_timer(void);
-ttime_t get_time_ms(void);
-ttime_t get_time_us(void);
+ttime_t timer_millis(void);
+ttime_t timer_micros(void);
 
 
 /*----------------------------------------------------------------------------*

@@ -74,7 +74,7 @@ SpriteInfo ant_sprite(unsigned size, Direction dir)
 	     : SI_NONE;
 }
 
-LogoSprites logo1_sprites = {
+const LogoSprites logo1_sprites = {
 	.base = {
 		0xC0, 0x01, 0x00, 0x40, 0x01, 0x00, 0x04, 0x01, 0x00,
 		0x04, 0xD8, 0xD9, 0x31, 0x80, 0x15, 0x55, 0x4A, 0xA4,
@@ -92,7 +92,7 @@ LogoSprites logo1_sprites = {
 		0x00, 0x00, 0x00
 	},
 };
-LogoSprites logo2_sprites = {
+const LogoSprites logo2_sprites = {
 	.base = {
 		0xE0, 0x00, 0x00, 0x00, 0x21, 0x00, 0x00, 0x00, 0x00,
 		0x84, 0x00, 0x07, 0x03, 0x38, 0xD0, 0x00, 0x24, 0x12,
@@ -110,14 +110,14 @@ LogoSprites logo2_sprites = {
 		0x00, 0x00, 0x00
 	},
 };
-static LogoSprites *logo_sprites[] = {
+static const LogoSprites *logo_sprites[] = {
 	&logo1_sprites, &logo2_sprites,
 };
 
 SpriteInfo logo_sprite(unsigned index, bool highlight)
 {
 	if (index < LEN(logo_sprites)) {
-		LogoSprites *ls = logo_sprites[index];
+		const LogoSprites *ls = logo_sprites[index];
 		return SI_LOGO(highlight ? ls->hl : ls->base);
 	}
 	return SI_NONE;

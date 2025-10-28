@@ -59,7 +59,7 @@ void game_loop(void)
 		bool colors_changed = !!(input & STATE_COLORS_CHANGED);
 		sim = stgs.simulation;
 
-		curr_time = get_time_us();
+		curr_time = timer_micros();
 		do_step = (curr_time - step_time >= LOOP_STEP_TIME_US(stgs.speed));
 		do_menu = (curr_time - menu_time >= LOOP_FRAME_TIME_US*stgs.speed/2);
 		do_draw = (curr_time - draw_time >= LOOP_FRAME_TIME_US);

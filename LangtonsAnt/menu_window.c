@@ -102,14 +102,13 @@ static logo_str_t logo_help_text[MENU_LOGO_HEIGHT] = {
 #define LOGO_INIT_SPRITES(s, c)  { .sprites = s, .hl_color = c, TRUE }
 #define LOGO_INIT_TEXT(t, c)     { .text = t,    .hl_color = c, FALSE }
 
-// TODO: Move to sprites.c
 typedef struct logo {
 	union {
-		LogoSprites *sprites;
-		logo_str_t  *text;
+		const LogoSprites *sprites;
+		logo_str_t        *text;
 	};
-	color_t          hl_color;
-	bool             has_sprites;
+	color_t  hl_color;
+	bool     has_sprites;
 } Logo;
 
 static const Logo logos[] = {

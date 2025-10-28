@@ -10,21 +10,21 @@ void init_timer(void)
 {
 	LARGE_INTEGER li;
 	QueryPerformanceFrequency(&li);
-	freq_ms = li.QuadPart / 1.0e3;
-	freq_us = li.QuadPart / 1.0e6;
+	freq_ms = li.QuadPart / 1e3;
+	freq_us = li.QuadPart / 1e6;
 
 	QueryPerformanceCounter(&li);
 	start_ticks = li.QuadPart;
 }
 
-ttime_t get_time_ms(void)
+ttime_t timer_millis(void)
 {
 	LARGE_INTEGER li;
 	QueryPerformanceCounter(&li);
 	return (ttime_t)((li.QuadPart - start_ticks) / freq_ms);
 }
 
-ttime_t get_time_us(void)
+ttime_t timer_micros(void)
 {
 	LARGE_INTEGER li;
 	QueryPerformanceCounter(&li);
