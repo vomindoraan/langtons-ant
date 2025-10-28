@@ -5,7 +5,7 @@ cd "%~dp0"
 
 set src_dir=..\LangtonsAnt
 set dst_dirs=.
-set files=logic.h io.h serial.h
+set files=serial.h io.h logic.h
 
 for %%d in (%dst_dirs%) do (
     for %%f in (%files%) do (
