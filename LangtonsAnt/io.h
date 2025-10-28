@@ -7,7 +7,6 @@
 #define __IO_H__
 
 #include "logic.h"
-#include "include/curses.h"
 
 
 /*------------------------- Input/output attributes --------------------------*/
@@ -35,10 +34,10 @@
 ///@{
 #define RGB_BGR(c)  (((c) & 0xA) | ((c) & 0x1) << 2 | ((c) & 0x4) >> 2)
 
-#ifdef CURSES_RGB
+#if defined(CURSES_RGB) || defined(__linux__)
 #	define RGB(c)   (c)
 #	define BGR(c)   RGB_BGR(c)
-#else
+#elif defined(CURSES_BGR) || defined(_WIN32)
 #	define RGB(c)   RGB_BGR(c)
 #	define BGR(c)   (c)
 #endif
