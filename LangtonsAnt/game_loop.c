@@ -61,17 +61,27 @@ void game_loop(void)
 
 		curr_time = get_time_us();
 		do_step = (curr_time - step_time >= LOOP_STEP_TIME_US(stgs.speed));
-		do_menu = (curr_time - menu_time >= LOOP_FRAME_TIME_US*stgs.speed/2 + 1);
+		do_menu = (curr_time - menu_time >= LOOP_FRAME_TIME_US*stgs.speed/2);
 		do_draw = (curr_time - draw_time >= LOOP_FRAME_TIME_US);
 
-		if (do_step && is_simulation_running(sim)) {
-			Vector2i prev_pos = sim->ant->pos;
-			if (simulation_step(sim)) {
-				draw_grid_iter(sim->grid, sim->ant, prev_pos);
-			} else {
-				grid_changed = menu_changed = TRUE;
+		if (is_simulation_running(sim)) {
+			if (do_step) {
+				Vector2i prev_pos = sim->ant->pos;
+				if (simulation_step(sim)) {
+					if (!grid_changed) {  // Ignore if full redraw is coming
+						draw_grid_iter(sim->grid, sim->ant, prev_pos);
+					}
+				} else {
+					grid_changed = menu_changed = TRUE;  // Grid expanded
+				}
+				step_time = curr_time;
 			}
-			step_time = curr_time;
+			if (do_menu) {
+				if (!menu_changed) {  // Ignore if full redraw is coming
+					draw_menu_iter();
+				}
+				menu_time = curr_time;
+			}
 		}
 
 		if (grid_changed) {
@@ -79,11 +89,8 @@ void game_loop(void)
 		}
 		if (menu_changed) {
 			draw_menu_full();
-		} else if (do_menu) {
-			draw_menu_iter();
-			menu_time = curr_time;
+			do_draw |= !!(pending_action.func);  // Account for blocking I/O
 		}
-
 		if (do_draw) {
 			doupdate();
 			draw_time = curr_time;
