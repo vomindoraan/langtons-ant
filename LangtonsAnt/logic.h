@@ -104,7 +104,7 @@ typedef struct ant {
 #define COLOR_NEXT(cs, c)  (cs)->next[c]
 #define COLOR_TURN(cs, c)  (cs)->turn[c]
 
-#define TURN_CHAR(t)       ((t) == TURN_LEFT)  ? '<' :     \
+#define TURN_CHAR(t)       ((t) == TURN_LEFT)  ? '<' :      \
                            ((t) == TURN_RIGHT) ? '>' : '-'
 ///@}
 

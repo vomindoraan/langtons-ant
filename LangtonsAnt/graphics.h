@@ -96,13 +96,6 @@
 #define COLOR_AQUA       (COLOR_BLUE | COLOR_LIME)
 #define COLOR_FUCHSIA    (COLOR_RED | COLOR_BLUE)
 #define COLOR_YELLOW     (COLOR_RED | COLOR_LIME)
-
-#ifndef COLOR_COUNT
-#	define COLOR_COUNT   16
-#endif
-#ifndef COLOR_NONE
-#	define COLOR_NONE    -1
-#endif
 ///@}
 
 /** @name Utility macros for colors */
@@ -340,14 +333,14 @@ typedef struct pending_action {
 #define EASE_LIN(a, b, t)       LERP(a, b, t)
 #define EASE_LOG(a, b, t)       (pow(a, 1.0-(t)) * pow(b, t))
 #define EASE_IN_QUAD(a, b, t)   ((a) + ((b)-(a)) * SQ(t))
-#define EASE_OUT_QUAD(a, b, t)  ((a) + ((b)-(a)) * (2*(t) - SQ(t)))
+#define EASE_OUT_QUAD(a, b, t)  ((a) + ((b)-(a)) * (2.0*(t) - SQ(t)))
 #ifndef LOOP_EASE
 #	define LOOP_EASE            EASE_LOG
 #endif
 ///@}
 
 /** Timer (delta) time type (ms/us) */
-typedef long long ttime_t;
+typedef long long  ttime_t;
 
 
 /*------------------------ Global variables/constants ------------------------*/

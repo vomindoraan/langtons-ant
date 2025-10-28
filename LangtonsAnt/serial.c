@@ -9,7 +9,7 @@ bool colors_to_color_rules(Colors *colors, ColorRules rules)
 {
 	color_t c;
 	bool do_for = TRUE;
-	int i = 0;
+	size_t i = 0;
 
 	if (!colors) {
 		return FALSE;
@@ -39,7 +39,7 @@ bool is_color_rule_valid(ColorRule rule)
 
 void serialize_color_rules(ColorRules rules, ColorRulesMsg msg)
 {
-	int i;
+	size_t i;
 	msg[0] = '\0';
 	for (i = 0; i < COLOR_RULES_COUNT && is_color_rule_valid(rules[i]); i++) {
 		color_t c = rules[i].color;
@@ -54,9 +54,9 @@ void serialize_color_rules(ColorRules rules, ColorRulesMsg msg)
 }
 
 // TODO
-//bool deserialize_color_rules(ColorRulesMsg str, ColorRules rules)
+//bool deserialize_color_rules(ColorRules rules, ColorRulesMsg str)
 //{
-//	int i = 0;
+//	size_t i = 0;
 //	pixel_t prgb;
 //	turn_t turn;
 //	while (sscanf(str, COLOR_RULE_FMT, &prgb[0], &prgb[1], &prgb[2], &turn) == 4) {

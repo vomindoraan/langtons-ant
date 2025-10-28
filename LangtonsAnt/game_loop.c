@@ -1,9 +1,7 @@
 #include "graphics.h"
 #include "serial.h"
 
-#include <stdlib.h>
-
-static bool run_loop = TRUE;
+static bool do_loop = TRUE;
 
 static state_t handle_input(Simulation *sim)
 {
@@ -41,6 +39,11 @@ static state_t handle_input(Simulation *sim)
 	return ret;
 }
 
+#define DRAW_ITER(w, ...)              \
+	if (! w##_changed) {               \
+		draw_##w##_iter(__VA_ARGS__);  \
+	}
+
 void game_loop(void)
 {
 	static ttime_t step_time, menu_time, draw_time;
@@ -52,12 +55,12 @@ void game_loop(void)
 	draw_grid_full(sim->grid, sim->ant);
 	draw_menu_full();
 
-	while (run_loop) {
+	while (do_loop) {
 		state_t input = handle_input(sim);
 		bool grid_changed   = !!(input & STATE_GRID_CHANGED);
 		bool menu_changed   = !!(input & STATE_MENU_CHANGED);
 		bool colors_changed = !!(input & STATE_COLORS_CHANGED);
-		sim = stgs.simulation;
+		sim = stgs.simulation;  // May have changed on input
 
 		curr_time = timer_micros();
 		do_step = (curr_time - step_time >= LOOP_STEP_TIME_US(stgs.speed));
@@ -68,18 +71,14 @@ void game_loop(void)
 			if (do_step) {
 				Vector2i prev_pos = sim->ant->pos;
 				if (simulation_step(sim)) {
-					if (!grid_changed) {  // Ignore if full redraw is coming
-						draw_grid_iter(sim->grid, sim->ant, prev_pos);
-					}
+					DRAW_ITER(grid, sim->grid, sim->ant, prev_pos);
 				} else {
 					grid_changed = menu_changed = TRUE;  // Grid expanded
 				}
 				step_time = curr_time;
 			}
 			if (do_menu) {
-				if (!menu_changed) {  // Ignore if full redraw is coming
-					draw_menu_iter();
-				}
+				DRAW_ITER(menu);
 				menu_time = curr_time;
 			}
 		}
@@ -89,13 +88,12 @@ void game_loop(void)
 		}
 		if (menu_changed) {
 			draw_menu_full();
-			do_draw |= !!(pending_action.func);  // Account for blocking I/O
+			do_draw |= !!(pending_action.func);  // Draw before blocking I/O
 		}
 		if (do_draw) {
 			doupdate();
 			draw_time = curr_time;
 		}
-
 		if (colors_changed) {
 #if SERIAL_COLORS
 			serial_send_colors(sim->colors);
@@ -106,5 +104,5 @@ void game_loop(void)
 
 void stop_game_loop(void)
 {
-	run_loop = FALSE;
+	do_loop = FALSE;
 }

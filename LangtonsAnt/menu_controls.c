@@ -7,7 +7,7 @@
 #define INPUT_WINDOW_WIDTH  (MENU_WINDOW_WIDTH - 4)
 #define INPUT_WINDOW_HEIGHT 3
 
-static WINDOW* inputw;
+static WINDOW *inputw;
 static const Vector2i input_pos = {
 	.y = MENU_CONTROLS_Y - 13,
 	.x = GRID_WINDOW_SIZE + MENU_WINDOW_WIDTH - INPUT_WINDOW_WIDTH - 2,
@@ -281,15 +281,15 @@ state_t menu_key_command(int key, MEVENT *mouse)
 		return clear_simulation();
 
 		/* I/O */
-	case '1': case '2': case '3': case '4': case '5':
-	case '6': case '7': case '8': case '9':
-		return load_example(key - '1');
 	case KEY_F(1): case KEY_F(3):
 		return load_button_clicked(key == KEY_F(3));
 #if SAVE_ENABLE
 	case KEY_F(2):
 		return save_button_clicked();
 #endif
+	case '1': case '2': case '3': case '4': case '5':
+	case '6': case '7': case '8': case '9':
+		return load_example(key - '1');
 
 		/* Quit */
 	case KEY_ESC:

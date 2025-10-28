@@ -197,5 +197,5 @@ chtype dir2arrow(Direction dir)
 
 chtype turn2arrow(turn_t turn)
 {
-	return (chtype)TURN_CHAR(turn);
+	return TURN_CHAR(turn);
 }

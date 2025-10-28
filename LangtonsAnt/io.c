@@ -210,7 +210,8 @@ Simulation *load_simulation(const char *filename)
 		goto error_end;
 	}
 
-	return (fclose(input) == EOF) ? NULL : sim;
+	fclose(input);
+	return sim;
 
 error_end:
 	fclose(input);

@@ -58,7 +58,7 @@ typedef char       ColorRulesMsg[COLOR_RULES_MSG_SZ];
 bool colors_to_color_rules(Colors *colors, ColorRules rules);
 bool is_color_rule_valid(ColorRule rule);
 void serialize_color_rules(ColorRules rules, ColorRulesMsg msg);
-//bool deserialize_color_rules(ColorRulesMsg msg, ColorRules rules);  // TODO
+//bool deserialize_color_rules(ColorRules rules, ColorRulesMsg msg);  // TODO
 bool serial_send_colors(Colors *colors);
 
 #endif  // SERIAL_COLORS
