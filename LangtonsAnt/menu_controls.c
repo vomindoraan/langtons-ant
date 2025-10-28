@@ -76,18 +76,21 @@ state_t clear_simulation(void)
 static state_t isize_button_clicked(int d)
 {
 	Simulation *sim = stgs.simulation;
-	unsigned old_value = stgs.init_size;
+	unsigned old_value = stgs.init_size, ret = 0;
 	if (d > 0) {
 		stgs.init_size = MIN(stgs.init_size+d, GRID_MAX_INIT_SIZE);
 	} else if (d < 0) {
 		stgs.init_size = MAX(stgs.init_size+d, GRID_MIN_INIT_SIZE);
-	} else {
-		return STATE_NO_CHANGE;
 	}
-	if (!is_simulation_running(sim) && !has_simulation_started(sim)) {  // Sanity check
-		return reset_simulation();
+	if (stgs.init_size != old_value)  {
+		if (!is_simulation_running(sim) && !has_simulation_started(sim)) {  // Sanity check
+			Direction dir = sim->ant->dir;
+			ret = reset_simulation();
+			stgs.simulation->ant->dir = dir;  // Preserve ant direction
+		}
+		return STATE_MENU_CHANGED | ret;
 	}
-	return (stgs.init_size != old_value) ? STATE_MENU_CHANGED : STATE_NO_CHANGE;
+	return STATE_NO_CHANGE;
 }
 
 static state_t dir_button_clicked(Direction dir)
@@ -106,8 +109,6 @@ static state_t speed_button_clicked(int delta)
 		stgs.speed = MIN((int)stgs.speed+delta, LOOP_MAX_SPEED);
 	} else if (delta < 0) {
 		stgs.speed = MAX((int)stgs.speed+delta, LOOP_MIN_SPEED);
-	} else {
-		return STATE_NO_CHANGE;
 	}
 	return (stgs.speed != old_value) ? STATE_MENU_CHANGED : STATE_NO_CHANGE;
 }
