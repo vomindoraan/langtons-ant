@@ -8,7 +8,6 @@
 
 #include "logic.h"
 #include "sprites.h"
-
 #include "include/curses.h"
 
 #include <math.h>

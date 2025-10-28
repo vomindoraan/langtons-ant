@@ -7,6 +7,7 @@
 #define __IO_H__
 
 #include "logic.h"
+#include "include/curses.h"
 
 
 /*------------------------- Input/output attributes --------------------------*/

@@ -7,8 +7,6 @@
 #ifndef __SERIAL_H__
 #define __SERIAL_H__
 
-#include "io.h"
-
 /** Compile flags (serial disabled by default) */
 ///@{
 #if defined(SERIAL_COLORS_ON)
