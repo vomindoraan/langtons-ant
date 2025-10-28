@@ -320,8 +320,8 @@ typedef struct pending_action {
 #define LOOP_DEF_SPEED          2      /**< Default speed multiplier */
 #define LOOP_MIN_SPEED          1      /**< Minimum allowed speed multiplier */
 #define LOOP_MAX_SPEED          9      /**< Maximum allowed speed multiplier */
-#define LOOP_MIN_STEP_TIME_S    1e-6   /**< Min time per step (max speed), ≠ 0 */
-#define LOOP_MAX_STEP_TIME_S    0.75   /**< Max time per step (min speed) */
+#define LOOP_MIN_STEP_TIME_S    1e-5   /**< Min time per step (max speed), > 0 */
+#define LOOP_MAX_STEP_TIME_S    0.7    /**< Max time per step (min speed) */
 #define LOOP_FRAMES_PER_S       30     /**< Target framerate for drawing */
 ///@}
 
