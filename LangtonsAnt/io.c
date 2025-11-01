@@ -189,7 +189,7 @@ Simulation *load_simulation(const char *filename)
 		goto error_end;
 	}
 
-	grid_delete(sim->grid);
+	grid_delete(sim->grid);  // Replace default grid with loaded data
 	sim->grid = malloc(sizeof(Grid));
 	sim->grid->c = NULL;
 	sim->grid->tmp = NULL;

@@ -506,24 +506,16 @@ static void draw_size(void)
 
 static void draw_steps(void)
 {
-	static bool do_draw;
 	Simulation *sim = stgs.simulation;
 	Vector2i pos = steps_pos;
 	char digits[MENU_STEPS_LEN+1], *d;
 	unsigned steps = sim ? sim->steps : 0;
 	unsigned len = steps ? (unsigned)log10(steps)+1 : 0;
 
-	if (steps <= 1) {
-		do_draw = TRUE;
-	} else if (!do_draw) {
-		return;
-	}
-
 	wattrset(menuw, fg_pair);
 	if (len > MENU_STEPS_LEN) {
 		pos.x += MENU_STEPS_LEN*(SPRITE_DIGIT_WIDTH+1) - SPRITE_INFINITY_WIDTH - 1;
 		draw_sprite(menuw, ui_sprite(UI_INFINITY, 0), pos, TRUE);
-		do_draw = FALSE;
 		return;
 	}
 

@@ -46,7 +46,6 @@ static const char *example_files[] = {
 
 state_t set_simulation(Simulation *sim)
 {
-	assert(stgs.simulation);
 	simulation_delete(stgs.simulation);
 	stgs.simulation = sim;
 	colors_delete(stgs.colors);
