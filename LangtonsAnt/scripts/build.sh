@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 SRC_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd)"
-
-FEATURES="-DSERIAL_COLORS_ON"  # SERIAL_COLORS_ON, GALLERY_MODE_ON
+APP="${1:-$SRC_DIR/LangtonsAnt}"
+FEATURES="${2-SAVE_ENABLE=1 GALLERY_MODE=0 SERIAL_COLORS=1}"
 
 C_FLAGS="-std=gnu18 -Wpedantic -Wall -Wextra -O3"
-LIB_CURSES="-lncursesw"
-#LIB_CURSES="$(xcurses-config --libs-static --cflags)"
-L_FLAGS="-lm $LIB_CURSES -flto"
+L_FLAGS="-lm -lncursesw -flto"
+for f in $FEATURES; do
+    C_FLAGS+=" -D$f"
+done
 
 OPT_CURSES=/usr/local/opt/ncurses
 if [ -d $OPT_CURSES ]; then
@@ -14,4 +15,5 @@ if [ -d $OPT_CURSES ]; then
     L_FLAGS+=" -L$OPT_CURSES/lib"
 fi
 
-gcc "$SRC_DIR"/*.c $FEATURES $C_FLAGS $L_FLAGS -o "${1:-LangtonsAnt}"
+echo "Building '$APP' ($FEATURES)..."
+gcc "$SRC_DIR"/*.c $C_FLAGS $L_FLAGS -o "$APP"

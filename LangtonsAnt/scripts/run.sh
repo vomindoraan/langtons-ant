@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
-APP="${1:-LangtonsAnt}"
+SRC_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd)"
+APP="${1:-$SRC_DIR/LangtonsAnt}"
 
+cd "$SRC_DIR"
+echo "Running '$APP'..."
 if command -v lxterminal &>/dev/null; then
     lxterminal --geometry=1024x768 -t KIOSK_APP -e "$APP"
 elif command -v osascript &>/dev/null; then
     osascript -e "tell app \"Terminal\" to do script \"$APP\""
     # TODO: Set geometry, position, font name and size
 else
-    ./"$APP"
+    "$APP"
 fi
 
 # ~/.config/openbox/lxde-pi-rc.xml
