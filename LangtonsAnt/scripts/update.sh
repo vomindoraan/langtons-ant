@@ -2,5 +2,7 @@
 BRANCH=develop
 SCRIPTS_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
+set -e
+cd "$SCRIPTS_DIR"
 git checkout $BRANCH && git fetch && git reset --hard origin/$BRANCH
-"$SCRIPTS_DIR"/build.sh
+./build.sh

@@ -16,7 +16,7 @@
 #	endif
 #	define CURSES_BGR
 
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__APPLE__)
 #	define NCURSES_WIDECHAR 1
 #	include <ncurses.h>
 #	ifndef NCURSES

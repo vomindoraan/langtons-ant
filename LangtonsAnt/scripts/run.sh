@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
-lxterminal --geometry=1024x768 -t KIOSK_APP -e "${1:-LangtonsAnt}"
+APP="${1:-LangtonsAnt}"
+
+if command -v lxterminal &>/dev/null; then
+    lxterminal --geometry=1024x768 -t KIOSK_APP -e "$APP"
+elif command -v osascript &>/dev/null; then
+    osascript -e "tell app \"Terminal\" to do script \"$APP\""
+    # TODO: Set geometry, position, font name and size
+else
+    ./"$APP"
+fi
 
 # ~/.config/openbox/lxde-pi-rc.xml
 # <?xml version="1.0" encoding="UTF-8"?>
