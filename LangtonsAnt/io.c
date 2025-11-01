@@ -121,7 +121,7 @@ static int load_cells_s(Simulation *sim, FILE *input) {
 			if (fscanf(input, "%c", &c) < 1) {
 				return EOF;
 			}
-			if ((c == '\r' && fscanf(input, "%c", &c)) || c == '\n') {
+			if (c == '\n' || (c == '\r' && fgetc(input) == '\n')) {
 				break;  // newline, end of row
 			}
 			if (fscanf(input, "%X", &cell.packed) < 1) {
@@ -202,6 +202,9 @@ Simulation *load_simulation(const char *filename)
 	sim->grid->def_color = BGR(def);
 	if (fscanf(input, "%d %d %d %d", &sim->grid->top_left.x, &sim->grid->top_left.y,
 	           &sim->grid->bottom_right.x, &sim->grid->bottom_right.y) < 4) {
+		goto error_end;
+	}
+	if (fgetc(input) == '\r' && fgetc(input) != '\n') {  // Read trailing newline
 		goto error_end;
 	}
 
