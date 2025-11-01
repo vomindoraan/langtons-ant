@@ -62,7 +62,7 @@ static bool draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
 			yx.y = center.y - sprite.height/2;
 			yx.x = center.x - sprite.width/2;
 			wattrset(gridw, fg_pair);
-			draw_sprite(gridw, sprite, yx, FALSE);
+			draw_sprite(gridw, sprite, yx);
 		} else {
 			mvwaddch(gridw, center.y, center.x, dir2arrow(ant->dir) | A_REVERSE);
 		}

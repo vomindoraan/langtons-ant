@@ -462,9 +462,8 @@ void draw_frame(WINDOW *w, Vector2i top_left, unsigned width, unsigned height);
  * @param w Window to draw to
  * @param sprite Sprite to be drawn and its size as SpriteInfo
  * @param top_left Sprite origin
- * @param overwrite Should existing content be overwritten?
  */
-void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left, bool overwrite);
+void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left);
 
 /**
  * Converts a direction into its char representation

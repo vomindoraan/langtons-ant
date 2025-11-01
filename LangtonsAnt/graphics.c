@@ -164,7 +164,7 @@ void draw_frame(WINDOW *w, Vector2i top_left, unsigned width, unsigned height)
 	}
 }
 
-void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left, bool overwrite)
+void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left)
 {
 	unsigned read, y, x;
 	byte pixel;
@@ -173,8 +173,6 @@ void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left, bool overwrite
 		y = read / sprite.width, x = read % sprite.width;
 		if (pixel) {
 			mvwaddch(w, top_left.y+y, top_left.x+x, CHAR_FULL);
-		} else if (overwrite) {  // TODO: Separate into two functions if slow
-			mvwaddch(w, top_left.y+y, top_left.x+x, CHAR_EMPTY);
 		}
 	}
 }
