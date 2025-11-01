@@ -115,9 +115,12 @@ static void draw_buttons(void)
 
 void draw_dialog(void)
 {
-	wbkgd(dialogw, ui_pair | A_REVERSE);
+	wattrset(dialogw, ui_pair);
+	draw_rect(dialogw, (Vector2i) { 0, 0 }, DIALOG_WINDOW_WIDTH, DIALOG_WINDOW_HEIGHT);
+
 	draw_colors();
 	draw_buttons();
+
 	wnoutrefresh(dialogw);
 }
 
