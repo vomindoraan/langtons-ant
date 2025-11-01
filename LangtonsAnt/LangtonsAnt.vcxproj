@@ -81,6 +81,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <SDLCheck>false</SDLCheck>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
