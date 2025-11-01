@@ -269,19 +269,16 @@ typedef enum {
 /** @name Mouse button event flags */
 ///@{
 #if MOUSE_ACT_ON_PRESS
-#	define MOUSE_LB_EVENT   BUTTON1_PRESSED
-#	define MOUSE_RB_EVENT   BUTTON3_PRESSED
-#	ifdef NCURSES
-		// WARN: ncurses mouse handling breaks if mouseinterval(0) is called and
-		//       only *_PRESSED is selected without *_CLICKED or *_RELEASED
-#		define MOUSE_MASK   (BUTTON1_PRESSED | BUTTON3_PRESSED | BUTTON1_CLICKED | BUTTON3_CLICKED)
-#	else
-#		define MOUSE_MASK   (BUTTON1_PRESSED | BUTTON3_PRESSED)
-#	endif
+#	define MOUSE_LB_EVENT  BUTTON1_PRESSED
+#	define MOUSE_RB_EVENT  BUTTON3_PRESSED
+	// WARN: ncurses mouse handling breaks if mouseinterval(0) is set and only
+	//       *_PRESSED is selected without *_RELEASED or *_CLICKED
+#	define MOUSE_MASK      (BUTTON1_PRESSED  | BUTTON3_PRESSED  | MOUSE_ANTIMASK)
+#	define MOUSE_ANTIMASK  (BUTTON1_RELEASED | BUTTON3_RELEASED)
 #else
-#	define MOUSE_LB_EVENT   BUTTON1_CLICKED
-#	define MOUSE_RB_EVENT   BUTTON3_CLICKED
-#	define MOUSE_MASK       (BUTTON1_CLICKED | BUTTON3_CLICKED)
+#	define MOUSE_LB_EVENT  BUTTON1_CLICKED
+#	define MOUSE_RB_EVENT  BUTTON3_CLICKED
+#	define MOUSE_MASK      (BUTTON1_CLICKED | BUTTON3_CLICKED)
 #endif
 ///@}
 

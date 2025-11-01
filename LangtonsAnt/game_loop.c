@@ -21,9 +21,9 @@ static state_t handle_input(Simulation *sim)
 	if ((key = getch()) == ERR) {
 		return STATE_NO_CHANGE;
 	}
-	if (key == KEY_MOUSE && getmouse(mouse) != ERR) {
-#if defined(MOUSE_ACT_ON_PRESS) && defined(NCURSES)
-		if (mouse->bstate & (BUTTON1_RELEASED | BUTTON3_RELEASED)) {
+	if (key == KEY_MOUSE && getmouse(mouse) != ERR && mouse->bstate) {
+#if MOUSE_ACT_ON_PRESS
+		if (mouse->bstate & MOUSE_ANTIMASK) {
 			return STATE_NO_CHANGE;  // Prevent double press
 		}
 #endif
