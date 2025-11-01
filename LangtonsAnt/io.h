@@ -7,30 +7,53 @@
 #define __IO_H__
 
 #include "logic.h"
-#include "graphics.h"
+#ifndef IO_NO_CURSES
+#	include "curses.h"
+#endif
+
 
 /*------------------------- Input/output attributes --------------------------*/
 
 /** Filename buffer size */
-#define FILENAME_SIZE 256
+#define FILENAME_SZ         (size_t)256U
 
 /** Total number of fields in a Colors struct */
-#define COLORS_TOTAL_FIELDS (COLOR_COUNT*2 + 4)
+#define COLORS_FIELD_COUNT  (COLOR_COUNT*2 + 4)
 
-/** @name Bitmap file attributes */
+
+/*----------------------- Bitmap I/O macros and types ------------------------*/
+
+/** @name Bitmap attributes */
 ///@{
-#define BYTES_PER_PIXEL  3 // BGR
-#define FILE_HEADER_SIZE 14
-#define INFO_HEADER_SIZE 40
+#define BMP_MAX_SZ          (size_t)(1U << 28)
+#define BMP_FILE_HEADER_SZ  (size_t)14U
+#define BMP_INFO_HEADER_SZ  (size_t)40U
 ///@}
 
-/*------------------------- Input/output color types -------------------------*/
+/** Pixel format size */
+#define BYTES_PER_PIXEL     (size_t)3U
 
-/** Bitmap pixel type (24-bit BGR) */
-typedef byte pixel_t[BYTES_PER_PIXEL]; // TODO make into a struct?
+/** @name Pixel format conversion macros */
+///@{
+#define RGB_BGR(c)  (((c) & 0xA) | ((c) & 0x1) << 2 | ((c) & 0x4) >> 2)
 
-/** Maps internal colors to bitmap-compatible pixel format */
-extern const pixel_t color_map[COLOR_COUNT];
+#if defined(CURSES_RGB)
+#	define RGB(c)   (c)
+#	define BGR(c)   RGB_BGR(c)
+#elif defined(CURSES_BGR)
+#	define RGB(c)   RGB_BGR(c)
+#	define BGR(c)   (c)
+#endif
+///@}
+
+/** Bitmap pixel type (24-bit BGR/RGB) */
+typedef byte  pixel_t[BYTES_PER_PIXEL];
+
+/**
+ * Maps internal colors to bitmap-compatible pixel type
+ * Index with @ref BGR(c) or @ref RGB(c) to explicitly convert format
+ */
+extern const pixel_t  color_map[COLOR_COUNT];
 
 
 /*----------------------------------------------------------------------------*
@@ -76,7 +99,7 @@ int save_simulation(const char *filename, Simulation *sim);
  * @param filename Destination .bmp file path
  * @param grid Grid to be written
  * @return Bitmap size if successful; EOF otherwise
- * @see create_bitmap_file(const char*, pixel_t *, size_t, size_t)
+ * @see create_bitmap_file(const char *, pixel_t *, size_t, size_t)
  */
 int save_grid_bitmap(const char *filename, Grid *grid);
 
@@ -94,4 +117,4 @@ int save_grid_bitmap(const char *filename, Grid *grid);
  */
 int create_bitmap_file(const char *filename, pixel_t *image, size_t height, size_t width);
 
-#endif // __IO_H__
+#endif  // __IO_H__

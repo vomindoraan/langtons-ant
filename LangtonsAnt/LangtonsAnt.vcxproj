@@ -21,7 +21,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
-    <EnableASAN>false</EnableASAN>
+    <EnableASAN>true</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -51,54 +51,60 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>SERIAL_SCRIPT="python ../LangtonsAnt/write_serial.py";SERIAL_COLORS;WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SAVE_ENABLE=1;GALLERY_MODE=0;SERIAL_COLORS=0;SERIAL_SCRIPT="python ../LangtonsAnt/scripts/write_serial.py";_CRT_SECURE_NO_WARNINGS;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)\include</AdditionalIncludeDirectories>
-      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <SDLCheck>true</SDLCheck>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>pdcurses.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>pdcurses.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <PrecompiledHeader>
       </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>SERIAL_SCRIPT="python ../LangtonsAnt/write_serial.py";SERIAL_COLORS;WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SAVE_ENABLE=1;GALLERY_MODE=0;SERIAL_COLORS=0;SERIAL_SCRIPT="python ../LangtonsAnt/scripts/write_serial.py";_CRT_SECURE_NO_WARNINGS;_CONSOLE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
       <DebugInformationFormat>None</DebugInformationFormat>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <SDLCheck>false</SDLCheck>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>pdcurses.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>pdcurses.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="curses.h" />
     <ClInclude Include="graphics.h" />
-    <ClInclude Include="include\curses.h" />
     <ClInclude Include="include\pdcurses.h" />
     <ClInclude Include="io.h" />
     <ClInclude Include="logic.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="serial.h" />
+    <ClInclude Include="sprites.h" />
+    <ClInclude Include="version.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ant_sprites.c" />
+    <ClCompile Include="sprites.c" />
     <ClCompile Include="bitmap_io.c" />
     <ClCompile Include="colors.c" />
     <ClCompile Include="dialog.c" />
@@ -114,6 +120,7 @@
     <ClCompile Include="serial.c" />
     <ClCompile Include="simulation.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="timer.c" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resource\LangtonsAnt.ico" />
@@ -126,6 +133,11 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LangtonsAnt.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="pdcurses.dll">
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

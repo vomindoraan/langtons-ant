@@ -38,20 +38,20 @@ PROJECT_NAME           = "Langton's Ant"
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 2.0
+PROJECT_NUMBER         = 2.1
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
 # quick idea about the purpose of the project. Keep the description short.
 
-PROJECT_BRIEF          = "14-color 2D Turing machine simulator with ASCII graphics, written in C"
+PROJECT_BRIEF          = "Cross-platform Langton's ant Turing machine simulator with character graphics"
 
 # With the PROJECT_LOGO tag one can specify a logo or an icon that is included
 # in the documentation. The maximum height of the logo should not exceed 55
 # pixels and the maximum width should not exceed 200 pixels. Doxygen will copy
 # the logo to the output directory.
 
-PROJECT_LOGO           = logo_ant.png
+PROJECT_LOGO           = Misc/logo_ant.png
 
 # The OUTPUT_DIRECTORY tag is used to specify the (relative or absolute) path
 # into which the generated documentation will be written. If a relative path is

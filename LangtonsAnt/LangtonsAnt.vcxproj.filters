@@ -36,6 +36,9 @@
     <ClInclude Include="serial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="graphics.c">
@@ -80,10 +83,10 @@
     <ClCompile Include="game_loop.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="bitmap.c">
+    <ClCompile Include="serial.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="serial.c">
+    <ClCompile Include="bitmap_io.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,5 +104,10 @@
     <ResourceCompile Include="LangtonsAnt.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="pdcurses.dll">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

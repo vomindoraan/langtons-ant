@@ -7,39 +7,60 @@
 #ifndef __SERIAL_H__
 #define __SERIAL_H__
 
-#include "io.h"
-
-#ifndef SERIAL_SCRIPT
-#	define SERIAL_SCRIPT "./write_serial.py"
+/** Compile flags (serial disabled by default) */
+///@{
+#if defined(SERIAL_COLORS_ON)
+#	define SERIAL_COLORS  1
+#elif !defined(SERIAL_COLORS)
+#	define SERIAL_COLORS  0
 #endif
 
-#ifdef SERIAL_COLORS
+#ifndef SERIAL_SCRIPT
+#	define SERIAL_SCRIPT  "scripts/write_serial.py"
+#endif
+///@}
 
-/* Message format: {BBGGRR,T} */
+#if SERIAL_COLORS
+
+#include "io.h"
+
+
+/*---------------------- Serialization macros and types ----------------------*/
+
+/** Serialized color rules, format: {RRGGBB,T} */
+///@{
 #define COLOR_RULE_FMT       "{%02hhx%02hhx%02hhx,%c}"
 #define COLOR_RULE_LEN       (BYTES_PER_PIXEL*2 + 1 + 3)
-#define COLOR_RULES_MSG_LEN  (COLOR_COUNT * COLOR_RULE_LEN)
-#define COLOR_RULES_MSG_SIZE (COLOR_RULES_MSG_LEN + 1)
+#define COLOR_RULE_SZ        (COLOR_RULE_LEN + 1)
 
+#define COLOR_RULES_COUNT    (COLOR_COUNT - 2)  // def_color, COLOR_NONE
+#define COLOR_RULES_MSG_LEN  (COLOR_RULES_COUNT * COLOR_RULE_LEN)
+#define COLOR_RULES_MSG_SZ   (COLOR_RULES_MSG_LEN + 1)
+///@}
+
+/** Single (color, turn) pair */
 typedef struct color_rule {
-	color_t color;
-	turn_t turn;
+	color_t  color;
+	turn_t   turn;
 } ColorRule;
 
-typedef ColorRule ColorRules[COLOR_COUNT];
-typedef char ColorRulesMsg[COLOR_RULES_MSG_SIZE];
+/** Serialization types */
+///@{
+typedef ColorRule  ColorRules[COLOR_RULES_COUNT];
+typedef char       ColorRulesMsg[COLOR_RULES_MSG_SZ];
+///@}
+
+
+/*----------------------------------------------------------------------------*
+ *                                  serial.c                                  *
+ *----------------------------------------------------------------------------*/
 
 bool colors_to_color_rules(Colors *colors, ColorRules rules);
-
 bool is_color_rule_valid(ColorRule rule);
-
 void serialize_color_rules(ColorRules rules, ColorRulesMsg msg);
-
-// TODO
-//bool deserialize_color_rules(ColorRulesMsg msg, ColorRules rules);
-
+//bool deserialize_color_rules(ColorRules rules, ColorRulesMsg msg);  // TODO
 bool serial_send_colors(Colors *colors);
 
-#endif // SERIAL_COLORS
+#endif  // SERIAL_COLORS
 
-#endif // __SERIAL_H__
+#endif  // __SERIAL_H__
