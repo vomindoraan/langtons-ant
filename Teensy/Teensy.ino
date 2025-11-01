@@ -3,6 +3,7 @@
 
 extern "C" {
 #define  SERIAL_COLORS  1
+#define  IO_NO_CURSES
 #include "serial.h"
 }
 

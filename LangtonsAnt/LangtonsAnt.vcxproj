@@ -93,8 +93,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="curses.h" />
     <ClInclude Include="graphics.h" />
-    <ClInclude Include="include\curses.h" />
     <ClInclude Include="include\pdcurses.h" />
     <ClInclude Include="io.h" />
     <ClInclude Include="logic.h" />
