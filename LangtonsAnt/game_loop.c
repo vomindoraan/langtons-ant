@@ -73,7 +73,7 @@ void game_loop(void)
 				if (simulation_step(sim)) {
 					DRAW_ITER(grid, sim->grid, sim->ant, prev_pos);
 				} else {
-					grid_changed = menu_changed = TRUE;  // Grid expanded
+					grid_changed = menu_changed = TRUE;  // Grid expanded/sparse
 				}
 				step_time = curr_time;
 			}

@@ -38,13 +38,14 @@ void simulation_halt(Simulation *sim)
 bool simulation_step(Simulation *sim)
 {
 	assert(sim);
+	bool was_sparse = is_grid_sparse(sim->grid);
 	bool in_bounds = ant_move(sim->ant, sim->grid, sim->colors);
 	grid_silent_expand(sim->grid);
 	if (!in_bounds) {
 		grid_expand(sim->grid, sim->ant);
 	}
 	sim->steps++;
-	return in_bounds;
+	return in_bounds && was_sparse == is_grid_sparse(sim->grid);
 }
 
 bool is_simulation_running(Simulation *sim)

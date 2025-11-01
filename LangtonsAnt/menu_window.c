@@ -571,13 +571,6 @@ void draw_menu_full(void)
 
 void draw_menu_iter(void)
 {
-	static bool sparse;
-	Simulation *sim = stgs.simulation;
-
-	if (!sparse && is_grid_sparse(sim->grid)) {
-		sparse = TRUE;
-		draw_border();
-	}
 	draw_dir_arrow();
 	draw_state_func();
 	draw_steps();
