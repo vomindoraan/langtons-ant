@@ -7,6 +7,7 @@
 #define __LOGIC_H__
 
 #include <limits.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 
@@ -38,19 +39,6 @@
 
 /** Linear interpolation macro */
 #define LERP(a, b, t)  ((a) * (1.0-(t)) + (b) * (t))
-
-///@{
-/** Curses boolean literal */
-#ifndef FALSE
-#	define FALSE       0
-#endif
-#ifndef TRUE
-#	define TRUE        1
-#endif
-///@}
-
-/** Curses boolean type */
-typedef unsigned char  bool;
 
 /** Global byte type */
 typedef unsigned char  byte;

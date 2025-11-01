@@ -11,7 +11,7 @@ Simulation *simulation_new(Colors *colors, unsigned init_size)
 	sim->grid = grid_new(colors, init_size);
 	sim->ant = ant_new(sim->grid, DIR_UP);
 	sim->steps = 0;
-	sim->is_running = FALSE;
+	sim->is_running = false;
 	return sim;
 }
 
@@ -26,13 +26,13 @@ void simulation_delete(Simulation *sim)
 void simulation_run(Simulation *sim)
 {
 	assert(sim);
-	sim->is_running = TRUE;
+	sim->is_running = true;
 }
 
 void simulation_halt(Simulation *sim)
 {
 	assert(sim);
-	sim->is_running = FALSE;
+	sim->is_running = false;
 }
 
 bool simulation_step(Simulation *sim)

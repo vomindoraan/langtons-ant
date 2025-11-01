@@ -206,7 +206,7 @@ void grid_make_sparse(Grid *grid)
 inline bool is_grid_sparse(Grid *grid)
 {
 	assert(grid);
-	return grid->csr ? assert(!grid->c), TRUE : FALSE;
+	return grid->csr ? assert(!grid->c), true : false;
 }
 
 bool is_grid_usage_low(Grid *grid)

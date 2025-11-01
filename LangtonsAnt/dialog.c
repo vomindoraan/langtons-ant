@@ -29,8 +29,8 @@ void open_dialog(Vector2i pos, color_t color_index)
 	dialog_pos = rel2abs(pos, menu_pos);
 
 	dialogw = newwin(height, DIALOG_WINDOW_WIDTH, dialog_pos.y, dialog_pos.x);
-	keypad(dialogw, TRUE);
-	nodelay(dialogw, TRUE);
+	keypad(dialogw, true);
+	nodelay(dialogw, true);
 }
 
 void close_dialog(void)
@@ -149,7 +149,7 @@ state_t dialog_mouse_command(MEVENT *mouse)
 {
 	state_t ret;
 	Vector2i pos, tl;
-	bool del = FALSE;
+	bool del = false;
 	color_t i;
 
 	if (!mouse) {
@@ -169,7 +169,7 @@ state_t dialog_mouse_command(MEVENT *mouse)
 		}
 	}
 	if (cidx >= 0 && area_contains(delete_pos, DIALOG_DELETE_WIDTH, DIALOG_DELETE_HEIGHT, pos)) {
-		del = TRUE;
+		del = true;
 		goto button_clicked;
 	}
 

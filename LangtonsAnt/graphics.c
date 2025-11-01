@@ -42,7 +42,7 @@ void init_graphics(color_t fg_color, color_t bg_color)
 	/* Store current console font */
 	console = GetStdHandle(STD_OUTPUT_HANDLE);
 	user_font.cbSize = sizeof(CONSOLE_FONT_INFOEX);  // Required for the below call
-	GetCurrentConsoleFontEx(console, FALSE, &user_font);
+	GetCurrentConsoleFontEx(console, false, &user_font);
 
 	/* Store current window position & size */
 	CONSOLE_SCREEN_BUFFER_INFO sb;
@@ -58,7 +58,7 @@ void init_graphics(color_t fg_color, color_t bg_color)
 		.FontWeight = FW_NORMAL,
 	};
 	wcscpy(font.FaceName, CONSOLE_FONT_NAME);
-	SetCurrentConsoleFontEx(console, FALSE, &font);
+	SetCurrentConsoleFontEx(console, false, &font);
 #endif
 
 	setlocale(LC_ALL, "");  // Helps with proper wide char display
@@ -68,8 +68,8 @@ void init_graphics(color_t fg_color, color_t bg_color)
 
 	noecho();
 	cbreak();
-	keypad(stdscr, TRUE);
-	nodelay(stdscr, TRUE);
+	keypad(stdscr, true);
+	nodelay(stdscr, true);
 	mousemask(MOUSE_MASK, NULL);
 #if MOUSE_ACT_ON_PRESS
 	mouseinterval(0);
@@ -95,8 +95,8 @@ void end_graphics(void)
 
 #ifdef _WIN32
 	/* Restore user console font and window position & size */
-	SetCurrentConsoleFontEx(console, FALSE, &user_font);
-	SetConsoleWindowInfo(console, TRUE, &user_window);
+	SetCurrentConsoleFontEx(console, false, &user_font);
+	SetConsoleWindowInfo(console, true, &user_window);
 #endif
 }
 

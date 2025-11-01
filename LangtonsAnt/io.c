@@ -117,7 +117,7 @@ static int load_cells_s(Simulation *sim, FILE *input) {
 		SparseCell *p = NULL;
 		char c;
 
-		while (TRUE) {
+		while (true) {
 			if (fscanf(input, "%c", &c) < 1) {
 				return EOF;
 			}
@@ -165,8 +165,7 @@ Simulation *load_simulation(const char *filename)
 	Simulation *sim;
 	Colors *colors;
 	FILE *input;
-	bool is_sparse;
-	byte def, skip;
+	byte is_sparse, def, skip;
 	io_func_t load_cells;
 
 	if (!(colors = load_colors(filename))) {

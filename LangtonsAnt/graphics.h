@@ -264,7 +264,7 @@ typedef enum {
 #define KEY_ESC  0x1B
 
 /** Should react on key press instead of release (click)? */
-#define MOUSE_ACT_ON_PRESS  TRUE
+#define MOUSE_ACT_ON_PRESS  true
 
 /** @name Mouse button event flags */
 ///@{

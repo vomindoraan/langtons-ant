@@ -11,8 +11,8 @@ void init_grid_window(void)
 {
 	gridw = newwin(GRID_WINDOW_SIZE, GRID_WINDOW_SIZE, grid_pos.y, grid_pos.x);
 	wbkgd(gridw, ui_pair);
-	keypad(gridw, TRUE);
-	nodelay(gridw, TRUE);
+	keypad(gridw, true);
+	nodelay(gridw, true);
 }
 
 void end_grid_window(void)
@@ -49,7 +49,7 @@ static bool draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
 {
 	/* Ignore if cell isn't visible */
 	if (yx.y < 0 || yx.y >= GRID_VIEW_SIZE || yx.x < 0 || yx.x >= GRID_VIEW_SIZE) {
-		return FALSE;
+		return false;
 	}
 
 	wattrset(gridw, PAIR_FOR(c));
@@ -68,7 +68,7 @@ static bool draw_cell(Vector2i yx, int cs, color_t c, Ant *ant)
 		}
 	}
 
-	return TRUE;
+	return true;
 }
 
 static void draw_scrollbars(color_t def)

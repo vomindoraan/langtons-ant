@@ -1,7 +1,7 @@
 #include "graphics.h"
 #include "serial.h"
 
-static bool do_loop = TRUE;
+static bool do_loop = true;
 
 static state_t handle_input(Simulation *sim)
 {
@@ -73,7 +73,7 @@ void game_loop(void)
 				if (simulation_step(sim)) {
 					DRAW_ITER(grid, sim->grid, sim->ant, prev_pos);
 				} else {
-					grid_changed = menu_changed = TRUE;  // Grid expanded/sparse
+					grid_changed = menu_changed = true;  // Grid expanded/sparse
 				}
 				step_time = curr_time;
 			}
@@ -104,5 +104,5 @@ void game_loop(void)
 
 void stop_game_loop(void)
 {
-	do_loop = FALSE;
+	do_loop = false;
 }

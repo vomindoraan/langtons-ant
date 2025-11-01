@@ -8,7 +8,7 @@
 
 #define APP_NAME       "Langton's Ant"
 #define APP_VERSION    "2.1"
-#define APP_AUTHOR     "Konstantin Djordjevic"
+#define APP_AUTHOR     "Konstantin Djordjevic"  // TODO: Wide char đć
 #define APP_COPYRIGHT1 "(C) 2015-2025  " APP_AUTHOR
 #define APP_COPYRIGHT2 "(C) 2015  Natalija Radic"
 #define APP_COPYRIGHT3 "(C) 2025  Konstantinos Petrovic"

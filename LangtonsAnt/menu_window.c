@@ -99,8 +99,8 @@ static logo_str_t logo_help_text[MENU_LOGO_HEIGHT] = {
 #endif
 };
 
-#define LOGO_INIT_SPRITES(s, c)  { .sprites = s, .hl_color = c, TRUE }
-#define LOGO_INIT_TEXT(t, c)     { .text = t,    .hl_color = c, FALSE }
+#define LOGO_INIT_SPRITES(s, c)  { .sprites = s, .hl_color = c, true }
+#define LOGO_INIT_TEXT(t, c)     { .text = t,    .hl_color = c, false }
 
 typedef struct logo {
 	union {
@@ -125,8 +125,8 @@ void init_menu_window(void)
 {
 	menuw = newwin(MENU_WINDOW_HEIGHT, MENU_WINDOW_WIDTH, menu_pos.y, menu_pos.x);
 	wbkgd(menuw, ui_pair);
-	keypad(menuw, TRUE);
-	nodelay(menuw, TRUE);
+	keypad(menuw, true);
+	nodelay(menuw, true);
 	assert(!IS_COLOR_BRIGHT(MENU_BORDER_COLOR)
 	    && !IS_COLOR_BRIGHT(MENU_BORDER_COLOR_S)
 	    && !IS_COLOR_BRIGHT(MENU_ACTIVE_COLOR)
@@ -289,7 +289,7 @@ static void draw_color_rules(void)
 {
 	color_t c;
 	unsigned i = 0;
-	bool do_for = TRUE;
+	bool do_for = true;
 	Vector2i pos1, pos2, cdef_pos;
 
 	pos1.y = rules_pos.y - 3;
@@ -487,12 +487,12 @@ static void draw_io_button(Vector2i pos, const char **label, IOStatus status, bo
 static void draw_io_buttons(void)
 {
 #if !SAVE_ENABLE && GALLERY_MODE
-	draw_io_button(menu_load_pos, load_label, load_status, FALSE);
+	draw_io_button(menu_load_pos, load_label, load_status, false);
 #else
-	draw_io_button(menu_load_pos, load_label, load_status, TRUE);
+	draw_io_button(menu_load_pos, load_label, load_status, true);
 #endif
 #if SAVE_ENABLE
-	draw_io_button(menu_save_pos, save_label, save_status, TRUE);
+	draw_io_button(menu_save_pos, save_label, save_status, true);
 #endif
 }
 

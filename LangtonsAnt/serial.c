@@ -8,11 +8,11 @@
 bool colors_to_color_rules(Colors *colors, ColorRules rules)
 {
 	color_t c;
-	bool do_for = TRUE;
+	bool do_for = true;
 	size_t i = 0;
 
 	if (!colors) {
-		return FALSE;
+		return false;
 	}
 
 	/* Add existing colors to rules */
@@ -29,7 +29,7 @@ bool colors_to_color_rules(Colors *colors, ColorRules rules)
 		rules[i] = (ColorRule) { COLOR_NONE, TURN_NONE };
 	}
 
-	return TRUE;
+	return true;
 }
 
 bool is_color_rule_valid(ColorRule rule)
@@ -70,7 +70,7 @@ bool serial_send_colors(Colors *colors)
 	ColorRulesMsg msg;
 
 	if (!colors_to_color_rules(colors, rules)) {
-		return FALSE;
+		return false;
 	}
 	serialize_color_rules(rules, msg);
 
@@ -80,7 +80,7 @@ bool serial_send_colors(Colors *colors)
 	pipe = popen(SERIAL_SCRIPT, "w");
 #endif
 	if (!pipe) {
-		return FALSE;
+		return false;
 	}
 	bool success = fputs(msg, pipe) != EOF;
 #ifdef _WIN32
