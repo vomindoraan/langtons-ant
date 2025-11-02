@@ -115,7 +115,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="pdcurses.dll">
+    <CopyFileToFolders Include="lib\pdcurses.dll">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
     <CopyFileToFolders Include="examples\zigzag.lant">

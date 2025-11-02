@@ -129,7 +129,7 @@
     <ResourceCompile Include="LangtonsAnt.rc" />
   </ItemGroup>
   <ItemGroup>
-    <CopyFileToFolders Include="pdcurses.dll">
+    <CopyFileToFolders Include="lib\pdcurses.dll">
       <FileType>Document</FileType>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
