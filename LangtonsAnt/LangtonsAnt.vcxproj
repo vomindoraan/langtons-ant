@@ -126,12 +126,6 @@
     <Image Include="resource\LangtonsAnt.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="resource\Px437_IBM_EGA_8x8.ttf">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
-    </Font>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="LangtonsAnt.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +215,11 @@
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="resource\PxPlus_IBM_EGA_8x8.ttf">
+      <DeploymentContent>true</DeploymentContent>
+    </Font>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

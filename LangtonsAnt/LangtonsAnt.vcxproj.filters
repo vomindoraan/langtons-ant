@@ -110,11 +110,6 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="resource\Px437_IBM_EGA_8x8.ttf">
-      <Filter>Resource Files</Filter>
-    </Font>
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="LangtonsAnt.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
@@ -156,5 +151,10 @@
     <CopyFileToFolders Include="scripts\write_serial.py">
       <Filter>Resource Files\Scripts</Filter>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="resource\PxPlus_IBM_EGA_8x8.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
   </ItemGroup>
 </Project>
