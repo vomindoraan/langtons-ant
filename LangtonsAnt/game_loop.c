@@ -1,7 +1,7 @@
 #include "graphics.h"
 #include "serial.h"
 
-static bool do_loop = true;
+static volatile bool do_loop = true;
 
 static state_t handle_input(Simulation *sim)
 {

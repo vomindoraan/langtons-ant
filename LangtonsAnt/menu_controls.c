@@ -75,7 +75,8 @@ state_t clear_simulation(void)
 static state_t isize_button_clicked(int d)
 {
 	Simulation *sim = stgs.simulation;
-	unsigned old_value = stgs.init_size, ret = 0;
+	unsigned old_value = stgs.init_size;
+	state_t ret = 0;
 	if (d > 0) {
 		stgs.init_size = MIN(stgs.init_size+d, GRID_MAX_INIT_SIZE);
 	} else if (d < 0) {

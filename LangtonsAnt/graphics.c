@@ -10,6 +10,8 @@
 HANDLE console;
 CONSOLE_FONT_INFOEX user_font;
 SMALL_RECT user_window;
+
+BOOL WINAPI consoleCloseHandler(DWORD ctrlType);
 #endif
 
 chtype fg_pair, bg_pair, ui_pair, ui_text_pair;
@@ -63,6 +65,9 @@ void init_graphics(color_t fg_color, color_t bg_color)
 	};
 	wcscpy(font.FaceName, CONSOLE_FONT_NAME);
 	SetCurrentConsoleFontEx(console, false, &font);
+
+	/* Register cleanup handler */
+	SetConsoleCtrlHandler(consoleCloseHandler, TRUE);
 #endif
 
 	setlocale(LC_ALL, "");  // Helps with proper wide char display
@@ -90,6 +95,15 @@ void init_graphics(color_t fg_color, color_t bg_color)
 
 	refresh();
 }
+
+#if _WIN32
+BOOL WINAPI consoleCloseHandler(DWORD ctrlType)
+{
+	stop_game_loop();  // Let main finish gracefully and call end_graphics()
+	while (true);      // Loop the handler thread to prevent early exit
+	return ctrlType;   // Unreachable
+}
+#endif
 
 void end_graphics(void)
 {
