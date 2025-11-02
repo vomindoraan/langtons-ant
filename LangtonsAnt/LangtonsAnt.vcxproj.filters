@@ -105,19 +105,24 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="LangtonsAnt.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
     <Image Include="resource\LangtonsAnt.ico">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="LangtonsAnt.rc">
+    <CopyFileToFolders Include="resource\PxPlus_IBM_EGA_8x8.ttf">
       <Filter>Resource Files</Filter>
-    </ResourceCompile>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="lib\pdcurses.dll">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
     <CopyFileToFolders Include="examples\zigzag.lant">
       <Filter>Resource Files\Examples</Filter>
     </CopyFileToFolders>
@@ -148,11 +153,10 @@
     <CopyFileToFolders Include="examples\cauliflower.lant">
       <Filter>Resource Files\Examples</Filter>
     </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
     <CopyFileToFolders Include="scripts\write_serial.py">
       <Filter>Resource Files\Scripts</Filter>
-    </CopyFileToFolders>
-    <CopyFileToFolders Include="resource\PxPlus_IBM_EGA_8x8.ttf">
-      <Filter>Resource Files</Filter>
     </CopyFileToFolders>
   </ItemGroup>
 </Project>
