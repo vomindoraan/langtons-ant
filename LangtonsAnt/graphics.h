@@ -35,7 +35,8 @@
 /** @name Preferred console font settings */
 ///@{
 #define CONSOLE_FONT_NAME  L"PxPlus IBM EGA 8x8"
-#define CONSOLE_FONT_SIZE  8
+#define CONSOLE_FONT_FILE  L"PxPlus_IBM_EGA_8x8.ttf"
+#define CONSOLE_FONT_SIZE  7
 ///@}
 
 /** Empty character used for drawing */

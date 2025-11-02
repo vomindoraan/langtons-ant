@@ -151,10 +151,8 @@
     <CopyFileToFolders Include="scripts\write_serial.py">
       <Filter>Resource Files\Scripts</Filter>
     </CopyFileToFolders>
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="resource\PxPlus_IBM_EGA_8x8.ttf">
+    <CopyFileToFolders Include="resource\PxPlus_IBM_EGA_8x8.ttf">
       <Filter>Resource Files</Filter>
-    </Font>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

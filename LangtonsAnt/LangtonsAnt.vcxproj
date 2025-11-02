@@ -217,9 +217,10 @@
     </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
-    <Font Include="resource\PxPlus_IBM_EGA_8x8.ttf">
+    <CopyFileToFolders Include="resource\PxPlus_IBM_EGA_8x8.ttf">
       <DeploymentContent>true</DeploymentContent>
-    </Font>
+      <FileType>Document</FileType>
+    </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

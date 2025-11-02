@@ -5,6 +5,7 @@
 
 #ifdef _WIN32
 #	include <Windows.h>
+#	include <wingdi.h>
 
 HANDLE console;
 CONSOLE_FONT_INFOEX user_font;
@@ -39,6 +40,9 @@ void init_def_pairs(color_t fg_color, color_t bg_color)
 void init_graphics(color_t fg_color, color_t bg_color)
 {
 #ifdef _WIN32
+	/* Load preferred font from included file */
+	AddFontResource(CONSOLE_FONT_FILE);
+
 	/* Store current console font */
 	console = GetStdHandle(STD_OUTPUT_HANDLE);
 	user_font.cbSize = sizeof(CONSOLE_FONT_INFOEX);  // Required for the below call
@@ -49,7 +53,7 @@ void init_graphics(color_t fg_color, color_t bg_color)
 	GetConsoleScreenBufferInfo(console, &sb);
 	user_window = sb.srWindow;
 
-	/* Set console font to 8x8 raster */
+	/* Set console font to preferred font */
 	CONSOLE_FONT_INFOEX font = {
 		.cbSize = sizeof(CONSOLE_FONT_INFOEX),
 		.nFont = 0,
@@ -97,6 +101,9 @@ void end_graphics(void)
 	/* Restore user console font and window position & size */
 	SetCurrentConsoleFontEx(console, false, &user_font);
 	SetConsoleWindowInfo(console, true, &user_window);
+
+	/* Unregister included font */
+	RemoveFontResource(CONSOLE_FONT_FILE);
 #endif
 }
 
