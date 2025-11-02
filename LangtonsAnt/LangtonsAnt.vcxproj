@@ -53,7 +53,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>SAVE_ENABLE=1;GALLERY_MODE=0;SERIAL_COLORS=0;SERIAL_SCRIPT="python ../LangtonsAnt/scripts/write_serial.py";_CRT_SECURE_NO_WARNINGS;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SAVE_ENABLE=1;GALLERY_MODE=0;SERIAL_COLORS=0;_CRT_SECURE_NO_WARNINGS;_CONSOLE;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)\include</AdditionalIncludeDirectories>
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <SDLCheck>true</SDLCheck>
@@ -73,7 +73,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>SAVE_ENABLE=1;GALLERY_MODE=0;SERIAL_COLORS=0;SERIAL_SCRIPT="python ../LangtonsAnt/scripts/write_serial.py";_CRT_SECURE_NO_WARNINGS;_CONSOLE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SAVE_ENABLE=1;GALLERY_MODE=0;SERIAL_COLORS=0;_CRT_SECURE_NO_WARNINGS;_CONSOLE;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)\include</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile />
       <PrecompiledHeaderOutputFile />
@@ -127,8 +127,8 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="resource\Px437_IBM_EGA_8x8.ttf">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </Font>
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +137,89 @@
   <ItemGroup>
     <CopyFileToFolders Include="pdcurses.dll">
       <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="scripts\write_serial.py">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\scripts</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\scripts</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="examples\cauliflower.lant">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\highway.lant">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\spiral.lant">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\square.lant">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\square2.lant">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\square3.lant">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\sword.lant">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\test.lant">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\triangle.lant">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\zigzag.lant">
+      <FileType>Document</FileType>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DestinationFolders Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)\examples</DestinationFolders>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
     </CopyFileToFolders>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
