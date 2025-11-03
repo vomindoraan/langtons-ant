@@ -7,20 +7,22 @@
 #define __CURSES_H__
 
 #if defined(_WIN32)
-#	define CURSES_BGR
-#	define NCURSES_MOUSE_VERSION
+#	define PDC_WIDE
+#	define PDC_DLL_BUILD
+#	define PDC_NCMOUSE
 #	include <pdcurses.h>
 #	ifndef PDCURSES
 #		define PDCURSES
 #	endif
+#	define CURSES_BGR
 
-#elif defined(__linux__)
-#	define CURSES_RGB
-#	define NCURSES_ENABLE_STDBOOL_H 0
+#elif defined(__linux__) || defined(__APPLE__)
+#	define NCURSES_WIDECHAR 1
 #	include <ncurses.h>
 #	ifndef NCURSES
 #		define NCURSES
 #	endif
+#	define CURSES_RGB
 
 #else
 #	error "Unsupported platform"

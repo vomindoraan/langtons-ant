@@ -1,6 +1,6 @@
 #include "serial.h"
 
-#ifdef SERIAL_COLORS
+#if SERIAL_COLORS
 
 #include <stdio.h>
 #include <string.h>
@@ -8,11 +8,11 @@
 bool colors_to_color_rules(Colors *colors, ColorRules rules)
 {
 	color_t c;
-	bool do_for = TRUE;
-	int i = 0;
+	bool do_for = true;
+	size_t i = 0;
 
 	if (!colors) {
-		return FALSE;
+		return false;
 	}
 
 	/* Add existing colors to rules */
@@ -21,15 +21,15 @@ bool colors_to_color_rules(Colors *colors, ColorRules rules)
 			break;
 		}
 		rules[i++] = (ColorRule) { c, colors->turn[c] };
-		do_for = c != colors->last;
+		do_for = (c != colors->last && i < COLOR_RULES_COUNT);
 	}
 
 	/* Mark remaining color rules as invalid */
-	for (; i < COLOR_COUNT; i++) {
+	for (; i < COLOR_RULES_COUNT; i++) {
 		rules[i] = (ColorRule) { COLOR_NONE, TURN_NONE };
 	}
 
-	return TRUE;
+	return true;
 }
 
 bool is_color_rule_valid(ColorRule rule)
@@ -39,26 +39,27 @@ bool is_color_rule_valid(ColorRule rule)
 
 void serialize_color_rules(ColorRules rules, ColorRulesMsg msg)
 {
-	int i, j = 0;
+	size_t i;
 	msg[0] = '\0';
-	for (i = 0; i < COLOR_COUNT && is_color_rule_valid(rules[i]); i++) {
+	for (i = 0; i < COLOR_RULES_COUNT && is_color_rule_valid(rules[i]); i++) {
 		color_t c = rules[i].color;
-		turn_t t = rules[i].turn;
-		const pixel_t *pbgr = &color_map[c];
+		turn_t  t = rules[i].turn;
+		const pixel_t *prgb = &color_map[RGB(c)];
+
 		char tmp[COLOR_RULE_LEN+1];
 		snprintf(tmp, COLOR_RULE_LEN+1, COLOR_RULE_FMT,
-		         (*pbgr)[0], (*pbgr)[1], (*pbgr)[2], turn2arrow(t) & 0xFF);
+		         (*prgb)[0], (*prgb)[1], (*prgb)[2], TURN_CHAR(t));
 		strcat(msg, tmp);
 	}
 }
 
 // TODO
-//bool deserialize_color_rules(ColorRulesMsg str, ColorRules rules)
+//bool deserialize_color_rules(ColorRules rules, ColorRulesMsg str)
 //{
-//	int i = 0;
-//	pixel_t pbgr;
+//	size_t i = 0;
+//	pixel_t prgb;
 //	turn_t turn;
-//	while (sscanf(str, COLOR_RULE_FMT, &pbgr[0], &pbgr[1], &pbgr[2], &turn) == 4) {
+//	while (sscanf(str, COLOR_RULE_FMT, &prgb[0], &prgb[1], &prgb[2], &turn) == 4) {
 //	}
 //}
 
@@ -68,7 +69,9 @@ bool serial_send_colors(Colors *colors)
 	ColorRules rules;
 	ColorRulesMsg msg;
 
-	colors_to_color_rules(colors, rules);
+	if (!colors_to_color_rules(colors, rules)) {
+		return false;
+	}
 	serialize_color_rules(rules, msg);
 
 #ifdef _WIN32
@@ -77,9 +80,8 @@ bool serial_send_colors(Colors *colors)
 	pipe = popen(SERIAL_SCRIPT, "w");
 #endif
 	if (!pipe) {
-		return FALSE;
+		return false;
 	}
-
 	bool success = fputs(msg, pipe) != EOF;
 #ifdef _WIN32
 	_pclose(pipe);
@@ -89,4 +91,4 @@ bool serial_send_colors(Colors *colors)
 	return success;
 }
 
-#endif // SERIAL_COLORS
+#endif  // SERIAL_COLORS

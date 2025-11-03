@@ -220,5 +220,5 @@ pip-log.txt
 
 *.exe
 *.dmp
-/Docs/
+/Docs/*/
 ~AutoRecover.LangtonsAnt.vcxproj

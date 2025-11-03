@@ -13,11 +13,11 @@ int main(int argc, char *argv[])
 
 	stgs.init_size = GRID_DEF_INIT_SIZE;
 	stgs.speed = LOOP_DEF_SPEED;
-	if (argc == 2 && (stgs.linked_sim = load_simulation(argv[1]))) {
-		stgs.colors = stgs.linked_sim->colors;
+	if (argc == 2 && (stgs.simulation = load_simulation(argv[1]))) {
+		stgs.colors = stgs.simulation->colors;
 	} else {
 		stgs.colors = colors_new(COLOR_SILVER);
-		stgs.linked_sim = simulation_new(stgs.colors, stgs.init_size);
+		stgs.simulation = simulation_new(stgs.colors, stgs.init_size);
 	}
 
 	init_graphics(COLOR_BLACK, COLOR_WHITE);
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
 
 	end_graphics();
 
-	simulation_delete(stgs.linked_sim);
+	simulation_delete(stgs.simulation);
 	colors_delete(stgs.colors);
 	return EXIT_SUCCESS;
 }
