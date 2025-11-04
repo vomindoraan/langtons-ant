@@ -223,7 +223,7 @@ static void draw_color_tile(Vector2i top_left, color_t c)
 {
 	chtype tile_pair = PAIR_FOR(c);
 	chtype frame_pair = (c != COLOR_FOR(bg_pair)) ? tile_pair : ui_pair;
-	bool is_def = c == stgs.colors->def;
+	bool is_def = (c == stgs.colors->def);
 	int y = top_left.y, x = top_left.x, s = MENU_TILE_SIZE;
 
 	/* Draw tile */
@@ -313,7 +313,7 @@ static void draw_color_rules(void)
 		}
 		draw_color_tile(pos1, c);
 		state_map[c] = i;
-		do_for = c != stgs.colors->last;
+		do_for = (c != stgs.colors->last);
 	}
 
 	/* Draw placeholder tile */

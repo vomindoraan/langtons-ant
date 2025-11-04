@@ -157,7 +157,7 @@ state_t grid_mouse_command(Grid *grid, Ant *ant, MEVENT *mouse)
 		return STATE_NO_CHANGE;
 	}
 
-	lb_clicked = !!(mouse->bstate & MOUSE_LB_EVENT);
+	lb_clicked = mouse->bstate & MOUSE_LB_EVENT;
 	step = lb_clicked ? SCROLL_STEP_SMALL : grid->size;  // Can be anything large
 
 	/* Vertical scrollbar */

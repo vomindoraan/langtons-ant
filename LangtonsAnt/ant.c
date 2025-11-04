@@ -49,7 +49,7 @@ static void update_bounding_box(Grid *grid, Vector2i pos)
 static void ant_move_n(Ant *ant, Grid *grid, Colors *colors)
 {
 	byte *c = &grid->c[ant->pos.y][ant->pos.x];
-	bool is_def = *c == colors->def;
+	bool is_def = (*c == colors->def);
 	turn_t turn;
 
 	/* In-place color changing */

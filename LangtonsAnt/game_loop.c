@@ -57,9 +57,9 @@ void game_loop(void)
 
 	while (do_loop) {
 		state_t input = handle_input(sim);
-		bool grid_changed   = !!(input & STATE_GRID_CHANGED);
-		bool menu_changed   = !!(input & STATE_MENU_CHANGED);
-		bool colors_changed = !!(input & STATE_COLORS_CHANGED);
+		bool grid_changed   = input & STATE_GRID_CHANGED;
+		bool menu_changed   = input & STATE_MENU_CHANGED;
+		bool colors_changed = input & STATE_COLORS_CHANGED;
 		sim = stgs.simulation;  // May have changed on input
 
 		curr_time = timer_micros();

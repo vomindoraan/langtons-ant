@@ -328,8 +328,8 @@ state_t menu_mouse_command(MEVENT *mouse)
 	}
 
 	pos = abs2rel(mouse_pos, menu_pos);
-	lb_clicked = !!(mouse->bstate & MOUSE_LB_EVENT);
-	rb_clicked = !!(mouse->bstate & MOUSE_RB_EVENT);
+	lb_clicked = mouse->bstate & MOUSE_LB_EVENT;
+	rb_clicked = mouse->bstate & MOUSE_RB_EVENT;
 
 	/* Logo area */
 	if (area_contains(menu_logo_pos, MENU_LOGO_WIDTH, MENU_LOGO_HEIGHT, pos)) {
