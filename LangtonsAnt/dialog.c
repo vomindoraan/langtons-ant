@@ -116,7 +116,7 @@ static void draw_buttons(void)
 void draw_dialog(void)
 {
 	wattrset(dialogw, ui_pair);
-	draw_rect(dialogw, (Vector2i) { 0, 0 }, DIALOG_WINDOW_WIDTH, DIALOG_WINDOW_HEIGHT);
+	draw_rect(dialogw, VECTOR_ZERO, DIALOG_WINDOW_WIDTH, DIALOG_WINDOW_HEIGHT);
 
 	draw_colors();
 	draw_buttons();
