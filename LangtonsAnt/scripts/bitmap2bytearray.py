@@ -4,8 +4,9 @@ import os
 import sys
 
 
-black = {0,   (0, 0, 0)}
-white = {255, (255, 255, 255)}
+BLACK = {0,   (0, 0, 0)}
+WHITE = {255, (255, 255, 255)}
+
 
 def bitmap2bytearray(filename):
     ba = bytearray()
@@ -13,7 +14,7 @@ def bitmap2bytearray(filename):
     with Image.open(filename) as img:
         byte = ''
         for i, pixel in enumerate(img.getdata()):
-            byte += '1' if pixel not in white else '0'
+            byte += '1' if pixel not in WHITE else '0'
             if (i+1) % 8 == 0:
                 ba.append(int(byte, 2))
                 byte = ''
