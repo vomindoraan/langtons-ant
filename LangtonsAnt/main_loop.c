@@ -44,7 +44,7 @@ static state_t handle_input(Simulation *sim)
 		draw_##w##_iter(__VA_ARGS__);  \
 	}
 
-void game_loop(void)
+void main_loop(void)
 {
 	static ttime_t step_time, menu_time, draw_time;
 	ttime_t curr_time;
@@ -102,7 +102,7 @@ void game_loop(void)
 	}
 }
 
-void stop_game_loop(void)
+void stop_main_loop(void)
 {
 	do_loop = false;
 }

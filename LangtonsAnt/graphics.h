@@ -481,21 +481,21 @@ chtype turn2arrow(turn_t turn);
 
 
 /*----------------------------------------------------------------------------*
- *                                game_loop.c                                 *
+ *                                main_loop.c                                 *
  *----------------------------------------------------------------------------*/
 
 /**
  * Main draw/update loop for the current simulation
- * @see stop_game_loop(void)
+ * @see stop_main_loop(void)
  * @see simulation_step(Simulation *)
  */
-void game_loop(void);
+void main_loop(void);
 
 /**
  * Stops the main draw/update loop
- * @see game_loop(void)
+ * @see main_loop(void)
  */
-void stop_game_loop(void);
+void stop_main_loop(void);
 
 
 /*----------------------------------------------------------------------------*

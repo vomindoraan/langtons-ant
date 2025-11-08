@@ -109,7 +109,7 @@
     <ClCompile Include="bitmap_io.c" />
     <ClCompile Include="colors.c" />
     <ClCompile Include="dialog.c" />
-    <ClCompile Include="game_loop.c" />
+    <ClCompile Include="main_loop.c" />
     <ClCompile Include="grid_controls.c" />
     <ClCompile Include="menu_controls.c" />
     <ClCompile Include="menu_window.c" />

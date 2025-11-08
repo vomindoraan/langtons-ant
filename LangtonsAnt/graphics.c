@@ -99,7 +99,7 @@ void init_graphics(color_t fg_color, color_t bg_color)
 #if _WIN32
 BOOL WINAPI consoleCloseHandler(DWORD ctrlType)
 {
-	stop_game_loop();  // Let main finish gracefully and call end_graphics()
+	stop_main_loop();  // Let main finish gracefully and call end_graphics()
 	while (true);      // Loop the handler thread to prevent early exit
 	return ctrlType;   // Unreachable
 }
