@@ -16,7 +16,7 @@ logging.basicConfig(
 )
 
 SERIAL_BAUD_RATE = 115200
-COMPORT_PATTERN = re.compile(r'/dev/ttyACM\d+|COM\d+')
+COMPORT_PATTERN = re.compile(r'COM\d+|/dev/ttyACM\d+')
 
 
 def connect() -> Serial:
@@ -51,6 +51,7 @@ if __name__ == '__main__':
     try:
         serial = connect()
         serial.write(msg_bytes + b'\0')  # Send as C string
+        logging.info("OK")
     except SerialException as e:
-        logging.error("Couldn't send: %s", e)
+        logging.error("ERR: %s", e)
         sys.exit(-2)

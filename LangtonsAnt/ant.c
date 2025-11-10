@@ -5,6 +5,7 @@
 
 Ant *ant_new(Grid *grid, Direction dir)
 {
+	assert(grid);
 	Ant *ant = malloc(sizeof(Ant));
 	ant->pos.y = ant->pos.x = grid->size / 2;
 	ant->dir = dir;
@@ -13,6 +14,7 @@ Ant *ant_new(Grid *grid, Direction dir)
 
 void ant_delete(Ant *ant)
 {
+	assert(ant);
 	free(ant);
 }
 
@@ -47,7 +49,7 @@ static void update_bounding_box(Grid *grid, Vector2i pos)
 static void ant_move_n(Ant *ant, Grid *grid, Colors *colors)
 {
 	byte *c = &grid->c[ant->pos.y][ant->pos.x];
-	bool is_def = *c == colors->def;
+	bool is_def = (*c == colors->def);
 	turn_t turn;
 
 	/* In-place color changing */
@@ -71,18 +73,19 @@ static void ant_move_n(Ant *ant, Grid *grid, Colors *colors)
 
 static void ant_move_s(Ant *ant, Grid *grid, Colors *colors)
 {
-	int y = ant->pos.y, x = ant->pos.x, turn;
+	int y = ant->pos.y, x = ant->pos.x;
+	turn_t turn;
 	SparseCell **t = grid->csr + y;
 
-	while (*t && CSR_GET_COLUMN(*t) < (size_t)x) {
+	while (*t && CSR_GET_COLUMN(*t) < (unsigned)x) {
 		t = &(*t)->next;
 	}
-	if (!*t || CSR_GET_COLUMN(*t) != (size_t)x) {
+	if (!*t || CSR_GET_COLUMN(*t) != (unsigned)x) {
 		if (!*t) {
 			grid->colored++;
 			update_bounding_box(grid, ant->pos);
 		}
-		sparse_new_cell(t, x, (byte)colors->first);
+		sparse_prepend(t, x, (byte)colors->first);
 	}
 
 	/* In-place color changing */
@@ -98,6 +101,7 @@ static void ant_move_s(Ant *ant, Grid *grid, Colors *colors)
 
 bool ant_move(Ant *ant, Grid *grid, Colors *colors)
 {
+	assert(ant), assert(grid), assert(colors);
 	if (is_grid_sparse(grid)) {
 		ant_move_s(ant, grid, colors);
 	} else {
@@ -108,6 +112,7 @@ bool ant_move(Ant *ant, Grid *grid, Colors *colors)
 
 bool is_ant_in_bounds(Ant *ant, Grid *grid)
 {
-	return ant->pos.y >= 0 && (size_t)ant->pos.y < grid->size
-	    && ant->pos.x >= 0 && (size_t)ant->pos.x < grid->size;
+	assert(ant), assert(grid);
+	return ant->pos.y >= 0 && (unsigned)ant->pos.y < grid->size
+	    && ant->pos.x >= 0 && (unsigned)ant->pos.x < grid->size;
 }

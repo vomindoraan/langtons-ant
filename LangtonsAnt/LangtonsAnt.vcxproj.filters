@@ -13,6 +13,14 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\Examples">
+      <UniqueIdentifier>{8776ab0b-f99a-4a4c-9e3b-ffd0ce3c4cd9}</UniqueIdentifier>
+      <Extensions>lant</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\Scripts">
+      <UniqueIdentifier>{7f879519-9f40-47e3-8d95-370c661ab652}</UniqueIdentifier>
+      <Extensions>py;sh</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="logic.h">
@@ -30,10 +38,16 @@
     <ClInclude Include="include\pdcurses.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\curses.h">
+    <ClInclude Include="serial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="serial.h">
+    <ClInclude Include="version.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="curses.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sprites.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,32 +88,78 @@
     <ClCompile Include="io.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ant_sprites.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game_loop.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bitmap.c">
+    <ClCompile Include="main_loop.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="serial.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="resource\LangtonsAnt.ico">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="resource\Px437_IBM_EGA_8x8.ttf">
-      <Filter>Resource Files</Filter>
-    </Font>
+    <ClCompile Include="bitmap_io.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sprites.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="LangtonsAnt.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+    <Image Include="resource\LangtonsAnt.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="resource\PxPlus_IBM_EGA_8x8.ttf">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="lib\pdcurses.dll">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="lib\pdcurses_x64.dll">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="examples\zigzag.lant">
+      <Filter>Resource Files\Examples</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\triangle.lant">
+      <Filter>Resource Files\Examples</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\highway.lant">
+      <Filter>Resource Files\Examples</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\spiral.lant">
+      <Filter>Resource Files\Examples</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\square.lant">
+      <Filter>Resource Files\Examples</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\square2.lant">
+      <Filter>Resource Files\Examples</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\square3.lant">
+      <Filter>Resource Files\Examples</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\sword.lant">
+      <Filter>Resource Files\Examples</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\test.lant">
+      <Filter>Resource Files\Examples</Filter>
+    </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\cauliflower.lant">
+      <Filter>Resource Files\Examples</Filter>
+    </CopyFileToFolders>
+  </ItemGroup>
+  <ItemGroup>
+    <CopyFileToFolders Include="scripts\write_serial.py">
+      <Filter>Resource Files\Scripts</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
 </Project>

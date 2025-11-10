@@ -6,24 +6,27 @@
 Colors *colors_new(color_t def)
 {
 	assert(def >= 0 && def < COLOR_COUNT);
-	Colors *colors = malloc(sizeof(Colors));
-	int i;
+	color_t i;
+	Colors* colors = malloc(sizeof(Colors));
+
 	for (i = 0; i < COLOR_COUNT; i++) {
 		colors->next[i] = def;
 		colors->turn[i] = TURN_NONE;
 	}
-	colors->n = 0;
 	colors->first = colors->last = COLOR_NONE;
 	colors->def = def;
+	colors->n = 0;
+
 	return colors;
 }
 
 void colors_delete(Colors *colors)
 {
+	assert(colors);
 	free(colors);
 }
 
-static void update_def(Colors *c)
+static inline void update_def(Colors *c)
 {
 	c->next[c->def] = c->next[c->first];
 	c->turn[c->def] = c->turn[c->first];
@@ -31,14 +34,14 @@ static void update_def(Colors *c)
 
 void colors_push(Colors *colors, color_t c, turn_t turn)
 {
+	assert(colors);
 	if (c < 0 || c >= COLOR_COUNT || c == colors->def) {
 		return;
 	}
-	
+
 	if (colors->first == COLOR_NONE) {
 		assert(colors->last == COLOR_NONE);
-		colors->first = c;
-		colors->last = c;
+		colors->first = colors->last = c;
 	}
 	colors->next[colors->last] = c;
 	colors->next[c] = colors->first;
@@ -51,6 +54,7 @@ void colors_push(Colors *colors, color_t c, turn_t turn)
 
 void colors_pop(Colors *colors, color_t c)
 {
+	assert(colors);
 	color_t i;
 	if (c < 0 || c >= COLOR_COUNT || c == colors->def || colors->n == 0) {
 		return;
@@ -79,6 +83,7 @@ void colors_pop(Colors *colors, color_t c)
 
 void colors_clear(Colors *colors)
 {
+	assert(colors);
 	color_t i;
 	for (i = 0; i < COLOR_COUNT; i++) {
 		colors->next[i] = colors->def;
@@ -88,10 +93,10 @@ void colors_clear(Colors *colors)
 	colors->n = 0;
 }
 
-void colors_update(Colors *colors, size_t index, color_t c, turn_t turn)
+void colors_update(Colors *colors, unsigned index, color_t c, turn_t turn)
 {
+	assert(colors && index < colors->n);
 	color_t prev = colors->last, i = colors->first, j;
-	assert(index < colors->n);
 	for (; index > 0; index--) {
 		prev = i;
 		i = colors->next[i];
@@ -119,10 +124,10 @@ void colors_update(Colors *colors, size_t index, color_t c, turn_t turn)
 	update_def(colors);
 }
 
-void colors_set_turn(Colors *colors, size_t index, turn_t turn)
+void colors_set_turn(Colors *colors, unsigned index, turn_t turn)
 {
+	assert(colors && index < colors->n);
 	color_t i = colors->first;
-	assert(index < colors->n);
 	for (; index > 0; index--) {
 		i = colors->next[i];
 	}
@@ -130,10 +135,10 @@ void colors_set_turn(Colors *colors, size_t index, turn_t turn)
 	update_def(colors);
 }
 
-color_t colors_at(Colors *colors, size_t index)
+color_t colors_at(Colors *colors, unsigned index)
 {
+	assert(colors && index < colors->n);
 	color_t i = colors->first;
-	assert(index < colors->n);
 	for (; index > 0; index--) {
 		i = colors->next[i];
 	}
@@ -142,20 +147,24 @@ color_t colors_at(Colors *colors, size_t index)
 
 bool color_exists(Colors *colors, color_t c)
 {
+	assert(colors);
 	return colors->turn[c] != TURN_NONE;
 }
 
 bool is_color_special(Colors *colors, color_t c)
 {
+	assert(colors);
 	return colors->next[c] != colors->def && colors->turn[c] == TURN_NONE;
 }
 
 bool is_colors_empty(Colors *colors)
 {
+	assert(colors);
 	return colors->n == 0;
 }
 
 bool has_enough_colors(Colors *colors)
 {
+	assert(colors);
 	return colors->n >= 2;
 }

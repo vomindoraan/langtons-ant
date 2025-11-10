@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-Simulation *simulation_new(Colors *colors, size_t init_size)
+Simulation *simulation_new(Colors *colors, unsigned init_size)
 {
 	assert(colors);
 	Simulation *sim = malloc(sizeof(Simulation));
@@ -11,12 +11,13 @@ Simulation *simulation_new(Colors *colors, size_t init_size)
 	sim->grid = grid_new(colors, init_size);
 	sim->ant = ant_new(sim->grid, DIR_UP);
 	sim->steps = 0;
-	sim->is_running = FALSE;
+	sim->is_running = false;
 	return sim;
 }
 
 void simulation_delete(Simulation *sim)
 {
+	assert(sim);
 	grid_delete(sim->grid);
 	ant_delete(sim->ant);
 	free(sim);
@@ -24,23 +25,27 @@ void simulation_delete(Simulation *sim)
 
 void simulation_run(Simulation *sim)
 {
-	sim->is_running = TRUE;
+	assert(sim);
+	sim->is_running = true;
 }
 
 void simulation_halt(Simulation *sim)
 {
-	sim->is_running = FALSE;
+	assert(sim);
+	sim->is_running = false;
 }
 
 bool simulation_step(Simulation *sim)
 {
+	assert(sim);
+	bool was_sparse = is_grid_sparse(sim->grid);
 	bool in_bounds = ant_move(sim->ant, sim->grid, sim->colors);
-	++(sim->steps);
 	grid_silent_expand(sim->grid);
 	if (!in_bounds) {
 		grid_expand(sim->grid, sim->ant);
 	}
-	return in_bounds;
+	sim->steps++;
+	return in_bounds && was_sparse == is_grid_sparse(sim->grid);
 }
 
 bool is_simulation_running(Simulation *sim)
