@@ -575,4 +575,8 @@ void draw_menu_iter(void)
 	draw_state_func();
 	draw_steps();
 	wnoutrefresh(menuw);
+
+	if (dialogw) {  // TODO: Replace with panel
+		draw_dialog();
+	}
 }
