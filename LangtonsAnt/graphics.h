@@ -308,32 +308,38 @@ typedef struct pending_action {
 
 /** @name Performance settings */
 ///@{
-#define LOOP_DEF_SPEED          2     /**< Default speed multiplier */
-#define LOOP_MIN_SPEED          1     /**< Minimum allowed speed multiplier */
-#define LOOP_MAX_SPEED          9     /**< Maximum allowed speed multiplier */
-#define LOOP_MIN_STEP_TIME_S    1e-5  /**< Min time per step (max speed), > 0 */
-#define LOOP_MAX_STEP_TIME_S    0.75  /**< Max time per step (min speed) */
-#define LOOP_FRAMES_PER_S       30    /**< Target framerate for drawing */
+#define LOOP_DEF_SPEED           2     /**< Default speed multiplier */
+#define LOOP_MIN_SPEED           1     /**< Minimum allowed speed multiplier */
+#define LOOP_MAX_SPEED           9     /**< Maximum allowed speed multiplier */
+#define LOOP_MIN_STEP_TIME_S     1e-5  /**< Min time per step (max speed), > 0 */
+#define LOOP_MAX_STEP_TIME_S     0.75  /**< Max time per step (min speed) */
+#define LOOP_FRAMES_PER_S        30    /**< Target framerate for drawing */
 ///@}
 
 /** @name Timestep calculation macros */
 ///@{
-#define LOOP_FRAME_TIME_MS      (1e3 / LOOP_FRAMES_PER_S)
-#define LOOP_FRAME_TIME_US      (1e6 / LOOP_FRAMES_PER_S)
-#define LOOP_STEP_TIME_MS(s)    (1e3 * LOOP_STEP_TIME_S(s))
-#define LOOP_STEP_TIME_US(s)    (1e6 * LOOP_STEP_TIME_S(s))
-#define LOOP_STEP_TIME_S(s)     LOOP_EASE(LOOP_MAX_STEP_TIME_S, LOOP_MIN_STEP_TIME_S, LOOP_SPEED_COEF(s))
-#define LOOP_SPEED_COEF(s)      (((double)(s) - LOOP_MIN_SPEED) / (LOOP_MAX_SPEED - LOOP_MIN_SPEED))
+#define LOOP_FRAME_TIME_MS       (1e3 / LOOP_FRAMES_PER_S)
+#define LOOP_FRAME_TIME_US       (1e6 / LOOP_FRAMES_PER_S)
+#define LOOP_MENU_TIME_MS(s)     (LOOP_MENU_TIME_US(s) / 1e3)
+#ifdef PDCURSES
+#	define LOOP_MENU_TIME_US(s)  (LOOP_FRAME_TIME_US * (s) / 2)  // Has less performant drawing
+#else
+#	define LOOP_MENU_TIME_US(s)  LOOP_FRAME_TIME_US
+#endif
+#define LOOP_STEP_TIME_MS(s)     (1e3 * LOOP_STEP_TIME_S(s))
+#define LOOP_STEP_TIME_US(s)     (1e6 * LOOP_STEP_TIME_S(s))
+#define LOOP_STEP_TIME_S(s)      LOOP_EASE(LOOP_MAX_STEP_TIME_S, LOOP_MIN_STEP_TIME_S, LOOP_SPEED_COEF(s))
+#define LOOP_SPEED_COEF(s)       (((double)(s) - LOOP_MIN_SPEED) / (LOOP_MAX_SPEED - LOOP_MIN_SPEED))
 ///@}
 
 /** @name Interpolation/easing macros */
 ///@{
-#define EASE_LIN(a, b, t)       LERP(a, b, t)
-#define EASE_LOG(a, b, t)       (pow(a, 1.0-(t)) * pow(b, t))
-#define EASE_IN_QUAD(a, b, t)   ((a) + ((b)-(a)) * SQ(t))
-#define EASE_OUT_QUAD(a, b, t)  ((a) + ((b)-(a)) * (2.0*(t) - SQ(t)))
+#define EASE_LIN(a, b, t)        LERP(a, b, t)
+#define EASE_LOG(a, b, t)        (pow(a, 1.0-(t)) * pow(b, t))
+#define EASE_IN_QUAD(a, b, t)    ((a) + ((b)-(a)) * SQ(t))
+#define EASE_OUT_QUAD(a, b, t)   ((a) + ((b)-(a)) * (2.0*(t)-SQ(t)))
 #ifndef LOOP_EASE
-#	define LOOP_EASE            EASE_LOG
+#	define LOOP_EASE             EASE_LOG
 #endif
 ///@}
 
@@ -481,21 +487,21 @@ chtype turn2arrow(turn_t turn);
 
 
 /*----------------------------------------------------------------------------*
- *                                game_loop.c                                 *
+ *                                main_loop.c                                 *
  *----------------------------------------------------------------------------*/
 
 /**
  * Main draw/update loop for the current simulation
- * @see stop_game_loop(void)
+ * @see stop_main_loop(void)
  * @see simulation_step(Simulation *)
  */
-void game_loop(void);
+void main_loop(void);
 
 /**
  * Stops the main draw/update loop
- * @see game_loop(void)
+ * @see main_loop(void)
  */
-void stop_game_loop(void);
+void stop_main_loop(void);
 
 
 /*----------------------------------------------------------------------------*

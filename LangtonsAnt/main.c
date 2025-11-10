@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
 	init_graphics(COLOR_BLACK, COLOR_WHITE);
 
-	game_loop();
+	main_loop();
 
 	end_graphics();
 

@@ -46,11 +46,14 @@ typedef unsigned char  byte;
 
 /*------------------------- Vector macros and types --------------------------*/
 
+/** Vector constants */
+///@{
+#define VECTOR_ZERO        (Vector2i) { 0, 0 }
+#define VECTOR_INVALID     (Vector2i) { INT_MIN, INT_MIN }
+///@}
+
 /** Equality comparison macro for two vectors */
 #define VECTOR_EQ(v1, v2)  ((v1).y == (v2).y && (v1).x == (v2).x)
-
-/** Vector representing an out-of-bounds position */
-#define VECTOR_INVALID     (Vector2i) { INT_MIN, INT_MIN }
 
 /** Vector container (int y, int x) */
 typedef struct vector2i {
@@ -70,7 +73,7 @@ typedef enum {
 
 /** Ant container */
 typedef struct ant {
-	Vector2i   pos;  /**< Current position */  // TODO: Use unsigned vector?
+	Vector2i   pos;  /**< Current position */
 	Direction  dir;  /**< Direction the ant is facing */
 } Ant;
 
@@ -106,8 +109,7 @@ typedef signed char  turn_t;
 typedef struct colors {
 	color_t   next[COLOR_COUNT];
 	turn_t    turn[COLOR_COUNT];
-	color_t   first, last;
-	color_t   def;
+	color_t   first, last, def;
 	unsigned  n;
 } Colors;  // TODO: Finish logic docs & add @see
 

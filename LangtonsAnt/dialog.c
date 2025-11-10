@@ -116,7 +116,7 @@ static void draw_buttons(void)
 void draw_dialog(void)
 {
 	wattrset(dialogw, ui_pair);
-	draw_rect(dialogw, (Vector2i) { 0, 0 }, DIALOG_WINDOW_WIDTH, DIALOG_WINDOW_HEIGHT);
+	draw_rect(dialogw, VECTOR_ZERO, DIALOG_WINDOW_WIDTH, DIALOG_WINDOW_HEIGHT);
 
 	draw_colors();
 	draw_buttons();
@@ -178,8 +178,8 @@ state_t dialog_mouse_command(MEVENT *mouse)
 
 	for (i = 0; i < COLOR_COUNT; i++) {
 		tl = dialog_tile_pos(i);
-		if ((cidx == CIDX_DEFAULT || !color_exists(stgs.colors, i)) &&
-				area_contains(tl, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, pos)) {
+		if ((cidx == CIDX_DEFAULT || !color_exists(stgs.colors, i))
+				&& area_contains(tl, DIALOG_TILE_SIZE, DIALOG_TILE_SIZE, pos)) {
 			picked_color = i;
 			goto button_clicked;
 		}

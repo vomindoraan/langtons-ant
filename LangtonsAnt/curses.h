@@ -12,15 +12,15 @@
 #	define PDC_NCMOUSE
 #	include <pdcurses.h>
 #	ifndef PDCURSES
-#		define PDCURSES
+#		define PDCURSES  1
 #	endif
 #	define CURSES_BGR
 
 #elif defined(__linux__) || defined(__APPLE__)
-#	define NCURSES_WIDECHAR 1
+#	define NCURSES_WIDECHAR  1
 #	include <ncurses.h>
 #	ifndef NCURSES
-#		define NCURSES
+#		define NCURSES  1
 #	endif
 #	define CURSES_RGB
 

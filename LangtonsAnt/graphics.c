@@ -99,7 +99,7 @@ void init_graphics(color_t fg_color, color_t bg_color)
 #if _WIN32
 BOOL WINAPI consoleCloseHandler(DWORD ctrlType)
 {
-	stop_game_loop();  // Let main finish gracefully and call end_graphics()
+	stop_main_loop();  // Let main finish gracefully and call end_graphics()
 	while (true);      // Loop the handler thread to prevent early exit
 	return ctrlType;   // Unreachable
 }
@@ -140,7 +140,7 @@ Vector2i abs2rel(Vector2i abs, Vector2i origin)
 bool area_contains(Vector2i top_left, unsigned width, unsigned height, Vector2i v)
 {
 	return (v.y >= top_left.y && v.y < top_left.y+(int)height
-	        && v.x >= top_left.x && v.x < top_left.x+(int)width);
+	     && v.x >= top_left.x && v.x < top_left.x+(int)width);
 }
 
 void draw_square(WINDOW *w, Vector2i top_left, unsigned size)

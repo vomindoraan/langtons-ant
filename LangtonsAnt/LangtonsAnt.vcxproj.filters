@@ -88,7 +88,7 @@
     <ClCompile Include="io.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="game_loop.c">
+    <ClCompile Include="main_loop.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="serial.c">

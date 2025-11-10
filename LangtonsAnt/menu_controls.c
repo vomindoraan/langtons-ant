@@ -293,7 +293,7 @@ state_t menu_key_command(int key, MEVENT *mouse)
 
 		/* Quit */
 	case KEY_ESC:
-		stop_game_loop();
+		stop_main_loop();
 		return STATE_NO_CHANGE;
 
 	case KEY_MOUSE:
