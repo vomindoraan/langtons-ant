@@ -121,6 +121,9 @@
     <CopyFileToFolders Include="lib\pdcurses.dll">
       <Filter>Resource Files</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="lib\pdcurses_x64.dll">
+      <Filter>Resource Files</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="examples\zigzag.lant">
