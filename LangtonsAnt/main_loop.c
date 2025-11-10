@@ -48,7 +48,7 @@ void main_loop(void)
 {
 	static ttime_t step_time, menu_time, draw_time;
 	ttime_t curr_time;
-	bool do_step, do_draw, do_menu;
+	bool do_step, do_menu, do_draw;
 	Simulation *sim = stgs.simulation;
 
 	init_timer();
@@ -64,7 +64,7 @@ void main_loop(void)
 
 		curr_time = timer_micros();
 		do_step = (curr_time - step_time >= LOOP_STEP_TIME_US(stgs.speed));
-		do_menu = (curr_time - menu_time >= LOOP_FRAME_TIME_US*stgs.speed/2);
+		do_menu = (curr_time - menu_time >= LOOP_MENU_TIME_US(stgs.speed));
 		do_draw = (curr_time - draw_time >= LOOP_FRAME_TIME_US);
 
 		if (is_simulation_running(sim)) {
