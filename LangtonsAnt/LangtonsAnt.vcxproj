@@ -227,6 +227,11 @@
       <DestinationFolders>$(OutDir)examples</DestinationFolders>
       <DeploymentContent>true</DeploymentContent>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\crystal.lant">
+      <FileType>Document</FileType>
+      <DestinationFolders>$(OutDir)examples</DestinationFolders>
+      <DeploymentContent>true</DeploymentContent>
+    </CopyFileToFolders>
     <CopyFileToFolders Include="examples\highway.lant">
       <FileType>Document</FileType>
       <DestinationFolders>$(OutDir)examples</DestinationFolders>

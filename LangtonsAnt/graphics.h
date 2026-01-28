@@ -322,7 +322,7 @@ typedef struct pending_action {
 #define LOOP_FRAME_TIME_US       (1e6 / LOOP_FRAMES_PER_S)
 #define LOOP_MENU_TIME_MS(s)     (LOOP_MENU_TIME_US(s) / 1e3)
 #ifdef PDCURSES
-#	define LOOP_MENU_TIME_US(s)  (LOOP_FRAME_TIME_US * (s) / 2)  // Has less performant drawing
+#	define LOOP_MENU_TIME_US(s)  (LOOP_FRAME_TIME_US * (s) / 2)  // PDC has less performant drawing
 #else
 #	define LOOP_MENU_TIME_US(s)  LOOP_FRAME_TIME_US
 #endif

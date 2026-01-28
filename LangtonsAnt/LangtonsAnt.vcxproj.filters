@@ -156,6 +156,9 @@
     <CopyFileToFolders Include="examples\cauliflower.lant">
       <Filter>Resource Files\Examples</Filter>
     </CopyFileToFolders>
+    <CopyFileToFolders Include="examples\crystal.lant">
+      <Filter>Resource Files\Examples</Filter>
+    </CopyFileToFolders>
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="scripts\write_serial.py">
