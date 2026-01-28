@@ -212,13 +212,20 @@ pip-log.txt
 .coverage
 .tox
 
-#Translations
+# Translations
 *.mo
 
-#Mr Developer
+# Mr Developer
 .mr.developer.cfg
+
+
+#############
+## Project
+#############
 
 *.exe
 *.dmp
 /Docs/*/
 ~AutoRecover.LangtonsAnt.vcxproj
+LangtonsAnt/LangtonsAnt
+LangtonsAnt/examples/*.bmp
