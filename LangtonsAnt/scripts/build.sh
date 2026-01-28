@@ -2,7 +2,7 @@
 SRC_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." &>/dev/null && pwd)"
 APP="${1:-$SRC_DIR/LangtonsAnt}"
 shift
-FEATURES="${@-SAVE_ENABLE=1 GALLERY_MODE=0 SERIAL_COLORS=1}"
+FEATURES="${@-SAVE_ENABLE=1 GALLERY_MODE=0 SERIAL_COLORS=0}"
 
 C_FLAGS="-std=gnu18 -Wpedantic -Wall -Wextra -O3"
 L_FLAGS="-lm -lncursesw -flto"
