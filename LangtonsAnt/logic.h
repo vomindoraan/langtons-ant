@@ -82,28 +82,23 @@ typedef struct ant {
 
 /** @name Colors struct constants */
 ///@{
-#define COLOR_COUNT  16
-#define COLOR_NONE   -1
+#define COLOR_COUNT   16
+#define COLOR_NONE    -1
 
-#define TURN_LEFT    -1
-#define TURN_NONE    0
-#define TURN_RIGHT   1
+#define TURN_LEFT     -1
+#define TURN_NONE     0
+#define TURN_RIGHT    1
 ///@}
 
-/** @name Colors utility macros */
-///@{
-#define COLOR_NEXT(cs, c)  (cs)->next[c]
-#define COLOR_TURN(cs, c)  (cs)->turn[c]
-
-#define TURN_CHAR(t)       (((t) == TURN_LEFT)  ? '<' :       \
-                            ((t) == TURN_RIGHT) ? '>' : '-')
-///@}
+/** @name Turn character representation macro */
+#define TURN_CHAR(t)  (((t) == TURN_LEFT)  ? '<' :       \
+                       ((t) == TURN_RIGHT) ? '>' : '-')
 
 /** Curses color type */
-typedef short        color_t;
+typedef short         color_t;
 
 /** Turn direction for given rule */
-typedef signed char  turn_t;
+typedef signed char   turn_t;
 
 /** Color rules container */
 typedef struct colors {
