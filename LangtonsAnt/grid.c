@@ -21,8 +21,8 @@ Grid *grid_new(Colors *colors, unsigned init_size)
 	grid->tmp = NULL;
 	grid->tmp_size = 0;
 	grid->def_color = (byte)colors->def;
-	grid->top_left.y = grid->top_left.x = init_size / 2;
-	grid->bottom_right = grid->top_left;
+	grid->pos_tl.y = grid->pos_tl.x = init_size / 2;
+	grid->pos_br = grid->pos_tl;
 	grid->colored = 0;
 
 	return grid;
@@ -162,8 +162,8 @@ void grid_expand(Grid *grid, Ant *ant)
 {
 	assert(grid), assert(ant);
 	transfer_vector(&ant->pos, grid->size);
-	transfer_vector(&grid->top_left, grid->size);
-	transfer_vector(&grid->bottom_right, grid->size);
+	transfer_vector(&grid->pos_tl, grid->size);
+	transfer_vector(&grid->pos_br, grid->size);
 
 	if (!is_grid_sparse(grid)) {
 		if (grid->size*GRID_MULT > GRID_SIZE_THRESHOLD && GRID_EFFICIENCY(grid) < 1) {
@@ -212,8 +212,8 @@ inline bool is_grid_sparse(Grid *grid)
 bool is_grid_usage_low(Grid *grid)
 {
 	assert(grid);
-	int b = (grid->bottom_right.y - grid->top_left.y + 1)
-	      * (grid->bottom_right.x - grid->top_left.x + 1);
+	int b = (grid->pos_br.y - grid->pos_tl.y + 1)
+	      * (grid->pos_br.x - grid->pos_tl.x + 1);
 	return (double)grid->colored / b < GRID_USAGE_THRESHOLD;
 }
 

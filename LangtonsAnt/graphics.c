@@ -137,55 +137,55 @@ Vector2i abs2rel(Vector2i abs, Vector2i origin)
 	};
 }
 
-bool area_contains(Vector2i top_left, unsigned width, unsigned height, Vector2i v)
+bool area_contains(Vector2i pos_tl, unsigned width, unsigned height, Vector2i v)
 {
-	return (v.y >= top_left.y && v.y < top_left.y+(int)height
-	     && v.x >= top_left.x && v.x < top_left.x+(int)width);
+	return (v.y >= pos_tl.y && v.y < pos_tl.y+(int)height
+	     && v.x >= pos_tl.x && v.x < pos_tl.x+(int)width);
 }
 
-void draw_square(WINDOW *w, Vector2i top_left, unsigned size)
+void draw_square(WINDOW *w, Vector2i pos_tl, unsigned size)
 {
-	draw_rect(w, top_left, size, size);
+	draw_rect(w, pos_tl, size, size);
 }
 
-void draw_rect(WINDOW *w, Vector2i top_left, unsigned width, unsigned height)
+void draw_rect(WINDOW *w, Vector2i pos_tl, unsigned width, unsigned height)
 {
 	unsigned i;
 	if (width == 1 && height == 1) {
-		mvwaddch(w, top_left.y, top_left.x, CHAR_FULL);
+		mvwaddch(w, pos_tl.y, pos_tl.x, CHAR_FULL);
 		return;
 	}
 	for (i = 0; i < height; i++) {
-		mvwhline(w, top_left.y+i, top_left.x, CHAR_FULL, width);
+		mvwhline(w, pos_tl.y+i, pos_tl.x, CHAR_FULL, width);
 	}
 }
 
-void draw_frame(WINDOW *w, Vector2i top_left, unsigned width, unsigned height)
+void draw_frame(WINDOW *w, Vector2i pos_tl, unsigned width, unsigned height)
 {
 	unsigned y = height-1, x = width-1, i;
 	if (width == 0 || height == 0) {
 		return;
 	}
 	if (width > 1 && height > 1) {
-		mvwaddch(w, top_left.y,   top_left.x,   ACS_ULCORNER);
-		mvwaddch(w, top_left.y,   top_left.x+x, ACS_URCORNER);
-		mvwaddch(w, top_left.y+y, top_left.x,   ACS_LLCORNER);
-		mvwaddch(w, top_left.y+y, top_left.x+x, ACS_LRCORNER);
+		mvwaddch(w, pos_tl.y,   pos_tl.x,   ACS_ULCORNER);
+		mvwaddch(w, pos_tl.y,   pos_tl.x+x, ACS_URCORNER);
+		mvwaddch(w, pos_tl.y+y, pos_tl.x,   ACS_LLCORNER);
+		mvwaddch(w, pos_tl.y+y, pos_tl.x+x, ACS_LRCORNER);
 	} else {
-		mvwaddch(w, top_left.y,   top_left.x+x, ACS_PLUS);
-		mvwaddch(w, top_left.y+y, top_left.x,   ACS_PLUS);
+		mvwaddch(w, pos_tl.y,   pos_tl.x+x, ACS_PLUS);
+		mvwaddch(w, pos_tl.y+y, pos_tl.x,   ACS_PLUS);
 	}
 	for (i = 1; i < width-1; i++) {
-		mvwaddch(w, top_left.y,   top_left.x+i, ACS_HLINE);
-		mvwaddch(w, top_left.y+y, top_left.x+i, ACS_HLINE);
+		mvwaddch(w, pos_tl.y,   pos_tl.x+i, ACS_HLINE);
+		mvwaddch(w, pos_tl.y+y, pos_tl.x+i, ACS_HLINE);
 	}
 	for (i = 1; i < height-1; i++) {
-		mvwaddch(w, top_left.y+i, top_left.x,   ACS_VLINE);
-		mvwaddch(w, top_left.y+i, top_left.x+x, ACS_VLINE);
+		mvwaddch(w, pos_tl.y+i, pos_tl.x,   ACS_VLINE);
+		mvwaddch(w, pos_tl.y+i, pos_tl.x+x, ACS_VLINE);
 	}
 }
 
-void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left)
+void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i pos_tl)
 {
 	unsigned read, y, x;
 	byte pixel;
@@ -193,7 +193,7 @@ void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i top_left)
 		pixel = (sprite.data[read/8] >> (7-read%8)) & 1;
 		y = read / sprite.width, x = read % sprite.width;
 		if (pixel) {
-			mvwaddch(w, top_left.y+y, top_left.x+x, CHAR_FULL);
+			mvwaddch(w, pos_tl.y+y, pos_tl.x+x, CHAR_FULL);
 		}
 	}
 }

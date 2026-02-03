@@ -157,7 +157,7 @@ typedef struct grid {
 	SparseCell **csr;
 	unsigned     init_size, size, tmp_size;
 	unsigned     colored;
-	Vector2i     top_left, bottom_right;
+	Vector2i     pos_tl, pos_br;
 } Grid;
 
 

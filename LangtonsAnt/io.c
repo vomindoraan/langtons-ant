@@ -199,8 +199,8 @@ Simulation *load_simulation(const char *filename)
 		goto error_end;
 	}
 	sim->grid->def_color = BGR(def);
-	if (fscanf(input, "%d %d %d %d", &sim->grid->top_left.y, &sim->grid->top_left.x,
-	           &sim->grid->bottom_right.y, &sim->grid->bottom_right.x) < 4) {
+	if (fscanf(input, "%d %d %d %d", &sim->grid->pos_tl.y, &sim->grid->pos_tl.x,
+	           &sim->grid->pos_br.y, &sim->grid->pos_br.x) < 4) {
 		goto error_end;
 	}
 	if (fgetc(input) == '\r' && fgetc(input) != '\n') {  // Read trailing newline
@@ -247,8 +247,8 @@ int save_simulation(const char *filename, Simulation *sim)
 	            sim->grid->init_size, sim->grid->size, sim->grid->colored) < 0) {
 		goto error_end;
 	}
-	if (fprintf(output, "%d %d %d %d\n", sim->grid->top_left.y, sim->grid->top_left.x,
-	            sim->grid->bottom_right.y, sim->grid->bottom_right.x) < 0) {
+	if (fprintf(output, "%d %d %d %d\n", sim->grid->pos_tl.y, sim->grid->pos_tl.x,
+	            sim->grid->pos_br.y, sim->grid->pos_br.x) < 0) {
 		goto error_end;
 	}
 

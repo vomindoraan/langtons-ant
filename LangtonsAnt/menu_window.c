@@ -219,16 +219,16 @@ static void draw_border(void)
 	mvwvline(menuw, 0,   h-1, CHAR_FULL, v);
 }
 
-static void draw_color_tile(Vector2i top_left, color_t c)
+static void draw_color_tile(Vector2i pos_tl, color_t c)
 {
 	chtype tile_pair = PAIR_FOR(c);
 	chtype frame_pair = (c != COLOR_FOR(bg_pair)) ? tile_pair : ui_pair;
 	bool is_def = (c == stgs.colors->def);
-	int y = top_left.y, x = top_left.x, s = MENU_TILE_SIZE;
+	int y = pos_tl.y, x = pos_tl.x, s = MENU_TILE_SIZE;
 
 	/* Draw tile */
 	wattrset(menuw, is_def ? bg_pair : tile_pair);
-	draw_square(menuw, top_left, s);
+	draw_square(menuw, pos_tl, s);
 
 	/* Draw frame */
 	wattrset(menuw, is_def ? frame_pair : fg_pair);

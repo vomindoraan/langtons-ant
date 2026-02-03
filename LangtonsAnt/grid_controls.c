@@ -6,7 +6,7 @@ state_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse)
 {
 	Vector2i center = { grid->size/2, grid->size/2 };
 	Vector2i pos = abs2rel(ant->pos, center);
-	Vector2i tl = abs2rel(grid->top_left, center), br = abs2rel(grid->bottom_right, center);
+	Vector2i tl = abs2rel(grid->pos_tl, center), br = abs2rel(grid->pos_br, center);
 	int o = GRID_VIEW_SIZE/2 - 1;
 
 	switch (key) {

@@ -39,7 +39,7 @@ static Direction change_dir(Ant *ant, turn_t turn)
 
 static void update_bounding_box(Grid *grid, Vector2i pos)
 {
-	Vector2i *tl = &grid->top_left, *br = &grid->bottom_right;
+	Vector2i *tl = &grid->pos_tl, *br = &grid->pos_br;
 	tl->y = MIN(tl->y, pos.y);
 	tl->x = MIN(tl->x, pos.x);
 	br->y = MAX(br->y, pos.y);
