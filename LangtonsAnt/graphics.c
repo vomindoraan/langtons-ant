@@ -137,55 +137,55 @@ Vector2i abs2rel(Vector2i abs, Vector2i origin)
 	};
 }
 
-bool area_contains(Vector2i pos_tl, unsigned width, unsigned height, Vector2i v)
+bool area_contains(Vector2i pos, unsigned width, unsigned height, Vector2i v)
 {
-	return (v.y >= pos_tl.y && v.y < pos_tl.y+(int)height
-	     && v.x >= pos_tl.x && v.x < pos_tl.x+(int)width);
+	return (v.y >= pos.y && v.y < pos.y+(int)height
+	     && v.x >= pos.x && v.x < pos.x+(int)width);
 }
 
-void draw_square(WINDOW *w, Vector2i pos_tl, unsigned size)
+void draw_square(WINDOW *w, Vector2i pos, unsigned size)
 {
-	draw_rect(w, pos_tl, size, size);
+	draw_rect(w, pos, size, size);
 }
 
-void draw_rect(WINDOW *w, Vector2i pos_tl, unsigned width, unsigned height)
+void draw_rect(WINDOW *w, Vector2i pos, unsigned width, unsigned height)
 {
 	unsigned i;
 	if (width == 1 && height == 1) {
-		mvwaddch(w, pos_tl.y, pos_tl.x, CHAR_FULL);
+		mvwaddch(w, pos.y, pos.x, CHAR_FULL);
 		return;
 	}
 	for (i = 0; i < height; i++) {
-		mvwhline(w, pos_tl.y+i, pos_tl.x, CHAR_FULL, width);
+		mvwhline(w, pos.y+i, pos.x, CHAR_FULL, width);
 	}
 }
 
-void draw_frame(WINDOW *w, Vector2i pos_tl, unsigned width, unsigned height)
+void draw_frame(WINDOW *w, Vector2i pos, unsigned width, unsigned height)
 {
 	unsigned y = height-1, x = width-1, i;
 	if (width == 0 || height == 0) {
 		return;
 	}
 	if (width > 1 && height > 1) {
-		mvwaddch(w, pos_tl.y,   pos_tl.x,   ACS_ULCORNER);
-		mvwaddch(w, pos_tl.y,   pos_tl.x+x, ACS_URCORNER);
-		mvwaddch(w, pos_tl.y+y, pos_tl.x,   ACS_LLCORNER);
-		mvwaddch(w, pos_tl.y+y, pos_tl.x+x, ACS_LRCORNER);
+		mvwaddch(w, pos.y,   pos.x,   ACS_ULCORNER);
+		mvwaddch(w, pos.y,   pos.x+x, ACS_URCORNER);
+		mvwaddch(w, pos.y+y, pos.x,   ACS_LLCORNER);
+		mvwaddch(w, pos.y+y, pos.x+x, ACS_LRCORNER);
 	} else {
-		mvwaddch(w, pos_tl.y,   pos_tl.x+x, ACS_PLUS);
-		mvwaddch(w, pos_tl.y+y, pos_tl.x,   ACS_PLUS);
+		mvwaddch(w, pos.y,   pos.x+x, ACS_PLUS);
+		mvwaddch(w, pos.y+y, pos.x,   ACS_PLUS);
 	}
 	for (i = 1; i < width-1; i++) {
-		mvwaddch(w, pos_tl.y,   pos_tl.x+i, ACS_HLINE);
-		mvwaddch(w, pos_tl.y+y, pos_tl.x+i, ACS_HLINE);
+		mvwaddch(w, pos.y,   pos.x+i, ACS_HLINE);
+		mvwaddch(w, pos.y+y, pos.x+i, ACS_HLINE);
 	}
 	for (i = 1; i < height-1; i++) {
-		mvwaddch(w, pos_tl.y+i, pos_tl.x,   ACS_VLINE);
-		mvwaddch(w, pos_tl.y+i, pos_tl.x+x, ACS_VLINE);
+		mvwaddch(w, pos.y+i, pos.x,   ACS_VLINE);
+		mvwaddch(w, pos.y+i, pos.x+x, ACS_VLINE);
 	}
 }
 
-void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i pos_tl)
+void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i pos)
 {
 	unsigned read, y, x;
 	byte pixel;
@@ -193,7 +193,7 @@ void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i pos_tl)
 		pixel = (sprite.data[read/8] >> (7-read%8)) & 1;
 		y = read / sprite.width, x = read % sprite.width;
 		if (pixel) {
-			mvwaddch(w, pos_tl.y+y, pos_tl.x+x, CHAR_FULL);
+			mvwaddch(w, pos.y+y, pos.x+x, CHAR_FULL);
 		}
 	}
 }

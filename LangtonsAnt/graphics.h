@@ -425,49 +425,49 @@ Vector2i abs2rel(Vector2i abs, Vector2i origin);
 
 /**
 * Checks if a vector is contained within an area
-* @param pos_tl Area origin
+* @param pos Area origin (top-left corner)
 * @param width Area width
 * @param height Area height
 * @param v Vector to be checked
 * @return Does area contain the vector?
 */
-bool area_contains(Vector2i pos_tl, unsigned width, unsigned height, Vector2i v);
+bool area_contains(Vector2i pos, unsigned width, unsigned height, Vector2i v);
 
 /**
  * Utility function for drawing square boxes
  * @param w Window to draw to
- * @param pos_tl Box origin
+ * @param pos Box origin (top-left corner)
  * @param size Box size
  * @see draw_rect(WINDOW *, Vector2i, unsigned, unsigned)
  */
-void draw_square(WINDOW *w, Vector2i pos_tl, unsigned size);
+void draw_square(WINDOW *w, Vector2i pos, unsigned size);
 
 /**
  * Utility function for drawing rectangular boxes
  * @param w Window to draw to
- * @param pos_tl Box origin
+ * @param pos Box origin (top-left corner)
  * @param width Box width
  * @param height Box height
  * @see draw_square(WINDOW *, Vector2i, unsigned)
  */
-void draw_rect(WINDOW *w, Vector2i pos_tl, unsigned width, unsigned height);
+void draw_rect(WINDOW *w, Vector2i pos, unsigned width, unsigned height);
 
 /**
  * Utility function for drawing thin rectangular frames
  * @param w Window to draw to
- * @param pos_tl Box origin
+ * @param pos Box origin (top-left corner)
  * @param width Box width
  * @param height Box height
  */
-void draw_frame(WINDOW *w, Vector2i pos_tl, unsigned width, unsigned height);
+void draw_frame(WINDOW *w, Vector2i pos, unsigned width, unsigned height);
 
 /**
  * Utility function for drawing monochrome sprites
  * @param w Window to draw to
  * @param sprite Sprite to be drawn and its size as SpriteInfo
- * @param pos_tl Sprite origin
+ * @param pos Sprite origin (top-left corner)
  */
-void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i pos_tl);
+void draw_sprite(WINDOW *w, SpriteInfo sprite, Vector2i pos);
 
 /**
  * Converts a direction into its char representation
