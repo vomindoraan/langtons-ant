@@ -25,52 +25,30 @@ state_t grid_key_command(Grid *grid, Ant *ant, int key, MEVENT *mouse)
 		break;
 
 		/* Scroll - numpad keys */
-	case '8':
 #ifdef PDCURSES
 	case KEY_A2:
-#endif
 		scroll_by(grid, -SCROLL_STEP_LARGE, 0);
 		break;
-	case '2':
-#ifdef PDCURSES
 	case KEY_C2:
-#endif
 		scroll_by(grid,  SCROLL_STEP_LARGE, 0);
 		break;
-	case '4':
-#ifdef PDCURSES
 	case KEY_B1:
-#endif
 		scroll_by(grid, 0, -SCROLL_STEP_LARGE);
 		break;
-	case '6':
-#ifdef PDCURSES
 	case KEY_B3:
-#endif
 		scroll_by(grid, 0,  SCROLL_STEP_LARGE);
 		break;
-	case '7':
-#ifdef PDCURSES
-	case KEY_A1:
 #endif
+	case KEY_A1:
 		scroll_by(grid, -SCROLL_STEP_LARGE, -SCROLL_STEP_LARGE);
 		break;
-	case '9':
-#ifdef PDCURSES
 	case KEY_A3:
-#endif
 		scroll_by(grid, -SCROLL_STEP_LARGE,  SCROLL_STEP_LARGE);
 		break;
-	case '1':
-#ifdef PDCURSES
 	case KEY_C1:
-#endif
 		scroll_by(grid,  SCROLL_STEP_LARGE, -SCROLL_STEP_LARGE);
 		break;
-	case '3':
-#ifdef PDCURSES
 	case KEY_C3:
-#endif
 		scroll_by(grid,  SCROLL_STEP_LARGE,  SCROLL_STEP_LARGE);
 		break;
 
