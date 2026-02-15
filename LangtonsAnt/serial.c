@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-bool colors_to_color_rules(Colors *colors, ColorRules rules)
+bool populate_color_rules(Colors *colors, ColorRules rules)
 {
 	color_t c;
 	bool do_for = true;
@@ -69,7 +69,7 @@ bool serial_send_colors(Colors *colors)
 	ColorRules rules;
 	ColorRulesMsg msg;
 
-	if (!colors_to_color_rules(colors, rules)) {
+	if (!populate_color_rules(colors, rules)) {
 		return false;
 	}
 	serialize_color_rules(rules, msg);
