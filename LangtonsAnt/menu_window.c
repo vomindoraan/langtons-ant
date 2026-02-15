@@ -86,7 +86,7 @@ static logo_str_t logo_about_text[MENU_LOGO_HEIGHT] = {
 static logo_str_t logo_help_text[MENU_LOGO_HEIGHT] = {
 	"Controls:",
 	"",
-	" Use mouse to set & update color rules",
+	" Use mouse to set & modify color rules",
 	"",
 	"      play/pause   ^<v>  scroll view",
 	" R    stop/reset   F M1  jump to ant",
