@@ -25,11 +25,11 @@ From the source directory `LangtonsAnt`, run the following commands in a shell:
 scripts/build.sh
 
 # Alternatively, output to specified path with optional feature flags
-scripts/build.sh /usr/bin/lant SAVE_ENABLE=1 GALLERY_MODE=0 SERIAL_COLORS=1
+scripts/build.sh ~/.local/bin/lant SAVE_ENABLE=1 GALLERY_MODE=0 SERIAL_COLORS=1
 
 # Run the project (optional: path)
 # Works best with lxterminal, but any curses-capable POSIX terminal will work
-scripts/run.sh #/usr/bin/lant
+scripts/run.sh #~/.local/bin/lant
 ```
 
 ### Windows
@@ -48,4 +48,4 @@ In the `Teensy` directory, there's optional support for an external, Arduino-con
 
 See [Docs/README.md](Docs/README.md).
 
-Clicking on the logo inside the program will display a controls cheat sheet.
+Clicking the logo inside the program will display a controls cheat sheet.
