@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Langton's Ant
+GenericName=ncurses application
+Comment=Cross-platform Langton's ant Turing machine simulator
+Icon=/home/pi/langtons-ant/Misc/logo_ant.png
+Path=/home/pi/langtons-ant/LangtonsAnt
+Exec=lxterminal -e scripts/run.sh
+Terminal=false

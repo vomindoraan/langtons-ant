@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Update Langton's Ant
+Comment=Update Langton's Ant from Git repository
+Path=/home/pi/langtons-ant/LangtonsAnt
+Exec=scripts/update.sh
+Terminal=true
+X-KeepTerminal=true
