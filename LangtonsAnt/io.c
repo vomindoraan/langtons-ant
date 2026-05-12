@@ -78,17 +78,30 @@ static int load_cells_n(Simulation *sim, FILE *input) {
 	sim->grid->c = malloc(sim->grid->size * sizeof(byte *));
 
 	for (i = 0; i < sim->grid->size; i++) {
+		byte c;
+		unsigned rle;
+
 		if (feof(input)) {
 			return EOF;
 		}
 		sim->grid->c[i] = malloc(sim->grid->size);
+		memset(sim->grid->c[i], sim->grid->def_color, sim->grid->size);
 
 		for (j = 0; j < sim->grid->size; j++) {
-			byte c;
-			if (fscanf(input, (j < sim->grid->size-1) ? "%hhu " : "%hhu\n", &c) < 1) {
+			// Consecutive def_color RLE
+			if (fscanf(input, " #%u", &rle) == 1) {
+				j += rle - 1;
+				continue;
+			}
+
+			if (fscanf(input, "%hhu", &c) < 1) {  // Consumes leading space
 				return EOF;
 			}
 			sim->grid->c[i][j] = BGR(c);
+		}
+		c = fgetc(input);
+		if (c != '\n' && (c == '\r' && fgetc(input) != '\n')) {
+			return EOF;
 		}
 	}
 	return 0;
@@ -96,13 +109,30 @@ static int load_cells_n(Simulation *sim, FILE *input) {
 
 static int save_cells_n(Simulation *sim, FILE *output)
 {
-	unsigned i, j;
+	unsigned i, j, rle;
 	for (i = 0; i < sim->grid->size; i++) {
+		rle = 0;
 		for (j = 0; j < sim->grid->size; j++) {
 			byte c = BGR(sim->grid->c[i][j]);
-			if (fprintf(output, (j < sim->grid->size-1) ? "%hhu " : "%hhu\n", c) < 0) {
+			if (c == BGR(sim->grid->def_color)) {
+				rle++;
+				continue;
+			}
+
+			if (rle > 0 && fprintf(output, " #%u", rle) < 0) {
 				return EOF;
 			}
+			rle = 0;
+
+			if (fprintf(output, " %hhu", c) < 0) {
+				return EOF;
+			}
+		}
+		if (rle > 0 && fprintf(output, " #%u", rle) < 0) {
+			return EOF;
+		}
+		if (fprintf(output, "\n") < 0) {
+			return EOF;
 		}
 	}
 	return 0;
@@ -122,19 +152,21 @@ static int load_cells_s(Simulation *sim, FILE *input) {
 			if (fscanf(input, "%c", &c) < 1) {
 				return EOF;
 			}
+
+			// Consecutive newline RLE
 			if (c == '$') {
 				if (fscanf(input, "%u%c", &rle, &c) < 1) {
 					return EOF;
 				}
-				i += rle - 1;  // Consecutive newlines RLE
+				i += rle - 1;
 			}
 			if (c == '\n' || (c == '\r' && fgetc(input) == '\n')) {
 				break;  // Newline, end of row
 			}
-			if (fscanf(input, "%X", &cell.packed) < 1) {
+
+			if (fscanf(input, "%X", &cell.packed) < 1) {  // Consumes leading space
 				return EOF;
 			}
-
 			CSR_SET_COLOR(sc, BGR(CSR_GET_COLOR(sc)));
 			p = sparse_append(p, CSR_GET_COLUMN(sc), CSR_GET_COLOR(sc));
 			if (!sim->grid->csr[i]) {
