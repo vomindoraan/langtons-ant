@@ -116,13 +116,20 @@ static int load_cells_s(Simulation *sim, FILE *input) {
 	for (i = 0; i < sim->grid->size; i++) {
 		SparseCell *p = NULL;
 		char c;
+		unsigned rle;
 
 		while (true) {
 			if (fscanf(input, "%c", &c) < 1) {
 				return EOF;
 			}
+			if (c == '$') {
+				if (fscanf(input, "%u%c", &rle, &c) < 1) {
+					return EOF;
+				}
+				i += rle - 1;  // Consecutive newlines RLE
+			}
 			if (c == '\n' || (c == '\r' && fgetc(input) == '\n')) {
-				break;  // newline, end of row
+				break;  // Newline, end of row
 			}
 			if (fscanf(input, "%X", &cell.packed) < 1) {
 				return EOF;
@@ -140,9 +147,18 @@ static int load_cells_s(Simulation *sim, FILE *input) {
 
 static int save_cells_s(Simulation *sim, FILE *output)
 {
-	unsigned i;
+	unsigned i, rle = 0;
 	for (i = 0; i < sim->grid->size; i++) {
 		SparseCell *curr = sim->grid->csr[i];
+		if (!curr) {
+			rle++;
+			continue;
+		}
+		if (rle > 0 && fprintf(output, "$%u\n", rle) < 0) {
+			return EOF;
+		}
+		rle = 0;
+
 		while (curr) {
 			SparseCell cell = *curr;
 			CSR_SET_COLOR(&cell, BGR(CSR_GET_COLOR(&cell)));
@@ -152,10 +168,12 @@ static int save_cells_s(Simulation *sim, FILE *output)
 			}
 			curr = curr->next;
 		}
-
 		if (fprintf(output, "\n") < 0) {
 			return EOF;
 		}
+	}
+	if (rle > 0 && fprintf(output, "$%u\n", rle) < 0) {
+		return EOF;
 	}
 	return 0;
 }
