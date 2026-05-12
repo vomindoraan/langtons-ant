@@ -345,9 +345,9 @@ static void draw_init_size(void)
 	draw_sprite(menuw, ui_sprite(UI_ARROW, DIR_DOWN), menu_isize_d_pos);
 
 	wattrset(menuw, bg_pair);
-	draw_rect(menuw, isize_pos, SPRITE_DIGIT_WIDTH, SPRITE_DIGIT_HEIGHT);
+	draw_rect(menuw, isize_pos, SPRITE_CHAR_WIDTH, SPRITE_CHAR_HEIGHT);
 	wattrset(menuw, fg_pair);
-	draw_sprite(menuw, ui_sprite(UI_DIGIT, stgs.init_size), isize_pos);
+	draw_sprite(menuw, ui_sprite(UI_CHAR, stgs.init_size+'0'), isize_pos);
 }
 
 static void draw_dir_arrow(void)
@@ -381,7 +381,7 @@ static void draw_speed(void)
 	Vector2i slider_pos = { speed_pos.y + dy - mult*stgs.speed, speed_pos.x };
 
 	wattrset(menuw, bg_pair);
-	draw_rect(menuw, speed_pos, SPRITE_DIGIT_WIDTH, MENU_SPEED_HEIGHT+SPRITE_DIGIT_HEIGHT-1);
+	draw_rect(menuw, speed_pos, SPRITE_CHAR_WIDTH, MENU_SPEED_HEIGHT+SPRITE_CHAR_HEIGHT-1);
 
 	/* Draw scrollbar */
 	wattrset(menuw, ui_pair);
@@ -392,7 +392,7 @@ static void draw_speed(void)
 	mvwvline(menuw, slider_pos.y+1, slider_pos.x-3, CHAR_FULL, 3);
 
 	/* Draw speed value */
-	draw_sprite(menuw, ui_sprite(UI_DIGIT, stgs.speed), slider_pos);
+	draw_sprite(menuw, ui_sprite(UI_CHAR, stgs.speed+'0'), slider_pos);
 
 	/* Draw arrow buttons */
 	wattrset(menuw, PAIR_FOR(MENU_ACTIVE_COLOR));
@@ -501,7 +501,7 @@ static void draw_size(void)
 	Simulation *sim = stgs.simulation;
 	unsigned size = sim ? sim->grid->size : 0;
 	char str[MENU_COL_WIDTH+1];
-	sprintf(str, "%" STR(MENU_COL_WIDTH) "u", size);
+	sprintf(str, "%*u", MENU_COL_WIDTH, size);
 	wattrset(menuw, fg_pair);
 	mvwaddstr(menuw, size_pos.y, size_pos.x, str);
 }
@@ -510,27 +510,35 @@ static void draw_steps(void)
 {
 	Simulation *sim = stgs.simulation;
 	Vector2i pos = steps_pos;
-	char digits[MENU_STEPS_LEN+1], *d;
-	unsigned width = MENU_STEPS_LEN*(SPRITE_DIGIT_WIDTH+1) - 1;
-	unsigned steps = sim ? sim->steps : 0;
-	unsigned len = steps ? (unsigned)log10(steps)+1 : 0;
+	steps_t steps = sim ? sim->steps : 0;
+	unsigned len = steps ? (unsigned)log10(steps) + 1 : 0;
+	unsigned width = MENU_STEPS_LEN*(SPRITE_CHAR_WIDTH+1) - 1;
+	char str[MENU_STEPS_LEN+1] = "", *c;
 
 	wattrset(menuw, bg_pair);
-	draw_rect(menuw, pos, width, SPRITE_DIGIT_HEIGHT);
-	wattrset(menuw, fg_pair);
+	draw_rect(menuw, pos, width, SPRITE_CHAR_HEIGHT);
 
-	if (len > MENU_STEPS_LEN) {
-		pos.x += width - SPRITE_INFINITY_WIDTH;
-		draw_sprite(menuw, ui_sprite(UI_INFINITY, 0), pos);
-		return;
-	}
-
-	sprintf(digits, "%" STR(MENU_STEPS_LEN) "u", steps);
-	for (d = digits; d < digits + MENU_STEPS_LEN; d++) {
-		if (*d != ' ') {
-			draw_sprite(menuw, ui_sprite(UI_DIGIT, *d - '0'), pos);
+	if (len <= MENU_STEPS_LEN) {
+		// Decimal
+		sprintf(str, "%*llu", MENU_STEPS_LEN, steps);
+	} else {
+		// Scientific ("m.mmmmEe" or "m.mmmEee")
+		char sci[MENU_STEPS_LEN+3], exp[3];
+		sprintf(sci, "%*.4E", MENU_STEPS_LEN, (double)steps);  // "m.mmmmE+[0e]e"
+		assert(sscanf(sci, "%[^+]+%2s", str, exp) == 2);
+		if (exp[0] == '0') {
+			strncat(str, exp+1, 1);           // Single-digit exponent
+		} else {
+			strcpy(strchr(str, 'E')-1, "E");  // Strip one mantissa digit
+			strncat(str, exp, 2);             // Double-digit exponent
 		}
-		pos.x += SPRITE_DIGIT_WIDTH+1;
+	}
+	for (c = str; c < str+MENU_STEPS_LEN; c++) {
+		if (*c != ' ') {
+			wattrset(menuw, (*c == 'E') ? PAIR_FOR(MENU_INACTIVE_COLOR) : fg_pair);
+			draw_sprite(menuw, ui_sprite(UI_CHAR, *c), pos);
+		}
+		pos.x += SPRITE_CHAR_WIDTH + 1;
 	}
 }
 

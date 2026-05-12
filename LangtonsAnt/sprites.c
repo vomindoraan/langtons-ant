@@ -8,14 +8,14 @@
 #define STEPUP_SZ      SPRITE_SZ_(SPRITE_STEPUP_SIZE)
 #define ARROW_SZ       SPRITE_SZ(SPRITE_UDARROW_WIDTH,  SPRITE_UDARROW_HEIGHT)
 #define BUTTON_SZ      SPRITE_SZ(SPRITE_BUTTON_WIDTH,   SPRITE_BUTTON_HEIGHT)
-#define DIGIT_SZ       SPRITE_SZ(SPRITE_DIGIT_WIDTH,    SPRITE_DIGIT_HEIGHT)
+#define CHAR_SZ        SPRITE_SZ(SPRITE_CHAR_WIDTH,     SPRITE_CHAR_HEIGHT)
 #define INFINITY_SZ    SPRITE_SZ(SPRITE_INFINITY_WIDTH, SPRITE_INFINITY_HEIGHT)
 
 #define SI_UDARROW(a)  SI(arrow_sprites[a],  SPRITE_UDARROW_WIDTH,  SPRITE_UDARROW_HEIGHT)
 #define SI_RLARROW(a)  SI(arrow_sprites[a],  SPRITE_RLARROW_WIDTH,  SPRITE_RLARROW_HEIGHT)
 #define SI_STEPUP()    SI(stepup_sprite,     SPRITE_STEPUP_SIZE,    SPRITE_STEPUP_SIZE)
 #define SI_BUTTON(a)   SI(button_sprites[a], SPRITE_BUTTON_WIDTH,   SPRITE_BUTTON_HEIGHT)
-#define SI_DIGIT(a)    SI(digit_sprites[a],  SPRITE_DIGIT_WIDTH,    SPRITE_DIGIT_HEIGHT)
+#define SI_CHAR(a)     SI(char_sprites[a],   SPRITE_CHAR_WIDTH,     SPRITE_CHAR_HEIGHT)
 #define SI_INFINITY()  SI(infinity_sprite,   SPRITE_INFINITY_WIDTH, SPRITE_INFINITY_HEIGHT)
 
 static sprite_t ant_s_sprites[][ANT_S_SZ] = {
@@ -139,9 +139,20 @@ static sprite_t button_sprites[_UIB_COUNT][BUTTON_SZ] = {
 	[UIB_CLEAR]   = { 0x47, 0x92, 0x17, 0x00 },
 	[UIB_PENDING] = { 0x00, 0x2A, 0x00, 0x00 },
 };
-static sprite_t digit_sprites[][DIGIT_SZ] = {
-	{ 0xF6, 0xDE }, { 0x24, 0x92 }, { 0xE7, 0xCE }, { 0xE7, 0x9E }, { 0xB7, 0x92 },
-	{ 0xF3, 0x9E }, { 0xF3, 0xDE }, { 0xE4, 0x92 }, { 0xF7, 0xDE }, { 0xF7, 0x9E },
+static sprite_t char_sprites[][CHAR_SZ] = {
+	['('] = { 0x52, 0x44 },
+	[')'] = { 0x44, 0x94 },
+	['*'] = { 0x15, 0x50 },
+	['+'] = { 0x0B, 0xA0 },
+	[','] = { 0x00, 0x24 },
+	['-'] = { 0x03, 0x80 },
+	['.'] = { 0x00, 0x04 },
+	['/'] = { 0x05, 0x40 },
+	['0'] = { 0xF6, 0xDE }, { 0x24, 0x92 }, { 0xE7, 0xCE }, { 0xE7, 0x9E }, { 0xB7, 0x92 },
+	        { 0xF3, 0x9E }, { 0xF3, 0xDE }, { 0xE4, 0x92 }, { 0xF7, 0xDE }, { 0xF7, 0x9E },
+	['='] = { 0x1C, 0x70 },
+	['E'] = { 0xF3, 0xCE },
+	['^'] = { 0x54, 0x00 },
 };
 static sprite_t infinity_sprite[INFINITY_SZ] = {
 	0x71, 0xD1, 0x46, 0x10, 0xC5, 0x17, 0x1C
@@ -161,9 +172,9 @@ SpriteInfo ui_sprite(UISpriteType type, int arg)
 		assert(arg >= 0 && arg < _UIB_COUNT);
 		return SI_BUTTON(arg);
 
-	case UI_DIGIT:
-		assert(arg >= 0 && arg < 10);
-		return SI_DIGIT(arg);
+	case UI_CHAR:
+		assert(arg >= 0 && arg < (int)LEN(char_sprites));
+		return SI_CHAR(arg);
 
 	case UI_INFINITY:
 		return SI_INFINITY();

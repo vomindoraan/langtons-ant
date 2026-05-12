@@ -23,10 +23,10 @@
 #define SPRITE_STEPUP_SIZE      3
 #define SPRITE_BUTTON_WIDTH     5
 #define SPRITE_BUTTON_HEIGHT    5
-#define SPRITE_DIGIT_WIDTH      3
-#define SPRITE_DIGIT_HEIGHT     5
+#define SPRITE_CHAR_WIDTH       3
+#define SPRITE_CHAR_HEIGHT      5
 #define SPRITE_INFINITY_WIDTH   11
-#define SPRITE_INFINITY_HEIGHT  SPRITE_DIGIT_HEIGHT
+#define SPRITE_INFINITY_HEIGHT  SPRITE_CHAR_HEIGHT
 
 
 /*------------------------- Sprite macros and types --------------------------*/
@@ -61,7 +61,7 @@ typedef enum {
 	UI_ARROW,
 	UI_STEPUP,
 	UI_BUTTON,
-	UI_DIGIT,
+	UI_CHAR,
 	UI_INFINITY,
 	_UI_COUNT
 } UISpriteType;

@@ -158,12 +158,15 @@ typedef struct grid {
 
 /*------------------------ Simulation type definition ------------------------*/
 
+/** Step counter type */
+typedef unsigned long long steps_t;
+
 /** Simulation container */
 typedef struct simulation {
 	Colors   *colors;
 	Grid     *grid;
 	Ant      *ant;
-	unsigned  steps;
+	steps_t   steps;
 	bool      is_running;
 } Simulation;
 

@@ -181,7 +181,7 @@ Simulation *load_simulation(const char *filename)
 	           &sim->ant->dir) < 3) {
 		return sim;  // Colors only
 	}
-	if (fscanf(input, "%u\n", &sim->steps) < 1) {
+	if (fscanf(input, "%llu\n", &sim->steps) < 1) {
 		goto error_end;
 	}
 	if (fscanf(input, "%hhu\n", &is_sparse) < 1) {
@@ -237,7 +237,7 @@ int save_simulation(const char *filename, Simulation *sim)
 	            sim->ant->dir) < 0) {
 		goto error_end;
 	}
-	if (fprintf(output, "%u\n", sim->steps) < 0) {
+	if (fprintf(output, "%llu\n", sim->steps) < 0) {
 		goto error_end;
 	}
 	if (fprintf(output, "%hhu\n", is_grid_sparse(sim->grid)) < 0) {

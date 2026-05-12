@@ -7,9 +7,9 @@
 #define __VERSION_H__
 
 #define APP_NAME       "Langton's Ant"
-#define APP_VERSION    "2.1"
+#define APP_VERSION    "2.2"
 #define APP_AUTHOR     "Konstantin Ðorđević"
-#define APP_COPYRIGHT1 "(C) 2015-2025  " APP_AUTHOR
+#define APP_COPYRIGHT1 "(C) 2015-2026  " APP_AUTHOR
 #define APP_COPYRIGHT2 "(C) 2015  Natalija Radić"
 #define APP_COPYRIGHT3 "(C) 2025  Konstantinos Petrović"
 #define APP_URL_REPO   "github.com/vomindoraan/langtons-ant"
