@@ -180,7 +180,7 @@ static state_t load_button_clicked(bool input)
 	static char filename[FILENAME_SZ];
 	if (input) {
 #if GALLERY_MODE
-		strcpy(filename, USER_FILE);
+		strncpy(filename, USER_FILE, FILENAME_SZ);
 #else
 		if (read_filename(filename)) {
 #endif
@@ -215,7 +215,7 @@ static state_t save_button_clicked(void)
 {
 	static char filename[FILENAME_SZ];
 #if GALLERY_MODE
-	strcpy(filename, USER_FILE);
+	strncpy(filename, USER_FILE, FILENAME_SZ);
 #else
 	if (read_filename(filename)) {
 #endif

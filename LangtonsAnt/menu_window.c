@@ -527,10 +527,10 @@ static void draw_steps(void)
 		sprintf(sci, "%*.4E", MENU_STEPS_LEN, (double)steps);  // "m.mmmmE+[0e]e"
 		sscanf(sci, "%[^+]+%2s", str, exp);
 		if (exp[0] == '0') {
-			strncat(str, exp+1, 1);           // Single-digit exponent
+			strncat(str, exp+1, 1);               // Single-digit exponent
 		} else {
-			strcpy(strchr(str, 'E')-1, "E");  // Strip one mantissa digit
-			strncat(str, exp, 2);             // Double-digit exponent
+			strncpy(strchr(str, 'E')-1, "E", 2);  // Strip one mantissa digit
+			strncat(str, exp, 2);                 // Double-digit exponent
 		}
 	}
 	for (c = str; c < str+MENU_STEPS_LEN; c++) {
