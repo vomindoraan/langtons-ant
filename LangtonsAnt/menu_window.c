@@ -525,7 +525,7 @@ static void draw_steps(void)
 		// Scientific ("m.mmmmEe" or "m.mmmEee")
 		char sci[MENU_STEPS_LEN+3], exp[3];
 		sprintf(sci, "%*.4E", MENU_STEPS_LEN, (double)steps);  // "m.mmmmE+[0e]e"
-		assert(sscanf(sci, "%[^+]+%2s", str, exp) == 2);
+		sscanf(sci, "%[^+]+%2s", str, exp);
 		if (exp[0] == '0') {
 			strncat(str, exp+1, 1);           // Single-digit exponent
 		} else {
