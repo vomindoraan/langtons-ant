@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define CHECK_NEWLINE(c, f)  ((c) == '\n' || ((c) == '\r' && fgetc(f) == '\n'))
+
 Colors *load_colors(const char *filename)
 {
 	Colors *colors;
@@ -71,23 +73,23 @@ int save_colors(const char *filename, Colors *colors)
 	return e;
 }
 
-typedef int (*io_func_t)(Simulation *, FILE *);
+typedef int (*io_func_t)(FILE *, Grid *);
 
-static int load_cells_n(Simulation *sim, FILE *input) {
+static int load_cells_n(FILE *input, Grid *grid) {
 	unsigned i, j;
-	sim->grid->c = malloc(sim->grid->size * sizeof(byte *));
+	grid->c = calloc(grid->size, sizeof(byte *));
 
-	for (i = 0; i < sim->grid->size; i++) {
+	for (i = 0; i < grid->size; i++) {
 		byte c;
 		unsigned rle;
 
 		if (feof(input)) {
 			return EOF;
 		}
-		sim->grid->c[i] = malloc(sim->grid->size);
-		memset(sim->grid->c[i], sim->grid->def_color, sim->grid->size);
+		grid->c[i] = calloc(grid->size, sizeof(byte));
+		memset(grid->c[i], grid->def_color, grid->size);
 
-		for (j = 0; j < sim->grid->size; j++) {
+		for (j = 0; j < grid->size; j++) {
 			// Consecutive def_color RLE
 			if (fscanf(input, " #%u", &rle) == 1) {
 				j += rle - 1;
@@ -97,24 +99,23 @@ static int load_cells_n(Simulation *sim, FILE *input) {
 			if (fscanf(input, "%hhu", &c) < 1) {  // Consumes leading space
 				return EOF;
 			}
-			sim->grid->c[i][j] = BGR(c);
+			grid->c[i][j] = BGR(c);
 		}
-		c = fgetc(input);
-		if (c != '\n' && (c == '\r' && fgetc(input) != '\n')) {
+		if (fscanf(input, "%c", &c) < 1 || !CHECK_NEWLINE(c, input)) {
 			return EOF;
 		}
 	}
 	return 0;
 }
 
-static int save_cells_n(Simulation *sim, FILE *output)
+static int save_cells_n(FILE *output, Grid *grid)
 {
 	unsigned i, j, rle;
-	for (i = 0; i < sim->grid->size; i++) {
+	for (i = 0; i < grid->size; i++) {
 		rle = 0;
-		for (j = 0; j < sim->grid->size; j++) {
-			byte c = BGR(sim->grid->c[i][j]);
-			if (c == BGR(sim->grid->def_color)) {
+		for (j = 0; j < grid->size; j++) {
+			byte c = BGR(grid->c[i][j]);
+			if (c == BGR(grid->def_color)) {
 				rle++;
 				continue;
 			}
@@ -138,12 +139,12 @@ static int save_cells_n(Simulation *sim, FILE *output)
 	return 0;
 }
 
-static int load_cells_s(Simulation *sim, FILE *input) {
+static int load_cells_s(FILE *input, Grid *grid) {
 	SparseCell cell = { 0 }, *sc = &cell;
 	unsigned i;
-	sim->grid->csr = calloc(sim->grid->size, sizeof(SparseCell *));
+	grid->csr = calloc(grid->size, sizeof(SparseCell *));
 
-	for (i = 0; i < sim->grid->size; i++) {
+	for (i = 0; i < grid->size; i++) {
 		SparseCell *p = NULL;
 		char c;
 		unsigned rle;
@@ -160,8 +161,8 @@ static int load_cells_s(Simulation *sim, FILE *input) {
 				}
 				i += rle - 1;
 			}
-			if (c == '\n' || (c == '\r' && fgetc(input) == '\n')) {
-				break;  // Newline, end of row
+			if (CHECK_NEWLINE(c, input)) {
+				break;  // End of row
 			}
 
 			if (fscanf(input, "%X", &cell.packed) < 1) {  // Consumes leading space
@@ -169,19 +170,19 @@ static int load_cells_s(Simulation *sim, FILE *input) {
 			}
 			CSR_SET_COLOR(sc, BGR(CSR_GET_COLOR(sc)));
 			p = sparse_append(p, CSR_GET_COLUMN(sc), CSR_GET_COLOR(sc));
-			if (!sim->grid->csr[i]) {
-				sim->grid->csr[i] = p;
+			if (!grid->csr[i]) {
+				grid->csr[i] = p;
 			}
 		}
 	}
 	return 0;
 }
 
-static int save_cells_s(Simulation *sim, FILE *output)
+static int save_cells_s(FILE *output, Grid *grid)
 {
 	unsigned i, rle = 0;
-	for (i = 0; i < sim->grid->size; i++) {
-		SparseCell *curr = sim->grid->csr[i];
+	for (i = 0; i < grid->size; i++) {
+		SparseCell *curr = grid->csr[i];
 		if (!curr) {
 			rle++;
 			continue;
@@ -224,7 +225,7 @@ Simulation *load_simulation(const char *filename)
 	if (!(input = fopen(filename, "r"))) {
 		return NULL;
 	}
-	for (skip = 0; skip < 5; skip += (getc(input) == '\n'));
+	for (skip = 0; skip < 5; skip += (fgetc(input) == '\n'));
 
 	sim = simulation_new(colors, GRID_DEF_INIT_SIZE);
 	if (fscanf(input, "%d %d %u\n", &sim->ant->pos.y, &sim->ant->pos.x,
@@ -239,26 +240,19 @@ Simulation *load_simulation(const char *filename)
 	}
 
 	grid_delete(sim->grid);  // Replace default grid with loaded data
-	sim->grid = malloc(sizeof(Grid));
-	sim->grid->c = NULL;
-	sim->grid->tmp = NULL;
-	sim->grid->tmp_size = 0;
-	sim->grid->csr = NULL;
+	sim->grid = calloc(1, sizeof(Grid));
 	if (fscanf(input, "%hhu %u %u %u\n", &def,
 	           &sim->grid->init_size, &sim->grid->size, &sim->grid->colored) < 4) {
 		goto error_end;
 	}
 	sim->grid->def_color = BGR(def);
-	if (fscanf(input, "%d %d %d %d", &sim->grid->pos_tl.y, &sim->grid->pos_tl.x,
+	if (fscanf(input, "%d %d %d %d\n", &sim->grid->pos_tl.y, &sim->grid->pos_tl.x,
 	           &sim->grid->pos_br.y, &sim->grid->pos_br.x) < 4) {
-		goto error_end;
-	}
-	if (fgetc(input) == '\r' && fgetc(input) != '\n') {  // Read trailing newline
 		goto error_end;
 	}
 
 	load_cells = is_sparse ? load_cells_s : load_cells_n;
-	if (load_cells(sim, input) == EOF) {
+	if (load_cells(input, sim->grid) == EOF) {
 		goto error_end;
 	}
 
@@ -303,7 +297,7 @@ int save_simulation(const char *filename, Simulation *sim)
 	}
 
 	save_cells = is_grid_sparse(sim->grid) ? save_cells_s : save_cells_n;
-	if (save_cells(sim, output) == EOF) {
+	if (save_cells(output, sim->grid) == EOF) {
 		goto error_end;
 	}
 
