@@ -34,7 +34,7 @@ ttime_t timer_micros(void)
 #else
 #	include <sys/time.h>
 
-struct timeval start;
+static struct timeval start;
 
 void init_timer(void)
 {
@@ -54,7 +54,7 @@ ttime_t timer_micros(void)
 	gettimeofday(&now, 0);
 	ds  = now.tv_sec  - start.tv_sec;
 	dus = now.tv_usec - start.tv_usec;
-	return (ttime_t)(ds*1e6 + dus);
+	return (ttime_t)(ds * 1e6 + dus);
 }
 
 #endif  // _WIN32
